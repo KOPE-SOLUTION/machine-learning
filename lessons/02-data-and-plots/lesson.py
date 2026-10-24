@@ -128,7 +128,12 @@ plt.show()
 # สีใช้คำตอบเพื่อช่วยอ่านภาพ ไม่ส่งเป็น feature และภาพแยกกลุ่มได้ยังไม่ใช่คะแนนโมเดล รายการ feature ที่เลือกยังมีสี่ค่า
 
 # %% Cell 10 — บันทึกตารางและรูปกราฟ
+import os
+
 out = Path("outputs/02-data-and-plots")
+if os.name == "nt":  # Windows: เลี่ยง Documents ที่บางเครื่องป้องกันการเขียน
+    out = Path.home() / "Projects/machine-learning/practics/outputs/02-data-and-plots"
+
 out.mkdir(parents=True, exist_ok=True)
 
 summary.to_csv(out / "feature-audit.csv", index_label="feature")
@@ -139,4 +144,6 @@ print("Saved CSV:", (out / "feature-audit.csv").resolve())
 print("Saved figure:", (out / "iris.png").resolve())
 
 # %% [markdown]
-# เห็นตำแหน่งเต็มของ CSV และ PNG ที่บันทึกแล้ว เปิดไฟล์เพื่อตรวจผลได้ หากบันทึกไม่ได้ ให้ดู error ของ cell นี้
+# Windows บันทึกที่ `Projects/machine-learning/practics/outputs/02-data-and-plots/` ใต้โฟลเดอร์ผู้ใช้ โดย `Path.home()` เลือกผู้ใช้ปัจจุบันให้ ส่วน WSL/Colab บันทึกใน `outputs/02-data-and-plots/` ใต้โฟลเดอร์ที่ Notebook ทำงาน
+#
+# ผลสองบรรทัดแสดงตำแหน่งเต็มของ CSV และ PNG ที่บันทึกแล้ว ใช้เปิดไฟล์ได้ทันที
