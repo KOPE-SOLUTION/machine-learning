@@ -2,9 +2,9 @@
 
 [กลับหน้าแรก](../README.md)
 
-ฉบับปรับคำอธิบายทุกบทสำหรับผู้ที่ใช้ NumPy, pandas และ Matplotlib ได้แล้วและเริ่มเรียน ML ตรวจเมื่อ **24 ตุลาคม 2026 (Asia/Bangkok)** บน **Ubuntu 24.04 ผ่าน WSL, CPython 3.12.3** ใช้แพ็กเกจหลักตาม uv.lock และ Mojo ใน environment แยก
+ฉบับเพิ่มการตั้ง environment ตั้งแต่ต้น, คู่มือ Ubuntu WSL และรายละเอียดที่มาของเนื้อหา สำหรับผู้ที่ใช้ NumPy, pandas และ Matplotlib ได้แล้วและเริ่มเรียน ML ตรวจเมื่อ **24 ตุลาคม 2026 (Asia/Bangkok)** บน **Ubuntu 24.04 ผ่าน WSL, CPython 3.12.3** ใช้แพ็กเกจหลักตาม uv.lock และ Mojo ใน environment แยก
 
-## ผลการรันฉบับนี้
+## ผลการตรวจและหลักฐานที่ใช้กับฉบับนี้
 
 | รายการ | ผล |
 |---|---|
@@ -15,11 +15,24 @@
 | Mojo compiler | 2/2 บท compile/run ผ่านด้วย Mojo 1.2.0 (2016d0cd) |
 | Mojo เทียบ Python reference | พารามิเตอร์/MSE และผลจำแนกตรงกันภายใน tolerance ที่กำหนด |
 | CLI predict.py | ผ่าน: อ่าน CSV สามแถวและทาย [5, 2, 8] |
-| README/notebook synchronization, local links, notebook schema | ผ่าน |
+| README/notebook synchronization, local links, notebook schema | ผ่าน: 32 Markdown files |
+| Environment เปล่า: uv และ venv + pip | ผ่านทั้งสองวิธี: ติดตั้งแพ็กเกจ, รันบท 00, เรียก JupyterLab 4.4.6; pip check ผ่าน |
+| คำสั่ง Bash ในคู่มือเริ่มต้น | 17 blocks ผ่านการตรวจ syntax ด้วย bash -n |
+| ลิงก์ภายนอกที่เพิ่มในรอบนี้ | 19/19 ตอบ HTTP 200 |
 
 โหมด `readmes` ดึงบล็อก Python จาก Markdown จริงแล้วรันใน process ใหม่แต่ละบล็อก จึงไม่อาศัยตัวแปรจากบทก่อน สำหรับ Mojo ตรวจให้โค้ดใน README ตรงกับไฟล์ .mojo ก่อน compile และรันเทียบ reference
 
 หลักฐานรุ่นแพ็กเกจ ผลแต่ละบท และ SHA-256 ของโค้ด/เอกสารอยู่ใน [verification-results.json](verification-results.json) ที่ `current_wsl_run` และ `mojo_compiler` หลักฐานฉบับก่อนอยู่ใน `previous_wsl_revision` กับ `previous_windows_revision`; ไม่ถือเป็นการรันฉบับปัจจุบันบนทุกแพลตฟอร์ม
+
+## ขอบเขตการทดสอบเริ่มต้นครั้งนี้
+
+สร้าง environment เปล่าผ่าน Ubuntu WSL โดยใช้ CPython 3.12.3 ที่มีอยู่แล้ว วิธี uv ใช้ uv 0.8.18 กับ `uv sync --frozen --python 3.12` ในโฟลเดอร์ทดลองบน `/mnt/c`; วิธี venv ใช้ `python3 -m venv` แล้วติดตั้งด้วย pip ตาม requirements.txt ในโฟลเดอร์ชั่วคราวของ Linux (`/tmp`) ทั้งสองวิธีรันบท 00 และเรียก CLI ของ JupyterLab ได้ ตรวจ activation/deactivation และ `pip check` ของวิธี venv ด้วย
+
+การติดตั้ง pip ครั้งแรกบน `/mnt/c` ถูกหยุดระหว่างเขียนไฟล์ที่ใช้เวลานาน แล้วเริ่มทดสอบจาก environment เปล่าบน Linux จนผ่าน ผลนี้ไม่ใช่ benchmark เปรียบเทียบความเร็วอย่างเป็นระบบ ลบ environment ทดลองเมื่อจบแล้วและเก็บรายงานไว้ใน outputs/verification/setup/
+
+การตรวจนี้ไม่ได้ติดตั้ง WSL ใหม่ ไม่ได้ย้าย checkout ไป `/home` ไม่ได้เปลี่ยนไดรเวอร์หรือทดสอบ CUDA workload และไม่ได้เปิด browser ของผู้เรียนเพื่อตรวจ localhost forwarding คำสั่งติดตั้งระบบและย้ายไฟล์อ้างอิงเอกสารทางการ พร้อมตรวจ syntax; installer uv รุ่นที่ระบุดาวน์โหลดด้วย curl ได้ แต่ไม่ได้รัน installer ทับเครื่อง การเลือก interpreter/kernel ในเครื่องผู้เรียนยังต้องตรวจตามบท 00
+
+โค้ด Mojo ไม่เปลี่ยนในรอบเอกสารนี้ ผล compile/run และเทียบ Python ในตารางเป็นผลรอบก่อนหน้าวันเดียวกัน โดย SHA-256 ของไฟล์ Mojo และ reference ยังตรงกัน
 
 ## ตัวอย่างผลที่ใช้ตรวจความเข้าใจ
 
@@ -46,8 +59,7 @@
 จากโฟลเดอร์หลักใน WSL หลังติดตั้ง uv:
 
 ```bash
-export UV_PROJECT_ENVIRONMENT=.venv-wsl
-uv sync --frozen
+uv sync --frozen --python 3.12
 uv run --frozen python scripts/sync_materials.py --check
 uv run --frozen python scripts/check_materials.py
 uv run --frozen python -m unittest discover -s tests -v
@@ -55,7 +67,7 @@ uv run --frozen python scripts/verify_course.py --mode all
 uv run --frozen python lessons/16-digits-project/predict.py outputs/16-digits-project/example-input.csv
 ```
 
-หากใช้ venv โดยตรง ให้แทน `uv run --frozen python` ด้วย `.venv-wsl/bin/python` ส่วน Mojo ติดตั้ง environment ตาม [คู่มือเสริม](../mojo/README.md) แล้วรัน:
+หากใช้ venv โดยตรง ให้แทน `uv run --frozen python` ด้วย `.venv/bin/python` ส่วน Mojo ติดตั้ง environment ตาม [คู่มือเสริม](../mojo/README.md) แล้วรัน:
 
 ```bash
 .venv-mojo/bin/python scripts/verify_mojo.py

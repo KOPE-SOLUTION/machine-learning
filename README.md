@@ -2,7 +2,7 @@
 
 หลักสูตร Machine Learning ภาษาไทยสำหรับผู้ที่เขียน Python และใช้ Jupyter notebook, NumPy, pandas และ Matplotlib ได้แล้ว โดยเริ่มเรียน ML ได้จากพื้นฐาน เนื้อหาเริ่มจากการตั้งโจทย์และสร้างโมเดลแรก ไปจนถึงการประเมินผล เตรียม feature ลดมิติ จัดกลุ่ม และทำโครงงานที่บันทึกโมเดลกลับมาใช้ได้
 
-**17 บท ML + 1 บทตรวจความพร้อม + 2 บทเสริม Mojo** · ใช้ CPU · ไม่มีบริการเสียเงินหรือ API key · ใช้ข้อมูลใน scikit-learn และข้อมูลจำลอง
+**17 บท ML + 1 บทเตรียม environment + 2 บทเสริม Mojo** · ใช้ CPU · ไม่มีบริการเสียเงินหรือ API key · ใช้ข้อมูลใน scikit-learn และข้อมูลจำลอง
 
 ทุกบทเริ่มด้วยพื้นฐานที่ใช้ต่อ อธิบายคำศัพท์ ML ใหม่และไล่ขั้นตอนก่อนรัน มีคำอธิบายสำหรับผู้เรียน โค้ดที่คัดลอกได้ครบชุด ไฟล์ Python, Jupyter notebook, แบบฝึกหัดพร้อมแนวคำตอบ และลิงก์อ่านต่อ เนื้อหาภาษาไทยและตัวอย่างใน repo นี้เขียนขึ้นใหม่
 
@@ -20,31 +20,35 @@
 
 ## เตรียม environment ของหลักสูตร
 
-ดาวน์โหลด repo เป็น ZIP แล้วแตกไฟล์ หรือ clone จาก URL ของ repo นี้ จากนั้นเปิด terminal ในโฟลเดอร์ที่มี `pyproject.toml`
+บน Windows แนะนำ **Ubuntu 24.04 / WSL 2** และเก็บ repo ในระบบไฟล์ Linux ตาม [คู่มือ WSL ตั้งแต่ติดตั้งจนถึง clone](docs/wsl.md) หากมี Ubuntu และ Git แล้ว เปิด Ubuntu terminal:
 
 ```bash
+mkdir -p ~/projects
+cd ~/projects
 git clone https://github.com/KOPE-SOLUTION/machine-learning.git
 cd machine-learning
 ```
 
-ติดตั้ง [Python 3.11–3.13](https://www.python.org/downloads/) และ [uv](https://docs.astral.sh/uv/getting-started/installation/) แล้วรัน:
+`uv` คือเครื่องมือจัดการ Python, environment และแพ็กเกจของแต่ละโปรเจกต์ อ่าน [คู่มือตั้ง environment ตั้งแต่ต้น](docs/setup.md) เพื่อติดตั้ง uv แล้วรัน:
 
 ```bash
-uv sync --frozen
+uv python install 3.12
+uv sync --frozen --python 3.12
 uv run --frozen python lessons/00-setup/lesson.py
-uv run --frozen python lessons/03-first-classifier/lesson.py
 uv run --frozen jupyter lab
 ```
 
-ใน JupyterLab ใช้บท 00 ตรวจ environment ประมาณ 10–15 นาที แล้วเริ่มเนื้อหา ML ที่ `lessons/01-ml-workflow/lesson.ipynb` หากใช้ Python/venv ปกติหรือ Google Colab ดู [คู่มือติดตั้งและแก้ปัญหา](docs/setup.md)
+`uv sync` สร้าง `.venv` และติดตั้งแพ็กเกจตาม `uv.lock`; `uv run` เลือก environment ให้โดยไม่ต้อง activate เอง [บท 00](lessons/00-setup/README.md) อธิบาย environment, interpreter และ kernel พร้อมวิธีสร้าง **venv + pip ด้วยตัวเอง** หากไม่ใช้ uv เตรียมครั้งแรกประมาณ 30–45 นาทีบวกเวลาดาวน์โหลด; ถ้าติดตั้งแล้วใช้ 10–15 นาทีตรวจความพร้อม
 
-แพ็กเกจหลักล็อกรุ่นเพื่อทำซ้ำ: NumPy 2.2.6, pandas 2.3.2, scikit-learn 1.7.1 และ Matplotlib 3.10.3 ไฟล์ `uv.lock` ล็อก dependency ทางอ้อมด้วย เอกสารออนไลน์รุ่น stable อาจใหม่กว่าหลักสูตร; ใช้ลิงก์ scikit-learn 1.7 ในแต่ละบทเมื่อเทียบ API
+ใน JupyterLab รันบท 00 แล้วเริ่ม `lessons/01-ml-workflow/lesson.ipynb` ทางเลือก Windows Python, macOS และ Colab อยู่ใน [คู่มือติดตั้ง](docs/setup.md) ทุกบทหลักและตัวอย่าง Mojo ใช้ CPU ได้ ไม่ต้องติดตั้ง CUDA
+
+แพ็กเกจหลักล็อกรุ่นเพื่อทำซ้ำ: NumPy 2.2.6, pandas 2.3.2, scikit-learn 1.7.1 และ Matplotlib 3.10.3 รองรับ Python 3.11–3.13 โดยใช้ 3.12 เป็นเส้นทางเริ่มต้น `uv.lock` ล็อก dependency ทางอ้อมด้วย เอกสารออนไลน์รุ่น stable อาจใหม่กว่าหลักสูตร; ใช้ลิงก์ scikit-learn 1.7 ในแต่ละบทเมื่อเทียบ API
 
 ## เส้นทางการเรียน
 
 ```mermaid
 flowchart LR
-  P["พื้นฐาน: Python, NumPy, pandas, Matplotlib"] --> R["00: ตรวจ environment"]
+  P["พื้นฐาน: Python, NumPy, pandas, Matplotlib"] --> R["00: ตั้ง environment"]
   R --> A["01–03: โจทย์ ML ตรวจข้อมูล และโมเดลแรก"]
   A --> B["04–10: วัดผลและเลือกโมเดล"]
   B --> C["11–14: ลดมิติและเรียนรู้โครงสร้าง"]
@@ -60,7 +64,7 @@ flowchart LR
 
 | บท | เนื้อหา | ชิ้นงานที่ได้ |
 |---|---|---|
-| 00 | [ตรวจ environment และสัญญาข้อมูลของ scikit-learn](lessons/00-setup/README.md) | ตรวจความพร้อม 10–15 นาที |
+| 00 | [ตั้ง environment และตรวจข้อมูลก่อนเริ่ม ML](lessons/00-setup/README.md) | ใช้ uv หรือสร้าง venv เอง แล้วตรวจ interpreter/kernel |
 | 01 | [Machine Learning คืออะไร และทำไมต้องมี baseline](lessons/01-ml-workflow/README.md) | โจทย์ ML กับ baseline |
 | 02 | [ตรวจข้อมูลสำหรับ ML: leakage, schema และ EDA](lessons/02-data-and-plots/README.md) | รายงาน audit และ feature ที่อนุญาตให้ใช้ |
 | 03 | [โมเดลแรกด้วย scikit-learn และ KNN](lessons/03-first-classifier/README.md) | Pipeline จำแนกดอกไม้ |
@@ -105,12 +109,15 @@ Mojo เป็นเส้นทางเสริม แยก environment จ�
 
 ## เอกสารเสริม
 
+- [เริ่มต้น Ubuntu WSL, ย้ายโฟลเดอร์ และข้อควรรู้เรื่อง GPU](docs/wsl.md)
+- [ตั้ง environment ด้วย uv หรือ venv + pip](docs/setup.md)
 - [ทักษะพื้นฐานและแบบตรวจความพร้อม](docs/prerequisites.md)
 - [คณิตศาสตร์ที่ใช้ในหลักสูตร](docs/math-primer.md)
 - [ศัพท์ ML ไทย–อังกฤษ](docs/glossary.md)
 - [ที่มาของข้อมูลและขอบเขตการใช้](docs/datasets.md)
 - [Model card สำหรับโครงงานตัวเลข](docs/model-card.md)
 - [เอกสารอ้างอิงและแหล่งอ่านเพิ่มเติม](docs/references.md)
+- [ที่มาของเนื้อหา ตัวอย่าง และภาพในแต่ละบท](docs/content-origin.md)
 - [วิธีตรวจซ้ำและสถานะการทดสอบ](docs/verification.md)
 
 ## ตรวจการทำงานในเครื่องตัวเอง
@@ -127,5 +134,5 @@ uv run --frozen python scripts/verify_course.py --mode notebooks
 
 ## การใช้เนื้อหาและการอ้างอิง
 
-โค้ดและข้อความต้นฉบับของ repo นี้ใช้ [MIT License](LICENSE) แหล่งอ้างอิงและข้อมูลภายนอกคงสิทธิ์ตามเจ้าของเดิม อ่าน [ที่มาและสิทธิ์ของแหล่งอ้างอิง](THIRD_PARTY_NOTICES.md)
+โค้ดและข้อความต้นฉบับของ repo นี้ใช้ [MIT License](LICENSE) แหล่งอ้างอิงและข้อมูลภายนอกคงสิทธิ์ตามเจ้าของเดิม อ่าน [ที่มาและสิทธิ์ของแหล่งอ้างอิง](THIRD_PARTY_NOTICES.md) และ [แผนที่เนื้อหาที่เขียนขึ้นสำหรับหลักสูตร](docs/content-origin.md)
 

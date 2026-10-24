@@ -2,7 +2,9 @@
 # %% ตรวจรุ่นเครื่องมือ
 import importlib.metadata
 import platform
+import sys
 
+print("Interpreter:", sys.executable)
 print("Python:", platform.python_version())
 for package in ("numpy", "pandas", "scikit-learn", "matplotlib"):
     print(f"{package}: {importlib.metadata.version(package)}")
