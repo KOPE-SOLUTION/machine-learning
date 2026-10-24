@@ -23,7 +23,7 @@ python -m pip install numpy==2.2.6 pandas==2.3.2 matplotlib==3.10.3 scikit-learn
 python -m jupyterlab
 ```
 
-คำสั่ง `python -m jupyterlab` เปิด Jupyter ใน browser จากนั้นสร้าง notebook ใหม่ เช่น `ml-00.ipynb` แล้วคัดลอกโค้ดจาก [บท 00](../lessons/00-setup/README.md) มารัน คำสั่งส่วนนี้ใช้ใน terminal; `%pip` ด้านบนใช้ใน notebook
+คำสั่ง `python -m jupyterlab` เปิด Jupyter ใน browser จากนั้นสร้าง notebook ใหม่ เช่น `ml-01.ipynb` แล้วคัดลอกโค้ดจาก [บท 01](../lessons/01-ml-workflow/README.md) มารัน คำสั่งส่วนนี้ใช้ใน terminal; `%pip` ด้านบนใช้ใน notebook
 
 หากใช้ VS Code เปิด `.ipynb` แล้วเลือก Python/kernel ที่ติดตั้งไลบรารีไว้ บน macOS หรือ Linux บางเครื่องใช้ชื่อคำสั่ง `python3` แทน `python`
 

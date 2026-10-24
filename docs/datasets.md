@@ -4,7 +4,7 @@
 
 | ชุดข้อมูล | บท | ที่มาและหน่วยข้อมูล | ข้อจำกัด |
 |---|---|---|---|
-| Iris | 00–03, 10 | [load_iris](https://scikit-learn.org/1.7/modules/generated/sklearn.datasets.load_iris.html): 150 ดอก, 4 ค่าขนาด, 3 คลาส | เล็กและค่อนข้างสะอาด ไม่แทนข้อมูลภาคสนามทั้งหมด |
+| Iris | 01–03, 10 | [load_iris](https://scikit-learn.org/1.7/modules/generated/sklearn.datasets.load_iris.html): 150 ดอก, 4 ค่าขนาด, 3 คลาส | เล็กและค่อนข้างสะอาด ไม่แทนข้อมูลภาคสนามทั้งหมด |
 | Digits | 11–12, 16 | [load_digits](https://scikit-learn.org/1.7/modules/generated/sklearn.datasets.load_digits.html): 1,797 ภาพ 8×8, 10 คลาส, pixel 0–16 | ไม่ใช่ MNIST; split ในหลักสูตรไม่ได้แยกผู้เขียน |
 | Binary classification | 04, 09 | [make_classification](https://scikit-learn.org/1.7/modules/generated/sklearn.datasets.make_classification.html), สร้างด้วย seed 42 | รูปแบบและ noise ถูกกำหนด ไม่ใช่ benchmark งานจริง |
 | Regression / delivery | 05–06, 15 | NumPy random generator และสมการในโค้ด | หน่วยค่าบริการสมมติ ไม่ใช่ราคา/ข้อมูลลูกค้าจริง |

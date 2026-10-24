@@ -24,8 +24,8 @@
 
 | บท | ตัวอย่างและการอธิบายใน repo | แหล่งตรวจแนวคิด/API |
 |---|---|---|
-| [00](../lessons/00-setup/README.md) | สร้าง notebook และอ่าน shape/index ของ Iris ก่อนเริ่มโมเดล | [scikit-learn: load_iris](https://scikit-learn.org/1.7/modules/generated/sklearn.datasets.load_iris.html) |
-| [01](../lessons/01-ml-workflow/README.md) | เปรียบเทียบคำทำนายคลาสส่วนใหญ่กับจำนวนดอกไม้ในชุดทดสอบ | [scikit-learn: DummyClassifier](https://scikit-learn.org/1.7/modules/generated/sklearn.dummy.DummyClassifier.html) |
+| [00](../lessons/00-setup/README.md) | แนะนำเส้นทางหลักสูตร วิธีอ่าน GitHub และทดลองรันข้อความใน notebook | [JupyterLab: Notebooks](https://jupyterlab.readthedocs.io/en/stable/user/notebook.html) |
+| [01](../lessons/01-ml-workflow/README.md) | อธิบายโจทย์ ML อ่าน Iris เป็น X/y ตรวจ shape/index แบ่งข้อมูล และเทียบ baseline กับการนับคำตอบที่ถูก | [scikit-learn: load_iris](https://scikit-learn.org/1.7/modules/generated/sklearn.datasets.load_iris.html), [DummyClassifier](https://scikit-learn.org/1.7/modules/generated/sklearn.dummy.DummyClassifier.html) |
 | [02](../lessons/02-data-and-plots/README.md) | เพิ่ม sample_id และคอลัมน์ที่รั่วจาก target เพื่อฝึกตรวจ schema | [scikit-learn: Common pitfalls และ leakage](https://scikit-learn.org/1.7/common_pitfalls.html) |
 | [03](../lessons/03-first-classifier/README.md) | ประกอบ scaler + KNN แล้วทำนายดอกไม้ใหม่ด้วยลำดับ feature เดิม | [scikit-learn: Nearest Neighbors](https://scikit-learn.org/1.7/modules/neighbors.html), [Common pitfalls](https://scikit-learn.org/1.7/common_pitfalls.html) |
 | [04](../lessons/04-validation-and-metrics/README.md) | จำลองคลาสไม่สมดุล แยก train/validation/test และอ่านความผิดพลาดแต่ละช่อง | [Metrics and scoring](https://scikit-learn.org/1.7/modules/model_evaluation.html), [Cross-validation](https://scikit-learn.org/1.7/modules/cross_validation.html) |
