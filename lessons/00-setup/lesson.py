@@ -1,14 +1,4 @@
-"""ตรวจสภาพแวดล้อมและรูปร่างข้อมูลก่อนเริ่มเรียน"""
-# %% ตรวจรุ่นเครื่องมือ
-import importlib.metadata
-import platform
-import sys
-
-print("Interpreter:", sys.executable)
-print("Python:", platform.python_version())
-for package in ("numpy", "pandas", "scikit-learn", "matplotlib"):
-    print(f"{package}: {importlib.metadata.version(package)}")
-
+"""อ่านตารางข้อมูลและรูปร่าง X/y ก่อนเริ่มเรียน ML"""
 # %% อ่านข้อมูลที่ติดมากับ scikit-learn
 from sklearn.datasets import load_iris
 

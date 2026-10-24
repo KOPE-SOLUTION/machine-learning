@@ -8,7 +8,7 @@
 
 ก่อนเริ่ม ML ควรใช้ Python/Jupyter, NumPy, pandas และ Matplotlib ได้แล้ว ทบทวนจากวิดีโอในช่อง KOPE SOLUTION: [NumPy](https://www.youtube.com/watch?v=KghryuGZFMU&list=PLtB6tPOso1cYC_CP2LQSj7JlY2_SAAYO3), [pandas](https://www.youtube.com/watch?v=Ejgb1q1A8uU&list=PLtB6tPOso1cY5OS1uyQjvrktkA-rHw2pU) และ [Matplotlib](https://www.youtube.com/watch?v=tUmJrKmaos8&list=PLea-bfI_jPIA)
 
-ดู [รายการทักษะและจุดที่นำไปใช้](prerequisites.md) บท 00 เปิด notebook และตรวจเครื่องมือ/ข้อมูล; บท 02 ประยุกต์ทักษะจัดตารางและกราฟเดิมเพื่อป้องกัน leakage และกำหนด feature schema
+ดู [รายการทักษะและจุดที่นำไปใช้](prerequisites.md) บท 00 สร้าง notebook แล้วอ่านตารางข้อมูลสำหรับ ML; บท 02 ประยุกต์ทักษะจัดตารางและกราฟเดิมเพื่อป้องกัน leakage และกำหนด feature schema
 
 ## อ่าน API และแนวปฏิบัติ
 

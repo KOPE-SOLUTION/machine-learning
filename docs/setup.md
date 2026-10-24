@@ -1,12 +1,12 @@
-# สร้าง environment ตั้งแต่ต้น
+# การติดตั้งเพิ่มเติมและการใช้ไฟล์ repo
 
 [กลับหน้าแรก](../README.md) · [เริ่มเรียนแบบก๊อปวาง](start-here.md) · [บท 00](../lessons/00-setup/README.md) · [Ubuntu WSL, การย้ายโฟลเดอร์ และ GPU](wsl.md)
 
 หน้านี้สำหรับติดตั้งเครื่องใหม่ แยก environment หรือแก้ปัญหา หากเปิด notebook และใช้ NumPy/pandas/Matplotlib ได้แล้ว ให้เริ่มที่ [วิธีเรียนจาก README](start-here.md) และบท 00 ได้เลย ไม่ต้องทำตามวิธีติดตั้งทุกแบบ
 
-หลักสูตรใช้ Python 3.11–3.13 แบบ 64-bit และ CPU สำหรับผู้เริ่มต้นบน Windows แนะนำ **Ubuntu 24.04 บน WSL 2 → เก็บ repo ใน `~/projects` → Python 3.12 → uv** ใช้เส้นทางเดียวตลอดหลักสูตร ส่วน Mojo มี environment เสริมของตัวเอง
+หลักสูตรตรวจด้วย Python 3.11–3.13 และใช้ CPU ได้ทั้งหมด ผู้ที่สร้าง `.ipynb` แล้วรัน NumPy/pandas/Matplotlib ได้อยู่แล้วใช้วิธีเดิมต่อได้ ดู [วิธีเพิ่ม scikit-learn จาก cell](start-here.md) เมื่อต้องติดตั้งไลบรารี ML
 
-หากยังไม่มี WSL หรือยังไม่ได้ clone ให้ทำตาม [ขั้นตอนติดตั้งและ clone](wsl.md) ก่อน แล้วเปิด Ubuntu terminal ในโฟลเดอร์หลักที่มี `pyproject.toml` คำสั่ง `bash` ในหน้านี้ใช้ใน Ubuntu terminal; คำสั่ง `powershell` ใช้ใน Windows PowerShell
+หัวข้อด้านล่างเป็นทางเลือกสำหรับแยก Python และแพ็กเกจของ repo ออกจากงานอื่น หากเลือกวิธี Ubuntu WSL ดู [การติดตั้งและ clone](wsl.md) แล้วทำงานในโฟลเดอร์หลักที่มี `pyproject.toml` คำสั่ง `bash` ใช้ใน Ubuntu terminal; คำสั่ง `powershell` ใช้ใน Windows PowerShell
 
 ## Environment, venv, pip และ uv คืออะไร
 
@@ -36,7 +36,7 @@ flowchart LR
 
 เลือก **วิธี A หรือ B เพียงวิธีเดียว** ใน checkout หนึ่งชุด วิธี B มีไว้ฝึกจัด environment ด้วยตัวเองและใช้แทน uv ได้ อย่าติดตั้งแพ็กเกจด้วย pip เพิ่มใน environment ที่ต้องการให้ตรง lockfile เพราะ `uv sync` อาจนำแพ็กเกจนอก lockfile ออกเมื่อ sync ครั้งถัดไป
 
-## วิธี A: uv — เส้นทางหลัก
+## ทางเลือก A: จัด environment ของ repo ด้วย uv
 
 ### 1. ติดตั้ง uv ใน Ubuntu
 
@@ -88,7 +88,7 @@ uv run --frozen jupyter lab
 uv run --frozen python lessons/03-first-classifier/lesson.py
 ```
 
-## วิธี B: สร้าง environment เองด้วย venv + pip
+## ทางเลือก B: สร้าง environment เองด้วย venv + pip
 
 เส้นทางนี้ไม่ต้องติดตั้ง uv เริ่มหลัง clone repo แล้ว ตัวอย่าง Ubuntu 24.04 ใช้ Python ระบบรุ่น 3.12:
 
@@ -152,7 +152,7 @@ uv run --frozen jupyter lab
 
 ## คัดลอกโค้ดจาก README
 
-1. ติดตั้งแพ็กเกจด้วยวิธีใดวิธีหนึ่งข้างต้น แล้วเปิด notebook ด้วย environment นั้น
+1. เปิด notebook ที่ใช้เรียนอยู่แล้ว หากต้องติดตั้งใหม่หรือแยก environment จึงเลือกวิธีด้านบน
 2. คัดลอกบล็อก `python` ทั้งชุด รวม import และฟังก์ชัน ไป cell เดียวใน notebook เปล่าแล้วรัน หรือบันทึกเป็นไฟล์ `.py` แล้วรันจาก terminal
 3. บล็อก `bash`/`powershell` เป็นคำสั่ง terminal ไม่วางใน cell Python ตรง ๆ ส่วนบล็อก `mojo` ให้บันทึกเป็นไฟล์ `.mojo` ตามคู่มือเสริม
 4. รูปและไฟล์ที่สร้างจะอยู่ใน `outputs/` ใต้ working directory ปัจจุบัน หากต้องการให้ตรงเส้นทางในคู่มือ ให้เริ่มที่ root ของ repo
@@ -160,11 +160,11 @@ uv run --frozen jupyter lab
 
 README แต่ละบทมีข้อมูลตัวอย่างอยู่ในโค้ดหรือ loader ของ scikit-learn ครบ ไม่ต้องหา CSV เพิ่ม บท 16 สร้าง input CSV ตัวอย่างหลังฝึกเสร็จ ให้รันคำสั่งทำนายหลังเห็นไฟล์นั้นแล้ว
 
-Notebook มี cell แรกสำหรับกลับไป working directory ของ repo เมื่อเปิดจากโฟลเดอร์บทเรียน โค้ดตัวอย่างไม่จำเป็นต้องรันบทก่อนหน้า หากคัดลอกไป notebook เปล่า ให้รัน Python block ทั้งชุดตามลำดับ
+Notebook เริ่มจากโค้ดบทเรียนโดยไม่มี cell เปลี่ยนโฟลเดอร์อัตโนมัติ ไฟล์ที่สร้างอยู่ใต้ working directory ปัจจุบัน โค้ดแต่ละบทไม่อาศัยตัวแปรจากบทก่อนหน้า
 
 ## Google Colab
 
-ดาวน์โหลด lesson.ipynb ของบทที่สนใจ แล้วเลือก Upload notebook ใน [Colab](https://colab.research.google.com/) เพิ่ม cell แรกด้วยคำสั่ง:
+สร้าง notebook ใน [Colab](https://colab.research.google.com/) แล้วคัดลอก Python จาก README ตาม [วิธีเริ่มเรียน](start-here.md) หรืออัปโหลดไฟล์ lesson.ipynb ได้ หากต้องการติดตั้งแพ็กเกจหลักตามรุ่นที่ใช้ตรวจทั้งชุด ให้รัน cell นี้:
 
 ```python
 %pip install numpy==2.2.6 pandas==2.3.2 scikit-learn==1.7.1 matplotlib==3.10.3 scipy==1.16.1 joblib==1.5.1
@@ -201,6 +201,25 @@ uv run --frozen python scripts/verify_course.py --mode readmes
 ```
 
 คำสั่งสร้าง notebook ใหม่จะล้าง output และการแก้ cell ที่ทำเฉพาะใน notebook หากต้องการเก็บการทดลองส่วนตัว ให้ Save As ชื่ออื่นก่อน โหมด `readmes` รันบล็อก Python จาก README ทุกบทและตัวอย่างคณิตศาสตร์ใน process ใหม่แต่ละบล็อก ส่วน `--mode all` รวมสคริปต์ บล็อก README และ notebook ดู [วิธีตรวจซ้ำ](verification.md)
+
+## รันไฟล์จาก repo
+
+หากต้องการรันไฟล์ `.py` แทน notebook ให้เปิด terminal ที่โฟลเดอร์หลักของ repo หลังติดตั้งแพ็กเกจแล้ว ตัวอย่างบท 01:
+
+```bash
+python lessons/01-ml-workflow/lesson.py
+```
+
+หากใช้วิธี uv ให้แทน `python` ด้วย `uv run --frozen python` ไฟล์ `lesson.py` แต่ละบทใช้โค้ดเดียวกับ Python block ใน README
+
+บท 16 มีคำสั่งทำนายเพิ่มเติม รันหลังฝึกโมเดลและสร้าง CSV ตัวอย่าง:
+
+```bash
+python lessons/16-digits-project/lesson.py
+python lessons/16-digits-project/predict.py outputs/16-digits-project/example-input.csv
+```
+
+CSV ต้องไม่มี header และเรียง pixel แบบ row-major ตามภาพ 8×8 ตัวอย่างนี้มาจาก holdout เพื่อสาธิตการโหลดโมเดล ไม่ใช่การประเมินกับข้อมูลภายนอก
 
 ## อ้างอิง
 

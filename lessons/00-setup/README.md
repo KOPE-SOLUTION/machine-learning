@@ -1,20 +1,18 @@
-# 00 · เปิด notebook และตรวจข้อมูลก่อนเริ่ม ML
+# 00 · สร้าง notebook และอ่านข้อมูลสำหรับ ML
 
 [กลับสารบัญ](../../README.md) · [Notebook](lesson.ipynb) · [Python](lesson.py)
 
-เวลา: 10–15 นาทีเมื่อติดตั้งแพ็กเกจพร้อมแล้ว
+เวลา: 10–15 นาที
 
 พื้นฐาน: ใช้ Python, notebook, NumPy, pandas และ Matplotlib ได้แล้ว ดู [ทักษะพื้นฐานและวิดีโอทบทวน](../../docs/prerequisites.md)
 
 ## ก่อนเริ่มบทนี้
 
-เปิด notebook ที่ใช้เรียน NumPy, pandas และ Matplotlib ได้อยู่แล้ว ขั้นตอนหลักใช้ Jupyter แต่เลือก Colab ได้เช่นกัน หากเปิดไฟล์ notebook ของบทนี้จาก repo อยู่แล้ว ให้รัน cell ที่มีตามลำดับ
+สร้างไฟล์ใหม่ชื่อ `ml-00.ipynb` แบบเดียวกับที่เรียน Matplotlib แล้วใช้ notebook นี้ทดลองอ่านข้อมูล คัดลอกโค้ดด้านล่างไปวางแล้วรันได้เลย หากยังไม่มี scikit-learn ดู [วิธีติดตั้งจาก cell](../../docs/start-here.md)
 
-บทนี้ตรวจเครื่องมือและอ่านข้อมูลตารางก่อนเริ่ม ML คำใหม่คือ sample, feature และ target แล้วจะไปทดลองโมเดลที่บท 01–03 ผู้ที่ยังไม่มีแพ็กเกจให้ดู [วิธีเริ่มเรียนและ cell ติดตั้ง](../../docs/start-here.md) ส่วนการสร้าง environment ใหม่ด้วย uv/venv อยู่ใน [คู่มือตั้งเครื่อง](../../docs/setup.md)
+## จากตารางเดิมสู่ข้อมูลสำหรับ ML
 
-## ตรวจสิ่งที่หลักสูตรต้องใช้
-
-รันโปรแกรมด้านล่างจาก notebook ที่เริ่มใหม่ บทนี้ตรวจ interpreter และข้อมูลที่ scikit-learn คืนมา โดยไม่ทบทวนวิธีใช้ notebook หรือ indexing ตั้งแต่ต้น
+บทนี้ใช้ตารางข้อมูลดอกไม้เพื่อรู้จักคำว่า sample, feature และ target โดยยังไม่ฝึกโมเดล
 
 สัญญา input ของ estimator ส่วนใหญ่คือ X มี shape (n_samples, n_features) และ y มีคำตอบหนึ่งค่าต่อแถว NumPy shape ถูกต้องอย่างเดียวยังไม่พอ: ลำดับตัวอย่างใน X/y ต้องตรงกัน และคอลัมน์ตอน predict ต้องมีลำดับ/หน่วยเหมือนตอน fit
 
@@ -36,32 +34,11 @@
 
 ## คัดลอกโค้ดไปรัน
 
-คัดลอกบล็อก `python` ด้านล่างทั้งชุดไป Code cell ใน Jupyter หรือ Colab แล้วกด Shift+Enter หากเปิด `lesson.ipynb` ของบทนี้อยู่แล้ว ให้รัน cell ที่มีตามลำดับ ไม่ต้องคัดลอกซ้ำ ดู [วิธีเริ่มเรียน](../../docs/start-here.md) หากยังไม่ได้เตรียมแพ็กเกจ
-
-<details>
-<summary>ทางเลือก: รันไฟล์ Python จาก repo ในเครื่อง</summary>
-
-```bash
-uv run --frozen python lessons/00-setup/lesson.py
-```
-
-หากใช้ venv ให้ใช้ Python ของ environment นั้นแทน `uv run --frozen python`
-
-</details>
+สร้างไฟล์ `.ipynb` ใหม่ คัดลอกโค้ดด้านล่างทั้งชุดลง Code cell แล้วกด **Shift+Enter** ใช้โปรแกรมเดิมที่เรียน Matplotlib ได้เลย ดู [วิธีเริ่มเรียน](../../docs/start-here.md) หากต้องการทำตามทีละขั้น
 
 <!-- CODE:START -->
 ```python
-"""ตรวจสภาพแวดล้อมและรูปร่างข้อมูลก่อนเริ่มเรียน"""
-# %% ตรวจรุ่นเครื่องมือ
-import importlib.metadata
-import platform
-import sys
-
-print("Interpreter:", sys.executable)
-print("Python:", platform.python_version())
-for package in ("numpy", "pandas", "scikit-learn", "matplotlib"):
-    print(f"{package}: {importlib.metadata.version(package)}")
-
+"""อ่านตารางข้อมูลและรูปร่าง X/y ก่อนเริ่มเรียน ML"""
 # %% อ่านข้อมูลที่ติดมากับ scikit-learn
 from sklearn.datasets import load_iris
 
@@ -75,16 +52,9 @@ print(X.head(3).to_string(index=False))
 ```
 <!-- CODE:END -->
 
-## ผลตรวจที่คาด
+## ผลลัพธ์ที่คาด
 
-เห็น X shape (150,4), y shape (150,), ชื่อสามสายพันธุ์และรุ่นแพ็กเกจที่ตรงกับ requirements.txt เมื่อผ่านแล้วให้เริ่ม [บท 01](../01-ml-workflow/README.md)
-
-<details>
-<summary>เมื่อ import ไม่ผ่าน: ตรวจ Python ของ notebook</summary>
-
-บรรทัด `Interpreter:` แสดง Python ที่รัน cell นี้ หากติดตั้งแพ็กเกจแล้วแต่ notebook ยังหาไม่พบ อาจเลือก kernel คนละ environment กับที่ติดตั้งไว้ ดู [วิธีแก้ปัญหา](../../docs/start-here.md) และ [คำอธิบาย interpreter/kernel](../../docs/setup.md) เมื่อต้องการตรวจต่อ
-
-</details>
+เห็น `X shape: (150, 4)` และ `y shape: (150,)` พร้อมชื่อสามสายพันธุ์และข้อมูลสามแถวแรก หมายถึงมีดอกไม้ 150 ดอก แต่ละดอกมีข้อมูลสำหรับทำนาย 4 คอลัมน์ เมื่ออ่านตารางได้แล้วให้เริ่ม [บท 01](../01-ml-workflow/README.md)
 
 ## ตรวจความเข้าใจเรื่องแถวข้อมูล
 
@@ -99,8 +69,5 @@ print(X.head(3).to_string(index=False))
 
 ## อ่านต่อ
 
-- [Python: venv](https://docs.python.org/3.12/library/venv.html)
-- [uv: working on projects](https://docs.astral.sh/uv/guides/projects/)
 - [scikit-learn: load_iris](https://scikit-learn.org/1.7/modules/generated/sklearn.datasets.load_iris.html)
 - [ทักษะพื้นฐานและวิดีโอทบทวน](../../docs/prerequisites.md)
-- [คู่มือติดตั้งของหลักสูตร](../../docs/setup.md)

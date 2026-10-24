@@ -1,31 +1,31 @@
 # การตรวจซ้ำและผลที่วัดได้
 
-[กลับหน้าแรก](../README.md) · [เริ่มเรียนจาก README](start-here.md)
+[กลับหน้าแรก](../README.md) · [สร้าง notebook แล้วรันตามบทเรียน](start-here.md)
 
-ฉบับนี้ปรับทางเริ่มเรียนเป็นอ่าน README แล้วคัดลอกโค้ดไป notebook โดยใช้ Jupyter เป็นตัวอย่างและให้ Colab เป็นทางเลือก ตรวจเมื่อ **24 ตุลาคม 2026 (Asia/Bangkok)** บน **Ubuntu 24.04 ผ่าน WSL, CPython 3.12.11** ในระบบไฟล์ Linux ใช้แพ็กเกจหลักตาม uv.lock
+ฉบับนี้ปรับทางเริ่มเรียนให้ต่อเนื่องจากหลักสูตร Matplotlib: สร้าง `.ipynb` แล้วคัดลอกโค้ดมารัน บท 00 อ่านข้อมูล X/y โดยไม่มีการตรวจ environment และ notebook ที่แจกไม่มี cell เปลี่ยนโฟลเดอร์อัตโนมัติ ตรวจเมื่อ **24 ตุลาคม 2026 (Asia/Bangkok)** บน **Ubuntu 24.04 ผ่าน WSL, CPython 3.12.11**
 
-## ผลตรวจของการปรับทางเริ่มเรียนครั้งนี้
+## ผลตรวจของฉบับนี้
 
 | รายการ | ผล |
 |---|---|
-| Python block จาก README บท 00–17 | 18/18 ผ่าน แต่ละบทเริ่มจากโฟลเดอร์ว่างแยกกันนอก repo และ process ใหม่ |
-| ความครบของโค้ดที่ก๊อปวาง | รันได้โดยไม่มีไฟล์ repo หรือตัวแปรของบทก่อนอยู่ใน working directory; มีแพ็กเกจหลักติดตั้งแล้ว |
-| Cell `%pip` ในคู่มือเริ่มเรียน | ผ่านใน IPython ของ environment ชั่วคราว จากนั้นรันบท 00 ใน process ใหม่และ `pip check` ผ่าน |
-| โค้ดบทเรียนและ code cell ใน notebook | ทั้ง 18 บทไม่เปลี่ยนจาก commit `74058ee`; แก้เฉพาะคำอธิบายและวิธีเริ่มเรียน |
+| Notebook บท 00–17 | 18/18 ผ่าน: kernel ใหม่และโฟลเดอร์ว่างนอก repo แยกกันทุกบท |
+| Cell ติดตั้ง scikit-learn ในคู่มือเริ่มเรียน | ผ่านใน environment ชั่วคราวที่มี NumPy/pandas/Matplotlib/IPython อยู่ก่อน |
+| Python block บท 00 จาก README | ผ่านใน IPython หลังติดตั้งด้วย cell ข้างต้น; `pip check` ผ่าน |
 | README/notebook synchronization, local links, notebook schema | ผ่าน: 33 Markdown files |
-| Environment ที่ใช้เรียนอยู่ | ไม่ติดตั้งแพ็กเกจทับระหว่างตรวจ cell `%pip`; ใช้ environment ชั่วคราวแยกต่างหาก |
+| โค้ด ML บท 01–17 | ไม่เปลี่ยนจาก commit `d61f247`; ตัดเฉพาะ cell ช่วยตั้ง working directory ออกจาก notebook |
+| Environment ที่ใช้เรียนอยู่ | ไม่มีการติดตั้งเพิ่มระหว่างทดสอบคำสั่งติดตั้ง; ใช้ environment ชั่วคราว |
 
-การตรวจบล็อก README รอบนี้ดึงข้อความระหว่าง code fence `python` จากเอกสารจริง รันด้วย CPU และ backend กราฟ Agg ในโฟลเดอร์ชั่วคราวคนละแห่งต่อบท ลบ `PYTHONPATH` จาก environment เพื่อไม่อาศัยโมดูลใน checkout ผลนี้ตรวจความครบของโค้ดและการสร้างไฟล์ ไม่ได้วัดความเร็วใน browser หรือรับรองทุก runtime ของ Colab
+แต่ละ notebook เริ่มจากโฟลเดอร์ว่างนอก checkout ไม่มีไฟล์ข้อมูลหรือผลจากบทก่อน และไม่มี `PYTHONPATH` ชี้กลับมาที่ repo จึงตรวจว่ารันได้โดยไม่อาศัยโครงสร้างโฟลเดอร์ของหลักสูตร ใช้ CPU และ backend กราฟ Agg ในการตรวจอัตโนมัติ ส่วนภาพในหน้า notebook ของผู้เรียนขึ้นกับ backend ของโปรแกรมที่ใช้
 
-หลักฐานแต่ละบทและวิธีตรวจอยู่ใน [verification-results.json](verification-results.json) ที่ `readme_learning_revision` ส่วน `material_sha256` และ `documentation_sha256` ระบุไฟล์ฉบับที่แก้แล้ว โดย hash ของ notebook ใช้ไฟล์แจกที่ยังไม่มี output หรือการตั้งค่า kernel ของผู้ใช้
+หลักฐานและวิธีตรวจอยู่ใน [verification-results.json](verification-results.json) ที่ `simple_notebook_revision` ส่วน `material_sha256`, `lesson_source_sha256` และ `documentation_sha256` ระบุไฟล์ฉบับปัจจุบัน Hash ของ notebook ใช้ไฟล์แจกที่ยังไม่มี output หรือการตั้งค่า kernel ส่วนตัว
 
-## ผลตรวจเต็มหลักสูตรก่อนแก้คำอธิบาย
+## หลักฐานก่อนการปรับครั้งนี้
 
-ก่อนการแก้ครั้งนี้ checkout บน Linux ที่ commit `74058ee` ใช้ CPython 3.12.11 และผ่าน script 18 บท, Python block ใน Markdown 21 ชุด, notebook 18 บท, behavioral tests 6 ข้อ และ Mojo 2 บท Jupyter API บน WSL และหน้า login ผ่าน localhost จาก Windows ตอบ HTTP 200 หลักฐานสรุปอยู่ที่ `native_wsl_readiness`
+`readme_learning_revision` เป็นผลรอบก่อน: Python block จาก README 18 บทรันผ่านใน process ใหม่และโฟลเดอร์ว่างแยกกัน ไม่ใช่การรัน notebook ฉบับปัจจุบัน
 
-รอบปัจจุบันไม่ได้รัน notebook ทั้งหมดหรือ compiler Mojo ซ้ำ เพราะตรวจเทียบแล้ว code cell, ไฟล์ Python และ Mojo ไม่เปลี่ยน ผลทดสอบฉบับก่อนบน CPython 3.12.3 เก็บที่ `previous_setup_wsl_run`, `setup_verification` และ `mojo_compiler` รวมถึงผล venv + pip, CLI predict และการเทียบ Mojo กับ Python จึงแยกจากการตรวจ README รอบนี้อย่างชัดเจน
+`native_wsl_readiness` เป็นผลเต็มหลักสูตรที่ commit `74058ee`: script 18 บท, Python block 21 ชุด, notebook 18 บท, behavioral tests 6 ข้อ และ Mojo 2 บท ผ่านบน CPython 3.12.11 รวมทั้ง Jupyter API และหน้า login ผ่าน localhost จาก Windows ตอบ HTTP 200
 
-ผลตั้ง environment รอบก่อนครอบคลุม uv บนโฟลเดอร์ทดลอง `/mnt/c` และ venv + pip บน Linux `/tmp` โดยรันบท 00, JupyterLab และ pip check ตามวิธีที่ใช้ การติดตั้ง pip บน `/mnt/c` ครั้งแรกถูกหยุดแล้วเริ่มใหม่บน Linux จนผ่าน; ไม่ใช่ benchmark เปรียบเทียบความเร็วอย่างเป็นระบบ
+ผลบน CPython 3.12.3 อยู่ที่ `previous_setup_wsl_run` และ `setup_verification` ส่วน `mojo_compiler` เก็บผล compile/run และเทียบ Python ของรอบก่อน โค้ด Mojo ไม่เปลี่ยนและไม่ได้รัน compiler ซ้ำในรอบนี้
 
 ## ตัวอย่างผลที่ใช้ตรวจความเข้าใจ
 

@@ -52,7 +52,7 @@
 ## เริ่มตรงไหน
 
 1. เปิด notebook ที่ถนัดตาม [วิธีเริ่มเรียนจาก README](start-here.md) ใช้ Jupyter หรือ Colab ได้
-2. ใช้ [บท 00](../lessons/00-setup/README.md) ตรวจรุ่นแพ็กเกจและสัญญา input ของ scikit-learn ประมาณ 10–15 นาที
+2. ใช้ [บท 00](../lessons/00-setup/README.md) อ่านตารางข้อมูลและรู้จัก sample, feature, target และ X/y ประมาณ 10–15 นาที
 3. เริ่ม ML ที่ [บท 01](../lessons/01-ml-workflow/README.md) แล้วใช้ [บท 02](../lessons/02-data-and-plots/README.md) ฝึก data audit ที่เกี่ยวกับการทำนาย
 4. ต่อบท 03–17 ตามเส้นทางหลัก ส่วน Mojo เริ่มหลังเข้าใจ Pipeline และ gradient descent แล้ว
 

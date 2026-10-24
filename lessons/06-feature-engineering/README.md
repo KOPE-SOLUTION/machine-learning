@@ -47,20 +47,7 @@ MAE ของ baseline มัธยฐานและ Ridge ใช้หน่�
 
 ## คัดลอกโค้ดไปรัน
 
-คัดลอกบล็อก `python` ด้านล่างทั้งชุดไป Code cell ใน Jupyter หรือ Colab แล้วกด Shift+Enter หากเปิด `lesson.ipynb` ของบทนี้อยู่แล้ว ให้รัน cell ที่มีตามลำดับ ไม่ต้องคัดลอกซ้ำ ดู [วิธีเริ่มเรียน](../../docs/start-here.md) หากยังไม่ได้เตรียมแพ็กเกจ
-
-<details>
-<summary>ทางเลือก: รันไฟล์ Python จาก repo ในเครื่อง</summary>
-
-จากโฟลเดอร์หลักของ repo:
-
-```bash
-uv run --frozen python lessons/06-feature-engineering/lesson.py
-```
-
-หากใช้ venv ให้ใช้ `python` แทน `uv run --frozen python` คัดลอกบล็อกต่อไปนี้ได้ทั้งชุด แต่ละส่วน `# %%` คือช่วงการทดลองเดียวกันกับ notebook
-
-</details>
+สร้างไฟล์ `.ipynb` ใหม่ คัดลอกโค้ดด้านล่างทั้งชุดลง Code cell แล้วกด **Shift+Enter** ใช้โปรแกรมเดิมที่เรียน Matplotlib ได้เลย ดู [วิธีเริ่มเรียน](../../docs/start-here.md) หากต้องการทำตามทีละขั้น
 
 <!-- CODE:START -->
 ```python

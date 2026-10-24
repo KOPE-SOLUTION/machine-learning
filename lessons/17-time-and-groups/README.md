@@ -45,20 +45,7 @@ TimeSeriesSplit ขยายช่วง train ไปข้างหน้าแ
 
 ## คัดลอกโค้ดไปรัน
 
-คัดลอกบล็อก `python` ด้านล่างทั้งชุดไป Code cell ใน Jupyter หรือ Colab แล้วกด Shift+Enter หากเปิด `lesson.ipynb` ของบทนี้อยู่แล้ว ให้รัน cell ที่มีตามลำดับ ไม่ต้องคัดลอกซ้ำ ดู [วิธีเริ่มเรียน](../../docs/start-here.md) หากยังไม่ได้เตรียมแพ็กเกจ
-
-<details>
-<summary>ทางเลือก: รันไฟล์ Python จาก repo ในเครื่อง</summary>
-
-จากโฟลเดอร์หลักของ repo:
-
-```bash
-uv run --frozen python lessons/17-time-and-groups/lesson.py
-```
-
-หากใช้ venv ให้ใช้ `python` แทน `uv run --frozen python` บล็อกนี้รันได้ทั้งชุดโดยไม่ต้องรันบทก่อนหน้า
-
-</details>
+สร้างไฟล์ `.ipynb` ใหม่ คัดลอกโค้ดด้านล่างทั้งชุดลง Code cell แล้วกด **Shift+Enter** ใช้โปรแกรมเดิมที่เรียน Matplotlib ได้เลย ดู [วิธีเริ่มเรียน](../../docs/start-here.md) หากต้องการทำตามทีละขั้น
 
 <!-- CODE:START -->
 ```python

@@ -7,16 +7,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 START, END = "<!-- CODE:START -->", "<!-- CODE:END -->"
-SETUP = '''# ใช้โฟลเดอร์ repo เป็น working directory เมื่อเปิด notebook ในโฟลเดอร์บทเรียน
-from pathlib import Path
-import os
 
-here = Path.cwd()
-root = next((p for p in [here, *here.parents]
-             if (p / "pyproject.toml").is_file() and (p / "lessons").is_dir()), here)
-os.chdir(root)
-print("Working directory:", root)
-'''
 
 
 def cell(kind, source, key):
@@ -41,7 +32,7 @@ def main():
         _, after = rest.split(END, 1)
         code = source.read_text(encoding="utf-8").rstrip() + "\n"
         rendered = before + START + "\n```python\n" + code + "```\n" + END + after
-        cells = [cell("markdown", before, "intro"), cell("code", SETUP, "setup")]
+        cells = [cell("markdown", before, "intro")]
         chunks = re.split(r"^# %% ?(.*)\n", code, flags=re.MULTILINE)
         if chunks[0].strip():
             cells.append(cell("code", chunks[0], "preamble"))
