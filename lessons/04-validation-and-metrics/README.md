@@ -1,0 +1,116 @@
+# 04 · วัดผลให้ตรงโจทย์: accuracy, precision, recall และ F1
+
+[กลับสารบัญ](../../README.md) · [Notebook](lesson.ipynb) · [Python](lesson.py)
+
+เวลาเรียนและทดลองโดยประมาณ: 50–70 นาที  
+สิ่งที่จะทำได้: แบ่ง train/validation/test และอ่าน confusion matrix ของปัญหาคลาสไม่สมดุลได้
+
+## คะแนนสูงอาจตอบโจทย์ผิด
+
+ถ้าตัวอย่าง 90% เป็นคลาส 0 การทาย 0 ทุกครั้งจะมี accuracy สูง แต่ตรวจคลาส 1 ไม่พบเลย ในบทนี้กำหนดคลาส 1 เป็น positive และสร้างข้อมูลจำลองเพื่อแยกผลของความไม่สมดุลออกจากบริบทจริง
+
+| Metric | ความหมาย | สูตร |
+|---|---|---|
+| Accuracy | สัดส่วนที่ทายถูกทั้งหมด | (TP + TN) / N |
+| Precision | ในสิ่งที่แจ้งว่า positive ถูกกี่ส่วน | TP / (TP + FP) |
+| Recall | ใน positive จริง ตรวจพบกี่ส่วน | TP / (TP + FN) |
+| F1 | ค่าเฉลี่ยฮาร์มอนิกของ precision กับ recall | 2PR / (P + R) |
+
+TP คือทาย positive ถูก, FP คือแจ้ง positive ผิด, FN คือพลาด positive, TN คือทาย negative ถูก เมื่อ denominator เป็นศูนย์ ตัวอย่างกำหนด `zero_division=0` เพื่อรายงานกรณีที่โมเดลไม่เคยทาย positive อย่างชัดเจน
+
+## สามชุดมีหน้าที่ต่างกัน
+
+Train ใช้เรียนพารามิเตอร์; validation ใช้เลือกโมเดลหรือ threshold; test ใช้ประเมินหลังตัดสินใจเสร็จ โค้ดกัน test 20% แล้วกัน 25% ของส่วนที่เหลือเป็น validation จึงได้ 60/20/20
+
+Logistic regression ใช้คะแนนเชิงเส้นแปลงเป็นความน่าจะเป็น สำหรับสองคลาส p = 1 / (1 + exp(−z)) แม้ชื่อมี regression แต่มักใช้จำแนกประเภท ในตัวอย่างยังใช้ threshold เริ่มต้น 0.5
+
+Average precision สรุปประสิทธิภาพจากการเรียงคะแนน positive หลาย threshold; ใช้ probability/score ไม่ใช้ hard label และไม่ใช่ accuracy หรือพื้นที่ใต้โค้งที่คำนวณด้วย trapezoid โดยตรง การเลือก metric ในงานจริงต้องสัมพันธ์กับต้นทุน FP/FN
+
+## ลงมือรัน
+
+จากโฟลเดอร์หลักของ repo:
+
+```bash
+uv run --frozen python lessons/04-validation-and-metrics/lesson.py
+```
+
+หากใช้ venv ให้ใช้ `python` แทน `uv run --frozen python` คัดลอกบล็อกต่อไปนี้ได้ทั้งชุด แต่ละส่วน `# %%` คือช่วงการทดลองเดียวกันกับ notebook
+
+<!-- CODE:START -->
+```python
+"""Accuracy อาจดูดีเมื่อคลาสไม่สมดุล"""
+# %% แบ่ง train / validation / test เป็น 60 / 20 / 20
+from sklearn.datasets import make_classification
+from sklearn.dummy import DummyClassifier
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import (
+    accuracy_score, average_precision_score, confusion_matrix,
+    precision_score, recall_score, f1_score,
+)
+from sklearn.model_selection import train_test_split
+from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import StandardScaler
+
+X, y = make_classification(
+    n_samples=1500, n_features=8, n_informative=5,
+    weights=[0.9, 0.1], flip_y=0.02, random_state=42,
+)
+X_dev, X_test, y_dev, y_test = train_test_split(
+    X, y, test_size=0.2, stratify=y, random_state=42
+)
+X_train, X_valid, y_train, y_valid = train_test_split(
+    X_dev, y_dev, test_size=0.25, stratify=y_dev, random_state=42
+)
+
+# %% เลือกวิธีจาก F1 บน validation
+models = {
+    "baseline": DummyClassifier(strategy="most_frequent"),
+    "logistic": make_pipeline(StandardScaler(), LogisticRegression(max_iter=1000)),
+}
+valid_scores = {}
+for name, model in models.items():
+    model.fit(X_train, y_train)
+    pred = model.predict(X_valid)
+    valid_scores[name] = f1_score(y_valid, pred, zero_division=0)
+    print(name, {
+        "accuracy": round(accuracy_score(y_valid, pred), 3),
+        "precision": round(precision_score(y_valid, pred, zero_division=0), 3),
+        "recall": round(recall_score(y_valid, pred), 3),
+        "f1": round(valid_scores[name], 3),
+    })
+
+# %% ตัดสินใจแล้วจึง refit และประเมิน test
+chosen = max(valid_scores, key=valid_scores.get)
+final = models[chosen].fit(X_dev, y_dev)
+test_pred = final.predict(X_test)
+positive_column = list(final.classes_).index(1)
+test_probability = final.predict_proba(X_test)[:, positive_column]
+print("Selected:", chosen)
+print("Test confusion matrix (rows=true, columns=predicted):\n",
+      confusion_matrix(y_test, test_pred, labels=[0, 1]))
+print(f"Test F1: {f1_score(y_test, test_pred):.3f}")
+print(f"Test average precision: {average_precision_score(y_test, test_probability):.3f}")
+```
+<!-- CODE:END -->
+
+## อ่านผลที่ได้
+
+baseline มี accuracy สูงแต่ F1 ต่ำหรือเป็นศูนย์ ได้ confusion matrix ที่แถวเป็นค่าจริง คอลัมน์เป็นค่าทำนาย พร้อม F1/AP บน test ของโมเดลที่เลือก ค่าทศนิยมอาจต่างเล็กน้อยตามแพลตฟอร์ม
+
+## แบบฝึกหัด
+
+หากโจทย์ต้องการลด FN จะสนใจ metric ใด และควรใช้ข้อมูลชุดใดเลือก threshold? ลองวางแผนเทียบ threshold 0.3, 0.5, 0.7 โดยยังไม่แตะ test
+
+<details>
+<summary>แนวคำตอบ — ลองทำก่อนเปิดอ่าน</summary>
+
+เริ่มดู recall และติดตาม precision ควบคู่ ใช้ validation เลือก threshold ตามข้อจำกัด ตรึงทางเลือกแล้วจึงประเมิน test ครั้งสุดท้าย การลด threshold มักเพิ่มจำนวน positive ที่ทาย แต่ผลแลกเปลี่ยนต้องวัดจริง
+
+</details>
+
+## อ่านต่อ
+
+- [Metrics and scoring](https://scikit-learn.org/1.7/modules/model_evaluation.html)
+- [Cross-validation](https://scikit-learn.org/1.7/modules/cross_validation.html)
+- [Google MLCC: Classification](https://developers.google.com/machine-learning/crash-course/classification)
+

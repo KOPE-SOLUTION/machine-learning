@@ -1,0 +1,41 @@
+"""PCA ลดจำนวน feature โดยเรียนทิศทางจาก train"""
+# %% ทำ PCA ใน Pipeline
+from pathlib import Path
+
+import matplotlib.pyplot as plt
+import numpy as np
+from sklearn.datasets import load_digits
+from sklearn.decomposition import PCA
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score
+from sklearn.model_selection import train_test_split
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler
+
+X, y = load_digits(return_X_y=True)
+X_train, X_test, y_train, y_test = train_test_split(X, y, stratify=y, random_state=42)
+model = Pipeline([
+    ("scale", StandardScaler()),
+    ("pca", PCA(n_components=0.9, svd_solver="full")),
+    ("classifier", LogisticRegression(max_iter=2000)),
+])
+model.fit(X_train, y_train)
+pca = model.named_steps["pca"]
+print("Original features:", X.shape[1], "Retained components:", pca.n_components_)
+print("Retained variance:", round(pca.explained_variance_ratio_.sum(), 3))
+print(f"Test accuracy: {accuracy_score(y_test, model.predict(X_test)):.3f}")
+
+# %% แสดง 2 component แรกเพื่อสำรวจ ไม่ใช่ feature ทั้งหมดของโมเดล
+Z_train = model[:-1].transform(X_train)
+fig, axes = plt.subplots(1, 2, figsize=(10, 4))
+points = axes[0].scatter(Z_train[:, 0], Z_train[:, 1], c=y_train, cmap="tab10", s=9, alpha=0.6)
+axes[0].set(xlabel="PC 1", ylabel="PC 2", title="Training digits")
+fig.colorbar(points, ax=axes[0], ticks=range(10))
+axes[1].plot(np.arange(1, pca.n_components_ + 1), np.cumsum(pca.explained_variance_ratio_), "o-")
+axes[1].set(xlabel="Components", ylabel="Cumulative explained variance")
+fig.tight_layout()
+out = Path("outputs/11-principal-components")
+out.mkdir(parents=True, exist_ok=True)
+fig.savefig(out / "pca.png", dpi=140)
+plt.show()
+plt.close(fig)

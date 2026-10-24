@@ -1,0 +1,101 @@
+# 06 · เตรียมตัวเลข หมวดหมู่ และค่าที่หาย
+
+[กลับสารบัญ](../../README.md) · [Notebook](lesson.ipynb) · [Python](lesson.py)
+
+เวลาเรียนและทดลองโดยประมาณ: 50–70 นาที  
+สิ่งที่จะทำได้: สร้าง ColumnTransformer, imputation และ one-hot encoding ใน Pipeline ได้
+
+## จาก pandas สู่ preprocessing ที่เรียนจาก train
+
+จากส่วนที่ 3 คุณจัดการค่าหาย รวมตาราง และเลือกคอลัมน์ได้แล้ว จุดใหม่ในบทนี้คือแยกการแปลงแบบมีกฎคงที่ออกจากการแปลงที่ต้องเรียนสถิติ เช่น median, ค่าเฉลี่ย หรือ vocabulary ขั้นที่ต้องเรียนต้อง fit ใหม่ภายใน training fold จึงย้ายมาอยู่ใน Pipeline เพื่อใช้กฎเดิมกับข้อมูลใหม่
+
+## โมเดลต้องเห็น feature ที่มีความหมาย
+
+ตารางส่งสินค้าจำลองมีระยะทาง น้ำหนัก และประเภทบริการ เป้าหมายเป็นค่าบริการจำลองที่มี noise เราแทรกค่าน้ำหนักที่หายเพื่อฝึกการจัดการข้อมูล ไม่ใช่หลักฐานว่าการแทนค่าด้วย median เหมาะกับทุกงาน
+
+Median imputation เรียนค่าทดแทนจาก train แล้วนำค่าเดิมไปใช้กับ test การลบทุกแถวที่มีค่าว่างอาจลดข้อมูลมากหรือเปลี่ยนสัดส่วนกลุ่มผู้ใช้ ควรสำรวจสาเหตุที่หาย และอาจเพิ่ม missing indicator หากมีประโยชน์
+
+## หมวดหมู่ไม่ใช่ลำดับ
+
+การแทน standard=0, express=1, same_day=2 อาจทำให้โมเดลเข้าใจว่าหมวดหมู่มีระยะห่างและลำดับ One-hot encoding สร้างคอลัมน์แยกแทน ในบทนี้ `handle_unknown="ignore"` ทำให้หมวดหมู่ใหม่กลายเป็นศูนย์ทุกคอลัมน์ของ field นั้น โปรแกรมจึงรันต่อได้ แต่ไม่ได้แปลว่าเรียนรู้หมวดหมู่ใหม่แล้ว
+
+`ColumnTransformer` ระบุว่าแต่ละคอลัมน์ผ่านขั้นตอนไหน แล้วต่อกับ Ridge ซึ่งเพิ่มโทษขนาด coefficient เพื่อจำกัดความซับซ้อน พารามิเตอร์ alpha ยิ่งมากยิ่งลงโทษมาก การปรับ alpha ต้องใช้ validation/CV
+
+เมื่อใช้ข้อมูลจริง ให้ตรวจว่า feature มีอยู่ก่อนเวลาทำนาย เช่นค่าบริการสุดท้ายหรือสถานะส่งสำเร็จจะรั่วข้อมูลเข้าสู่โจทย์ที่ต้องทำนายตอนรับคำสั่งซื้อ
+
+## ลงมือรัน
+
+จากโฟลเดอร์หลักของ repo:
+
+```bash
+uv run --frozen python lessons/06-feature-engineering/lesson.py
+```
+
+หากใช้ venv ให้ใช้ `python` แทน `uv run --frozen python` คัดลอกบล็อกต่อไปนี้ได้ทั้งชุด แต่ละส่วน `# %%` คือช่วงการทดลองเดียวกันกับ notebook
+
+<!-- CODE:START -->
+```python
+"""จัดการ missing values และข้อมูลหมวดหมู่ภายใน Pipeline"""
+# %% สร้างข้อมูลส่งสินค้าจำลอง ไม่ใช่ข้อมูลธุรกิจจริง
+import numpy as np
+import pandas as pd
+from sklearn.compose import ColumnTransformer
+from sklearn.impute import SimpleImputer
+from sklearn.linear_model import Ridge
+from sklearn.metrics import mean_absolute_error
+from sklearn.model_selection import train_test_split
+from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import OneHotEncoder, StandardScaler
+
+rng = np.random.default_rng(42)
+n = 400
+distance = rng.uniform(1, 100, n)
+weight = rng.uniform(0.2, 8, n)
+service = rng.choice(["standard", "express"], n)
+y = 30 + 2 * distance + 5 * weight + 40 * (service == "express") + rng.normal(0, 8, n)
+X = pd.DataFrame({"distance_km": distance, "weight_kg": weight, "service": service})
+X.loc[rng.choice(n, 30, replace=False), "weight_kg"] = np.nan
+X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=42)
+
+# %% แยกวิธีแปลงข้อมูลตามชนิดคอลัมน์
+numeric = make_pipeline(SimpleImputer(strategy="median"), StandardScaler())
+categorical = make_pipeline(
+    SimpleImputer(strategy="most_frequent"),
+    OneHotEncoder(handle_unknown="ignore"),
+)
+preprocess = ColumnTransformer([
+    ("numeric", numeric, ["distance_km", "weight_kg"]),
+    ("categorical", categorical, ["service"]),
+])
+model = make_pipeline(preprocess, Ridge(alpha=1.0))
+model.fit(X_train, y_train)
+print(f"Test MAE (synthetic cost units): {mean_absolute_error(y_test, model.predict(X_test)):.3f}")
+print("Transformed columns:", preprocess.get_feature_names_out())
+
+# %% หมวดหมู่ที่ไม่เคยเห็นจะไม่ทำให้โปรแกรมหยุด แต่ผลอาจไม่น่าเชื่อถือ
+new_order = pd.DataFrame({"distance_km": [20.0], "weight_kg": [np.nan], "service": ["same_day"]})
+print("Unseen-category prediction:", model.predict(new_order).round(2))
+```
+<!-- CODE:END -->
+
+## อ่านผลที่ได้
+
+พิมพ์ชื่อ feature หลังแปลงและ MAE หน่วยจำลอง ตัวอย่าง service=same_day รันได้แม้ไม่เคยอยู่ใน train ค่าทศนิยมอาจต่างเล็กน้อยตามแพลตฟอร์ม
+
+## แบบฝึกหัด
+
+เพิ่มคอลัมน์จำนวนชิ้นเข้าในข้อมูลและ ColumnTransformer จากนั้นออกแบบการตรวจว่าเมื่อค่าประเภทบริการไม่รู้จัก ควรแจ้งผู้ใช้หรือ fallback อย่างไร
+
+<details>
+<summary>แนวคำตอบ — ลองทำก่อนเปิดอ่าน</summary>
+
+เพิ่มคอลัมน์ตัวเลขในรายชื่อ numeric และพิจารณาว่าสัมพันธ์กับ target หรือไม่ การตั้ง handle_unknown ป้องกัน error ของ encoder เท่านั้น ระบบใช้งานจริงยังควรตรวจรายการหมวดหมู่ รายงานสัดส่วน unknown และกำหนดการตอบสนองเอง
+
+</details>
+
+## อ่านต่อ
+
+- [Handbook: Feature Engineering](https://jakevdp.github.io/PythonDataScienceHandbook/05.04-feature-engineering.html)
+- [Pipelines and composite estimators](https://scikit-learn.org/1.7/modules/compose.html)
+- [Imputation](https://scikit-learn.org/1.7/modules/impute.html)
+
