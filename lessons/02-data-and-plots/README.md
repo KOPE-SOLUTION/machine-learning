@@ -3,7 +3,7 @@
 [กลับสารบัญ](../../README.md) · [Notebook](lesson.ipynb) · [Python](lesson.py)
 
 เวลาเรียนและทดลอง: 35–50 นาที  
-สิ่งที่จะทำได้: ใช้ทักษะ pandas/NumPy/Matplotlib จากส่วนที่ 1–4 ตรวจ feature ที่ใช้ได้จริง รักษา X/y alignment และสำรวจ train โดยไม่ใช้ test เลือกโมเดล
+สิ่งที่จะทำได้: ใช้ทักษะพื้นฐาน pandas/NumPy/Matplotlib ตรวจ feature ที่ใช้ได้จริง รักษา X/y alignment และสำรวจ train โดยไม่ใช้ test เลือกโมเดล
 
 ## ก่อนคำนวณ ต้องรู้ว่าหนึ่งแถวแทนอะไร
 
@@ -136,5 +136,5 @@ plt.close(fig)
 ## อ่านต่อ
 
 - [scikit-learn: Common pitfalls และ leakage](https://scikit-learn.org/1.7/common_pitfalls.html)
-- [Handbook ส่วนที่ 3: Data Manipulation with Pandas](https://jakevdp.github.io/PythonDataScienceHandbook/03.00-introduction-to-pandas.html)
-- [Handbook ส่วนที่ 4: Visualization with Matplotlib](https://jakevdp.github.io/PythonDataScienceHandbook/04.00-introduction-to-matplotlib.html)
+- [ทบทวน pandas — KOPE SOLUTION](https://www.youtube.com/watch?v=Ejgb1q1A8uU&list=PLtB6tPOso1cY5OS1uyQjvrktkA-rHw2pU)
+- [ทบทวน Matplotlib — KOPE SOLUTION](https://www.youtube.com/watch?v=tUmJrKmaos8&list=PLea-bfI_jPIA)

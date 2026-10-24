@@ -2,7 +2,7 @@
 
 [กลับหน้าแรก](../README.md)
 
-เอกสารนี้ใช้เตรียม environment สำหรับหลักสูตร ML โดยถือว่าผู้เรียนใช้ IPython/Jupyter และเครื่องมือใน Handbook ส่วนที่ 1–4 ได้แล้ว หาก environment พร้อม ให้ตรวจบท 00 แล้วเริ่มบท 01
+เอกสารนี้ใช้เตรียม environment สำหรับหลักสูตร ML โดยถือว่าผู้เรียนใช้ Jupyter notebook, NumPy, pandas และ Matplotlib ได้แล้ว หาก environment พร้อม ให้ตรวจบท 00 แล้วเริ่มบท 01
 
 ## วิธี A: uv — ใช้ lockfile
 

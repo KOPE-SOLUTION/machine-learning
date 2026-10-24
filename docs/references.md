@@ -6,11 +6,11 @@
 
 ## จุดเริ่มต้นของผู้เรียน
 
-หลักสูตรนี้ต่อจากส่วนที่ 1–4: [IPython](https://jakevdp.github.io/PythonDataScienceHandbook/01.00-ipython-beyond-normal-python.html), [NumPy](https://jakevdp.github.io/PythonDataScienceHandbook/02.00-introduction-to-numpy.html), [pandas](https://jakevdp.github.io/PythonDataScienceHandbook/03.00-introduction-to-pandas.html) และ [Matplotlib](https://jakevdp.github.io/PythonDataScienceHandbook/04.00-introduction-to-matplotlib.html) ของหนังสือ ใช้ส่วนเหล่านี้เป็น prerequisite และแหล่งทบทวน ส่วนเนื้อหา ML เริ่มจากส่วนที่ 5
+ก่อนเริ่ม ML ควรใช้ Python/Jupyter, NumPy, pandas และ Matplotlib ได้แล้ว ทบทวนจากวิดีโอในช่อง KOPE SOLUTION: [NumPy](https://www.youtube.com/watch?v=KghryuGZFMU&list=PLtB6tPOso1cYC_CP2LQSj7JlY2_SAAYO3), [pandas](https://www.youtube.com/watch?v=Ejgb1q1A8uU&list=PLtB6tPOso1cY5OS1uyQjvrktkA-rHw2pU) และ [Matplotlib](https://www.youtube.com/watch?v=tUmJrKmaos8&list=PLea-bfI_jPIA)
 
 ดู [รายการทักษะและจุดที่นำไปใช้](prerequisites.md) บท 00 เป็นการตรวจ environment; บท 02 ประยุกต์ทักษะจัดตารางและกราฟเดิมเพื่อป้องกัน leakage และกำหนด feature schema
 
-## แหล่งตั้งต้น: Python Data Science Handbook
+## อ่านเพิ่มเติม: Python Data Science Handbook
 
 [Jake VanderPlas — บท Machine Learning](https://jakevdp.github.io/PythonDataScienceHandbook/05.00-machine-learning.html) เหมาะสำหรับเชื่อมภาพรวมกับตัวอย่างหลาย algorithm หนังสือออนไลน์มี API จากช่วงเวลาที่เผยแพร่ ให้ใช้โค้ดใน repo และเอกสาร scikit-learn 1.7 เมื่อลองรันใน environment ที่ล็อกไว้
 

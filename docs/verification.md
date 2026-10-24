@@ -2,7 +2,7 @@
 
 [กลับหน้าแรก](../README.md)
 
-ฉบับปรับพื้นฐานผู้เรียนให้ต่อจาก Handbook ส่วนที่ 1–4 ตรวจเมื่อ **24 ตุลาคม 2026 (Asia/Bangkok)** บน **Ubuntu 24.04 ผ่าน WSL, CPython 3.12.3** ใช้แพ็กเกจตาม uv.lock และ uv 0.8.18 ใน environment แยกจาก Windows
+โค้ดหลักสูตรสำหรับผู้ที่มีพื้นฐาน Python, NumPy, pandas และ Matplotlib ตรวจเมื่อ **24 ตุลาคม 2026 (Asia/Bangkok)** บน **Ubuntu 24.04 ผ่าน WSL, CPython 3.12.3** ใช้แพ็กเกจตาม uv.lock และ uv 0.8.18 ใน environment แยกจาก Windows
 
 ไฟล์หลักสูตรและผลการรันอยู่ในโฟลเดอร์ repo จริง การสร้าง/ปรับไฟล์ในรอบนี้ทำผ่าน WSL ส่วนหลักฐานจากฉบับก่อนที่รันบน Windows 11 / CPython 3.13.7 เก็บแยกเป็น previous_windows_revision ไม่ถือเป็นการตรวจโค้ดบท 02 ฉบับใหม่บน Windows
 

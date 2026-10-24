@@ -1,19 +1,21 @@
-# พื้นฐานก่อนเข้าเรียน: ต่อจาก Handbook ส่วนที่ 1–4
+# พื้นฐานก่อนเข้าเรียน
 
 [กลับหลักสูตร](../README.md)
 
-หลักสูตรนี้เริ่มส่วนที่ 5: Machine Learning โดยถือว่าคุณเรียนส่วนที่ 1–4 ของ [Python Data Science Handbook](https://jakevdp.github.io/PythonDataScienceHandbook/) มาแล้ว ใช้ NumPy, pandas และ Matplotlib เป็นเครื่องมือในการทดลองได้ ส่วนความรู้ ML เริ่มใหม่ตั้งแต่การตั้งโจทย์
+หลักสูตรนี้เหมาะสำหรับผู้ที่เขียน Python เบื้องต้นและใช้ NumPy, pandas และ Matplotlib เป็นเครื่องมือในการทดลองได้แล้ว ส่วนความรู้ Machine Learning เริ่มใหม่ตั้งแต่การตั้งโจทย์ หากต้องการทบทวนเครื่องมือพื้นฐาน ใช้วิดีโอในช่อง **KOPE SOLUTION** ตามลิงก์ด้านล่าง
 
 ## ทักษะเดิมที่ใช้ต่อทันที
 
+ตารางนี้เป็นทักษะที่ควรเตรียมสำหรับหลักสูตร ML ลิงก์วิดีโอใช้เป็นจุดเริ่มต้นในการเรียนหรือทบทวนแต่ละเครื่องมือ
+
 | พื้นฐาน | สิ่งที่ควรทำได้ | จุดที่ใช้ใน ML |
 |---|---|---|
-| [ส่วนที่ 1: IPython](https://jakevdp.github.io/PythonDataScienceHandbook/01.00-ipython-beyond-normal-python.html) | รัน notebook จาก kernel ใหม่ อ่าน traceback ค้น help และใช้ %timeit | ทำซ้ำการทดลอง ตรวจ error และแยกเวลา fit/predict |
-| [ส่วนที่ 2: NumPy](https://jakevdp.github.io/PythonDataScienceHandbook/02.00-introduction-to-numpy.html) | indexing, shape, axis, masks, broadcasting และ vectorization | สร้าง X/y คำนวณ loss อ่าน shape ของ prediction และ PCA |
-| [ส่วนที่ 3: pandas](https://jakevdp.github.io/PythonDataScienceHandbook/03.00-introduction-to-pandas.html) | เลือกแถว/คอลัมน์ จัดการ missing, groupby, join/merge และ index | กำหนด feature ตรวจหน่วยตัวอย่าง ป้องกัน label เหลื่อมแถวและข้อมูลซ้ำ |
-| [ส่วนที่ 4: Matplotlib](https://jakevdp.github.io/PythonDataScienceHandbook/04.00-introduction-to-matplotlib.html) | ใช้ figure/axes, scatter, histogram, subplots, legend และ colorbar | อ่าน distribution, residual, learning curve และ embedding |
+| Python และ Jupyter notebook | ใช้ตัวแปร ฟังก์ชัน และ import; รัน notebook จาก kernel ใหม่ อ่าน traceback และค้น help | อ่านโค้ด ทำซ้ำการทดลอง และตรวจ error |
+| [NumPy — วิดีโอในช่อง](https://www.youtube.com/watch?v=KghryuGZFMU&list=PLtB6tPOso1cYC_CP2LQSj7JlY2_SAAYO3) | indexing, shape, axis, masks, broadcasting และ vectorization | สร้าง X/y คำนวณ loss อ่าน shape ของ prediction และ PCA |
+| [pandas — วิดีโอในช่อง](https://www.youtube.com/watch?v=Ejgb1q1A8uU&list=PLtB6tPOso1cY5OS1uyQjvrktkA-rHw2pU) | เลือกแถว/คอลัมน์ จัดการ missing, groupby, join/merge และ index | กำหนด feature ตรวจหน่วยตัวอย่าง ป้องกัน label เหลื่อมแถวและข้อมูลซ้ำ |
+| [Matplotlib — วิดีโอในช่อง](https://www.youtube.com/watch?v=tUmJrKmaos8&list=PLea-bfI_jPIA) | ใช้ figure/axes, scatter, histogram, subplots, legend และ colorbar | อ่าน distribution, residual, learning curve และ embedding |
 
-ไม่จำเป็นต้องจำทุก API หรือหัวข้อเฉพาะทั้งหมดของส่วนที่ 1–4 เปิดเอกสารทบทวนขณะทำโจทย์ได้ สิ่งสำคัญคืออ่านโค้ดจัดข้อมูลและกราฟในบทเรียนได้ โดยไม่ต้องเริ่มสอนไวยากรณ์ของเครื่องมือเหล่านั้นใหม่
+ไม่จำเป็นต้องจำทุก API เปิดเอกสารหรือวิดีโอทบทวนขณะทำโจทย์ได้ สิ่งสำคัญคืออ่านโค้ดจัดข้อมูลและกราฟในบทเรียนได้
 
 ## สิ่งที่เป็นเนื้อหาใหม่
 
@@ -45,7 +47,7 @@
 
 </details>
 
-หากติดเฉพาะข้อใด ให้กลับไปส่วนที่เกี่ยวข้องในตารางอ้างอิง ไม่จำเป็นต้องเริ่มอ่านทั้งสี่ส่วนใหม่
+หากติดเฉพาะข้อใด ให้ทบทวนทักษะนั้นจากตารางด้านบน แล้วกลับมาลองตรวจความพร้อมอีกครั้ง
 
 ## เริ่มตรงไหน
 

@@ -1,23 +1,22 @@
 # Machine Learning ลงมือทำด้วย Python 🇹🇭
 
-หลักสูตรภาษาไทยต่อจาก **ส่วนที่ 1–4 ของ Python Data Science Handbook** สำหรับผู้ที่ใช้ IPython/Jupyter, NumPy, pandas และ Matplotlib ได้แล้ว และกำลังเริ่มส่วนที่ 5: Machine Learning เนื้อหาเริ่มจากการตั้งโจทย์และสร้างโมเดลแรก ไปจนถึงการประเมินผล เตรียม feature ลดมิติ จัดกลุ่ม และทำโครงงานที่บันทึกโมเดลกลับมาใช้ได้
+หลักสูตร Machine Learning ภาษาไทยสำหรับผู้ที่เขียน Python และใช้ Jupyter notebook, NumPy, pandas และ Matplotlib ได้แล้ว โดยเริ่มเรียน ML ได้จากพื้นฐาน เนื้อหาเริ่มจากการตั้งโจทย์และสร้างโมเดลแรก ไปจนถึงการประเมินผล เตรียม feature ลดมิติ จัดกลุ่ม และทำโครงงานที่บันทึกโมเดลกลับมาใช้ได้
 
 **17 บท ML + 1 บทตรวจความพร้อม + 2 บทเสริม Mojo** · ใช้ CPU · ไม่มีบริการเสียเงินหรือ API key · ใช้ข้อมูลใน scikit-learn และข้อมูลจำลอง
 
-ทุกบทมีคำอธิบายสำหรับผู้เรียน โค้ดที่คัดลอกได้ครบชุด ไฟล์ Python, Jupyter notebook, แบบฝึกหัดพร้อมแนวคำตอบ และลิงก์อ่านต่อ อ่าน [แนวคิด ML จาก Python Data Science Handbook](https://jakevdp.github.io/PythonDataScienceHandbook/05.00-machine-learning.html) ควบคู่ได้ เนื้อหาภาษาไทยและตัวอย่างใน repo นี้เขียนขึ้นใหม่
+ทุกบทมีคำอธิบายสำหรับผู้เรียน โค้ดที่คัดลอกได้ครบชุด ไฟล์ Python, Jupyter notebook, แบบฝึกหัดพร้อมแนวคำตอบ และลิงก์อ่านต่อ เนื้อหาภาษาไทยและตัวอย่างใน repo นี้เขียนขึ้นใหม่
 
 ## พื้นฐานก่อนเข้าเรียน
 
-ผู้เรียนผ่านส่วนต่อไปนี้มาแล้ว โดยใช้ทักษะเดิมลงมือทดลองตลอดหลักสูตร:
+ควรเขียน Python เบื้องต้นและใช้ Jupyter notebook ได้ พร้อมทักษะ NumPy, pandas และ Matplotlib ตามตาราง หากต้องการเรียนหรือทบทวน สามารถดูวิดีโอในช่อง **KOPE SOLUTION** แล้วนำทักษะเดิมมาลงมือทดลองตลอดหลักสูตร:
 
-| ส่วนในหนังสือ | ทักษะที่นำมาใช้กับ ML |
+| เนื้อหาพื้นฐานในช่อง YouTube | ทักษะที่นำมาใช้กับ ML |
 |---|---|
-| [1. IPython: Beyond Normal Python](https://jakevdp.github.io/PythonDataScienceHandbook/01.00-ipython-beyond-normal-python.html) | ใช้ notebook, help, traceback และจับเวลาการทดลอง |
-| [2. Introduction to NumPy](https://jakevdp.github.io/PythonDataScienceHandbook/02.00-introduction-to-numpy.html) | indexing, shape, broadcasting, masks และ vectorized computation |
-| [3. Data Manipulation with Pandas](https://jakevdp.github.io/PythonDataScienceHandbook/03.00-introduction-to-pandas.html) | เลือก/รวมตาราง จัดการ missing values, groupby และรักษา index |
-| [4. Visualization with Matplotlib](https://jakevdp.github.io/PythonDataScienceHandbook/04.00-introduction-to-matplotlib.html) | สร้างและอ่านกราฟ distribution, scatter, subplots และ colorbar |
+| [NumPy](https://www.youtube.com/watch?v=KghryuGZFMU&list=PLtB6tPOso1cYC_CP2LQSj7JlY2_SAAYO3) | indexing, shape, broadcasting, masks และ vectorized computation |
+| [pandas](https://www.youtube.com/watch?v=Ejgb1q1A8uU&list=PLtB6tPOso1cY5OS1uyQjvrktkA-rHw2pU) | เลือก/รวมตาราง จัดการ missing values, groupby และรักษา index |
+| [Matplotlib](https://www.youtube.com/watch?v=tUmJrKmaos8&list=PLea-bfI_jPIA) | สร้างและอ่านกราฟ distribution, scatter, subplots และ colorbar |
 
-เริ่มเรียน ML ได้โดยยังไม่รู้ scikit-learn, train/test split, metrics หรือ gradient descent เพราะเป็นเนื้อหาใหม่ของหลักสูตรนี้ อ่าน [ขอบเขตพื้นฐานและแบบตรวจความพร้อม](docs/prerequisites.md) หากต้องการทบทวนจุดเชื่อมจากส่วนที่ 1–4
+ควรรัน notebook จากต้นจนจบ อ่าน traceback และค้น help ได้ด้วย ส่วน scikit-learn, train/test split, metrics และ gradient descent จะเริ่มเรียนในหลักสูตรนี้ อ่าน [ทักษะพื้นฐานและแบบตรวจความพร้อม](docs/prerequisites.md) เพื่อเช็กว่าพร้อมเริ่มบทแรกหรือยัง
 
 ## เตรียม environment ของหลักสูตร
 
@@ -45,7 +44,7 @@ uv run --frozen jupyter lab
 
 ```mermaid
 flowchart LR
-  P["พื้นฐาน: Handbook ส่วนที่ 1–4"] --> R["00: ตรวจ environment"]
+  P["พื้นฐาน: Python, NumPy, pandas, Matplotlib"] --> R["00: ตรวจ environment"]
   R --> A["01–03: โจทย์ ML ตรวจข้อมูล และโมเดลแรก"]
   A --> B["04–10: วัดผลและเลือกโมเดล"]
   B --> C["11–14: ลดมิติและเรียนรู้โครงสร้าง"]
@@ -104,12 +103,12 @@ Mojo เป็นเส้นทางเสริม แยก environment จ�
 
 ## เอกสารเสริม
 
-- [พื้นฐานจาก Handbook ส่วนที่ 1–4 และแบบตรวจความพร้อม](docs/prerequisites.md)
+- [ทักษะพื้นฐานและแบบตรวจความพร้อม](docs/prerequisites.md)
 - [คณิตศาสตร์ที่ใช้ในหลักสูตร](docs/math-primer.md)
 - [ศัพท์ ML ไทย–อังกฤษ](docs/glossary.md)
 - [ที่มาของข้อมูลและขอบเขตการใช้](docs/datasets.md)
 - [Model card สำหรับโครงงานตัวเลข](docs/model-card.md)
-- [เอกสารอ้างอิงและแผนที่อ่านคู่กับ Handbook](docs/references.md)
+- [เอกสารอ้างอิงและแหล่งอ่านเพิ่มเติม](docs/references.md)
 - [วิธีตรวจซ้ำและสถานะการทดสอบ](docs/verification.md)
 
 ## ตรวจการทำงานในเครื่องตัวเอง
@@ -125,5 +124,5 @@ uv run --frozen python scripts/verify_course.py --mode notebooks
 
 ## การใช้เนื้อหาและการอ้างอิง
 
-โค้ดและข้อความต้นฉบับของ repo นี้ใช้ [MIT License](LICENSE) แหล่งอ้างอิงและข้อมูลภายนอกคงสิทธิ์ตามเจ้าของเดิม อ่าน [ที่มาและสิทธิ์ของแหล่งอ้างอิง](THIRD_PARTY_NOTICES.md) ตัวอย่างใน repo ไม่ใช่คำแปลหรือสำเนาบทหนังสือทั้งบท
+โค้ดและข้อความต้นฉบับของ repo นี้ใช้ [MIT License](LICENSE) แหล่งอ้างอิงและข้อมูลภายนอกคงสิทธิ์ตามเจ้าของเดิม อ่าน [ที่มาและสิทธิ์ของแหล่งอ้างอิง](THIRD_PARTY_NOTICES.md)
 

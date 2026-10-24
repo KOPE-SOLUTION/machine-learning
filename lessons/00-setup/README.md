@@ -3,7 +3,7 @@
 [กลับสารบัญ](../../README.md) · [Notebook](lesson.ipynb) · [Python](lesson.py)
 
 เวลา: 10–15 นาที · เป็นบทตรวจความพร้อมก่อนเนื้อหา ML  
-พื้นฐาน: ผ่าน [Handbook ส่วนที่ 1–4](../../docs/prerequisites.md) และใช้ notebook/NumPy/pandas/Matplotlib ได้แล้ว
+พื้นฐาน: ใช้ Python, notebook, NumPy, pandas และ Matplotlib ได้แล้ว ดู [ทักษะพื้นฐานและวิดีโอทบทวน](../../docs/prerequisites.md)
 
 ## ตรวจสิ่งที่หลักสูตรต้องใช้
 
@@ -63,5 +63,5 @@ print(X.head(3).to_string(index=False))
 ## อ่านต่อ
 
 - [scikit-learn: load_iris](https://scikit-learn.org/1.7/modules/generated/sklearn.datasets.load_iris.html)
-- [พื้นฐานจาก Handbook ส่วนที่ 1–4](../../docs/prerequisites.md)
+- [ทักษะพื้นฐานและวิดีโอทบทวน](../../docs/prerequisites.md)
 - [คู่มือติดตั้งของหลักสูตร](../../docs/setup.md)
