@@ -4,6 +4,7 @@ import importlib.metadata
 import json
 import os
 import platform
+import re
 import subprocess
 import sys
 import time
@@ -14,7 +15,7 @@ ROOT = Path(__file__).resolve().parents[1]
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--mode", choices=["scripts", "notebooks", "all"], default="scripts")
+    parser.add_argument("--mode", choices=["scripts", "readmes", "notebooks", "all"], default="scripts")
     args = parser.parse_args()
     out = ROOT / "outputs" / "verification"
     out.mkdir(parents=True, exist_ok=True)
@@ -30,6 +31,25 @@ def main():
             rows.append({"lesson": path.parent.name, "kind": "script", "passed": result.returncode == 0,
                          "seconds": round(time.perf_counter() - start, 2)})
             print(f"{'PASS' if result.returncode == 0 else 'FAIL'} script {path.parent.name}", flush=True)
+    if args.mode in ("readmes", "all"):
+        # Execute the literal code a learner copies, with no previous cell state.
+        readmes = [*sorted(ROOT.glob("lessons/*/README.md")),
+                   *sorted(ROOT.glob("mojo/*/README.md")), ROOT / "docs/math-primer.md"]
+        for path in readmes:
+            blocks = re.findall(r"^```python\n(.*?)^```", path.read_text(encoding="utf-8"),
+                                flags=re.MULTILINE | re.DOTALL)
+            if not blocks:
+                raise SystemExit(f"No Python block found in {path.relative_to(ROOT)}")
+            for index, code in enumerate(blocks, start=1):
+                start = time.perf_counter()
+                name = path.parent.name if path.name == "README.md" else path.stem
+                result = subprocess.run([sys.executable, "-c", code], cwd=ROOT, env=environment,
+                                        text=True, encoding="utf-8", capture_output=True, timeout=180)
+                (out / f"{name}-readme-{index}.log").write_text(result.stdout + result.stderr, encoding="utf-8")
+                rows.append({"lesson": name, "kind": "readme", "block": index,
+                             "passed": result.returncode == 0,
+                             "seconds": round(time.perf_counter() - start, 2)})
+                print(f"{'PASS' if result.returncode == 0 else 'FAIL'} README {name} block {index}", flush=True)
     if args.mode in ("notebooks", "all"):
         import nbformat
         from nbclient import NotebookClient

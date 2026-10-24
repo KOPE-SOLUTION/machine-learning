@@ -3,6 +3,7 @@
 import numpy as np
 import pandas as pd
 from sklearn.compose import ColumnTransformer
+from sklearn.dummy import DummyRegressor
 from sklearn.impute import SimpleImputer
 from sklearn.linear_model import Ridge
 from sklearn.metrics import mean_absolute_error
@@ -32,8 +33,13 @@ preprocess = ColumnTransformer([
 ])
 model = make_pipeline(preprocess, Ridge(alpha=1.0))
 model.fit(X_train, y_train)
+baseline = DummyRegressor(strategy="median").fit(X_train, y_train)
+print(f"Baseline MAE: {mean_absolute_error(y_test, baseline.predict(X_test)):.3f}")
 print(f"Test MAE (synthetic cost units): {mean_absolute_error(y_test, model.predict(X_test)):.3f}")
 print("Transformed columns:", preprocess.get_feature_names_out())
+preview = preprocess.transform(X_train.iloc[:3])
+print("First three transformed rows:\n",
+      pd.DataFrame(preview, columns=preprocess.get_feature_names_out()).round(3).to_string(index=False))
 
 # %% หมวดหมู่ที่ไม่เคยเห็นจะไม่ทำให้โปรแกรมหยุด แต่ผลอาจไม่น่าเชื่อถือ
 new_order = pd.DataFrame({"distance_km": [20.0], "weight_kg": [np.nan], "service": ["same_day"]})

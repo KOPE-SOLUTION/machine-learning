@@ -5,9 +5,15 @@
 เวลาเรียนและทดลองโดยประมาณ: 50–75 นาที  
 สิ่งที่จะทำได้: คำนวณ loss/gradient อัปเดต w,b และตรวจคำตอบกับ least squares ได้
 
+## ก่อนเริ่มบทนี้
+
+เรียนเส้นตรงบท 05 ก่อน ใช้ vectorization ของ NumPy มาคำนวณความผิดพลาดของทุกแถวพร้อมกัน รอบแรกไม่ต้องรู้แคลคูลัสครบ เพียงเข้าใจว่าทำไมจึงเลื่อน w และ b
+
 ## เปิดดูขั้นตอนการเรียนพารามิเตอร์
 
 บทนี้สร้าง ŷ = wx + b แล้วลด mean squared error ด้วยการอัปเดตทีละก้าว เหมาะสำหรับเชื่อมแนวคิดกับโค้ดและบทเสริม Mojo ส่วน LinearRegression ที่ใช้ก่อนหน้านี้ไม่จำเป็นต้องใช้ gradient descent แบบนี้ในการ fit
+
+บท 05 นิยาม residual เป็นค่าจริงลบค่าทำนาย ส่วนบทนี้นิยาม error กลับเครื่องหมายเป็นค่าทำนายลบค่าจริง เมื่อยกกำลังสองได้ loss เดียวกัน แต่ต้องใช้เครื่องหมายในสูตร gradient ให้ตรงกับนิยาม
 
 กำหนด error_i = wx_i + b − y_i จะได้
 
@@ -24,6 +30,20 @@
 Learning rate เล็กเกินไปอาจต้องใช้หลายรอบ; ใหญ่เกินไปอาจแกว่งหรือ diverge สเกล x มีผลต่อความชันของ loss ตัวอย่างจึงใช้ x ในช่วง −1 ถึง 1 และเทียบพารามิเตอร์กับ least squares บน train เดียวกัน
 
 การที่ training loss ลดลงยังไม่รับรองผลกับข้อมูลใหม่ เราจึงรายงาน test MAE ด้วย ฟังก์ชันตรวจ shape และค่าที่ไม่เป็น finite เพื่อให้ความผิดพลาดของ input ชัดเจน
+
+## เดินหนึ่งก้าวด้วยตัวเลขจริง
+
+**Loss** คือค่าความผิดพลาดที่ต้องการลด ในบทนี้ใช้ MSE ส่วน **gradient** บอกว่าถ้าเพิ่มพารามิเตอร์เล็กน้อย loss จะเพิ่มหรือลดและแรงเพียงใด เราจึงเลื่อนพารามิเตอร์ไปทิศตรงข้ามกับ gradient ด้วย learning rate
+
+ลองมีข้อมูลจุดเดียว x=1, y=5 เริ่ม w=0, b=0 จะได้ prediction=0, error=−5, gradient_w=−10 และ gradient_b=−10 ถ้า learning rate=0.1 จะอัปเดตเป็น w=1, b=1 ทำให้ prediction=2 และ squared error ลดจาก 25 เป็น 9 ตัวอย่างหนึ่งจุดนี้ใช้ฝึกคำนวณเท่านั้น ยังแยก w กับ b ที่เหมาะสมอย่างเอกเทศไม่ได้
+
+สัญลักษณ์ `∂` ในสูตรหมายถึงดูการเปลี่ยน loss เมื่อเปลี่ยนพารามิเตอร์ตัวหนึ่งโดยตรึงอีกตัวไว้ ในโค้ด `np.mean(error * x)` และ `np.mean(error)` คือค่าเฉลี่ยจากทุกตัวอย่าง เรียกว่า batch gradient descent
+
+## ตามรอยฟังก์ชัน
+
+`fit_gradient_descent` รับ x/y แบบหนึ่งมิติ ต่างจาก estimator ของ scikit-learn ที่รับ X สองมิติ จึง reshape เฉพาะตอนเทียบกับ LinearRegression ค่า `history` เก็บ MSE **หลัง** อัปเดตแต่ละก้าว แกนตั้ง `semilogy` เป็นสเกล log เพื่อมอง loss ที่ลดหลายระดับได้
+
+ให้ดูทั้งความใกล้เคียง w/b กับ least squares และ MAE บน test ถ้า loss ไม่ finite หรือค่าล้น ฟังก์ชันจะหยุดพร้อมข้อความให้ลด learning rate กรณีนี้ไม่ควรเอาพารามิเตอร์สุดท้ายไปทำนายต่อ
 
 ## ลงมือรัน
 
@@ -49,17 +69,27 @@ def fit_gradient_descent(x, y, learning_rate=0.1, steps=1000):
         raise ValueError("x and y must be nonempty one-dimensional arrays of equal length")
     if not np.isfinite(x).all() or not np.isfinite(y).all():
         raise ValueError("x and y must be finite")
-    if learning_rate <= 0 or steps < 1:
-        raise ValueError("learning_rate and steps must be positive")
+    if not np.isfinite(learning_rate) or learning_rate <= 0:
+        raise ValueError("learning_rate must be finite and positive")
+    if not isinstance(steps, (int, np.integer)) or steps < 1:
+        raise ValueError("steps must be a positive integer")
     w, b = 0.0, 0.0
     history = []
-    for _ in range(steps):
-        error = w * x + b - y
-        dw = 2.0 * np.mean(error * x)
-        db = 2.0 * np.mean(error)
-        w -= learning_rate * dw
-        b -= learning_rate * db
-        history.append(np.mean((w * x + b - y) ** 2))
+    try:
+        with np.errstate(over="raise", invalid="raise"):
+            for _ in range(steps):
+                error = w * x + b - y
+                dw = 2.0 * np.mean(error * x)
+                db = 2.0 * np.mean(error)
+                # ใช้ gradient ทั้งคู่จาก w,b รอบเดิมก่อนเปลี่ยนค่า
+                w -= learning_rate * dw
+                b -= learning_rate * db
+                loss = np.mean((w * x + b - y) ** 2)
+                if not np.isfinite(loss):
+                    raise FloatingPointError("Non-finite loss")
+                history.append(loss)
+    except FloatingPointError as error:
+        raise FloatingPointError("Gradient descent diverged; reduce learning_rate or scale x") from error
     return w, b, np.asarray(history)
 
 

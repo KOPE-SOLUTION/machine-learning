@@ -27,7 +27,12 @@ model = make_pipeline(CountVectorizer(), MultinomialNB(alpha=1.0))
 model.fit(X_train, y_train)
 print(classification_report(y_test, model.predict(X_test), zero_division=0))
 examples = ["team scores a goal", "developer fixes software", "recipe with vegetables"]
-vectors = model.named_steps["countvectorizer"].transform(examples)
+vectorizer = model.named_steps["countvectorizer"]
+vectors = vectorizer.transform(examples)
+print("Vocabulary size:", len(vectorizer.get_feature_names_out()))
+used_columns = np.asarray(vectors.sum(axis=0)).ravel() > 0
+print("Words present in examples:", vectorizer.get_feature_names_out()[used_columns])
+print("Counts for these words:\n", vectors[:, used_columns].toarray())
 for text, label, token_count in zip(examples, model.predict(examples), vectors.sum(axis=1).A1):
     print(f"{text!r} -> {label}; known-token count={token_count}")
 print("Class order:", model.classes_)

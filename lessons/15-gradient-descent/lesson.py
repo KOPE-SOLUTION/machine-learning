@@ -10,17 +10,27 @@ def fit_gradient_descent(x, y, learning_rate=0.1, steps=1000):
         raise ValueError("x and y must be nonempty one-dimensional arrays of equal length")
     if not np.isfinite(x).all() or not np.isfinite(y).all():
         raise ValueError("x and y must be finite")
-    if learning_rate <= 0 or steps < 1:
-        raise ValueError("learning_rate and steps must be positive")
+    if not np.isfinite(learning_rate) or learning_rate <= 0:
+        raise ValueError("learning_rate must be finite and positive")
+    if not isinstance(steps, (int, np.integer)) or steps < 1:
+        raise ValueError("steps must be a positive integer")
     w, b = 0.0, 0.0
     history = []
-    for _ in range(steps):
-        error = w * x + b - y
-        dw = 2.0 * np.mean(error * x)
-        db = 2.0 * np.mean(error)
-        w -= learning_rate * dw
-        b -= learning_rate * db
-        history.append(np.mean((w * x + b - y) ** 2))
+    try:
+        with np.errstate(over="raise", invalid="raise"):
+            for _ in range(steps):
+                error = w * x + b - y
+                dw = 2.0 * np.mean(error * x)
+                db = 2.0 * np.mean(error)
+                # ใช้ gradient ทั้งคู่จาก w,b รอบเดิมก่อนเปลี่ยนค่า
+                w -= learning_rate * dw
+                b -= learning_rate * db
+                loss = np.mean((w * x + b - y) ** 2)
+                if not np.isfinite(loss):
+                    raise FloatingPointError("Non-finite loss")
+                history.append(loss)
+    except FloatingPointError as error:
+        raise FloatingPointError("Gradient descent diverged; reduce learning_rate or scale x") from error
     return w, b, np.asarray(history)
 
 

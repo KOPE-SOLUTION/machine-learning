@@ -53,6 +53,7 @@ def main():
         "split": "stratified random holdout 20%; seed 42; not a writer-group split",
         "train_rows": len(train_idx), "test_rows": len(test_idx),
         "baseline_accuracy": accuracy_score(y_test, baseline.predict(X_test)),
+        "baseline_macro_f1": f1_score(y_test, baseline.predict(X_test), average="macro", zero_division=0),
         "best_params": search.best_params_, "cv_macro_f1": search.best_score_,
         "test_accuracy": accuracy_score(y_test, pred),
         "test_macro_f1": f1_score(y_test, pred, average="macro"),
@@ -68,6 +69,9 @@ def main():
     np.savetxt(out / "example-input.csv", X_test[:3], delimiter=",")
     restored = joblib.load(out / "model.joblib")  # โหลดเฉพาะไฟล์ที่เพิ่งสร้างเอง
     np.testing.assert_array_equal(pred, restored.predict(X_test))
+    csv_pixels = validate_pixels(np.loadtxt(out / "example-input.csv", delimiter=",", ndmin=2))
+    print("Predictions from saved CSV:", restored.predict(csv_pixels).tolist())
+    print("True labels for these examples:", y_test[:3].tolist())
     errors = np.flatnonzero(pred != y_test)
     print("Misclassified held-out examples:", len(errors))
     fig, ax = plt.subplots(figsize=(6, 5))

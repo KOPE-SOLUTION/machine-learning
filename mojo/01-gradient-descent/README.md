@@ -4,13 +4,25 @@
 
 เวลาเรียนประมาณ 45–60 นาที เรียน [บท 15](../../lessons/15-gradient-descent/README.md) ก่อนเริ่ม
 
-**สถานะ: ตัวอย่าง Mojo ยังไม่ผ่านการ compile/run ในการตรวจรอบนี้** ดู environment และรุ่นเอกสารใน [คู่มือติดตั้ง](../README.md)
+**ทดสอบแล้วด้วย Mojo 1.2.0 บน Ubuntu 24.04 / WSL และ CPython 3.12.3** ใช้ environment ตาม [คู่มือติดตั้ง](../README.md) เพื่อให้รุ่นตรงกัน
 
 ## แนวคิด
 
 ใช้ข้อมูลห้าจุดที่อยู่บนเส้น y=3x+2 และอัปเดต w,b ด้วย MSE gradient เหมือนบท Python แต่ระบุ Float64 ให้ตัวเลขและ List[Float64] ให้ข้อมูล `var` ประกาศตัวแปรที่เปลี่ยนค่าได้ และ `main` เป็นจุดเริ่มโปรแกรมตาม syntax ของเอกสารที่อ้างอิง
 
 การสะสม dw,db ด้วย loop ทำให้เห็นว่าการคูณ/บวกแต่ละตัวอย่างประกอบกันเป็น gradient อย่างไร เราคำนวณทั้งคู่จากพารามิเตอร์รอบเดิมก่อนอัปเดต
+
+## เชื่อมจาก NumPy มาสู่ loop
+
+| ที่คุ้นเคยใน Python | ที่ใช้ในตัวอย่าง Mojo |
+|---|---|
+| array ของ float64 | `List[Float64]` เก็บค่าชนิดเดียวกันในตัวอย่างนี้ |
+| การเปลี่ยนค่า w, b | `var` ประกาศตัวแปรที่แก้ค่าได้ |
+| `np.mean(error * x)` | วนทีละจุด บวก `error * x[i] / n` จนครบ |
+| การแปลงจำนวนเต็มเป็นทศนิยม | `Float64(n)` ก่อนหาร |
+| รันไฟล์ Python | compiler แปล `.mojo` แล้วเริ่มที่ `main()` |
+
+คัดลอกบล็อก Mojo ไปไฟล์ `main.mojo` ก่อนรัน ไม่วางใน cell Python ข้อมูลห้าจุดนี้ไม่มี noise จึงคาด w≈3, b≈2 และ MSE ใกล้ศูนย์ บท 15 ใช้ข้อมูลมี noise และ test แยก จึงไม่ควรคาด MSE ศูนย์แบบเดียวกัน
 
 ## รันจาก root ของ repo
 
@@ -25,7 +37,7 @@ python mojo/01-gradient-descent/reference.py
 
 <!-- MOJO:START -->
 ```mojo
-# Target syntax: Mojo documentation 1.2.0; compiler execution not verified here.
+# Verified with Mojo 1.2.0 on Ubuntu 24.04 / WSL; see mojo/README.md.
 def main():
     var x: List[Float64] = [-1.0, -0.5, 0.0, 0.5, 1.0]
     var y: List[Float64] = [-1.0, 0.5, 2.0, 3.5, 5.0]
@@ -34,7 +46,7 @@ def main():
     var learning_rate: Float64 = 0.1
     var n = len(x)
 
-    for step in range(300):
+    for _ in range(300):
         var dw: Float64 = 0.0
         var db: Float64 = 0.0
         for i in range(n):
@@ -54,6 +66,31 @@ def main():
     print("training MSE:", mse)
 ```
 <!-- MOJO:END -->
+
+## Python สำหรับเทียบผล
+
+คัดลอกบล็อกนี้ไปรันด้วย Python ใน environment เดียวกันได้ครบชุด เปรียบเทียบคำตอบก่อนทดลองเปลี่ยนค่าหรือจับเวลา
+
+<!-- PYTHON:START -->
+```python
+"""Python reference using the same data, precision, update order, and iterations."""
+import numpy as np
+
+x = np.array([-1.0, -0.5, 0.0, 0.5, 1.0], dtype=np.float64)
+y = np.array([-1.0, 0.5, 2.0, 3.5, 5.0], dtype=np.float64)
+w, b = 0.0, 0.0
+for step in range(300):
+    error = w * x + b - y
+    dw = 2.0 * np.mean(error * x)
+    db = 2.0 * np.mean(error)
+    w -= 0.1 * dw
+    b -= 0.1 * db
+np.testing.assert_allclose([w, b], [3.0, 2.0], atol=1e-8)
+print("w:", w)
+print("b:", b)
+print("training MSE:", np.mean((w * x + b - y) ** 2))
+```
+<!-- PYTHON:END -->
 
 ## อ่านผลและฝึกต่อ
 

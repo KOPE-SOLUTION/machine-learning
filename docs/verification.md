@@ -2,46 +2,48 @@
 
 [กลับหน้าแรก](../README.md)
 
-โค้ดหลักสูตรสำหรับผู้ที่มีพื้นฐาน Python, NumPy, pandas และ Matplotlib ตรวจเมื่อ **24 ตุลาคม 2026 (Asia/Bangkok)** บน **Ubuntu 24.04 ผ่าน WSL, CPython 3.12.3** ใช้แพ็กเกจตาม uv.lock และ uv 0.8.18 ใน environment แยกจาก Windows
+ฉบับปรับคำอธิบายทุกบทสำหรับผู้ที่ใช้ NumPy, pandas และ Matplotlib ได้แล้วและเริ่มเรียน ML ตรวจเมื่อ **24 ตุลาคม 2026 (Asia/Bangkok)** บน **Ubuntu 24.04 ผ่าน WSL, CPython 3.12.3** ใช้แพ็กเกจหลักตาม uv.lock และ Mojo ใน environment แยก
 
-ไฟล์หลักสูตรและผลการรันอยู่ในโฟลเดอร์ repo จริง การสร้าง/ปรับไฟล์ในรอบนี้ทำผ่าน WSL ส่วนหลักฐานจากฉบับก่อนที่รันบน Windows 11 / CPython 3.13.7 เก็บแยกเป็น previous_windows_revision ไม่ถือเป็นการตรวจโค้ดบท 02 ฉบับใหม่บน Windows
-
-## ผ่านการรันจริงใน WSL
+## ผลการรันฉบับนี้
 
 | รายการ | ผล |
 |---|---|
 | Python lesson.py | 18/18 ผ่าน: 17 บท ML และ 1 บทตรวจความพร้อม |
+| บล็อก Python ที่คัดลอกจาก Markdown | 21/21 ผ่าน: 18 บทหลัก + 2 Python references ของ Mojo + ตัวอย่าง math primer |
 | Jupyter notebook | 18/18 ผ่านจาก kernel ใหม่ของแต่ละบท |
-| Behavioral tests | 4/4 ผ่าน: gradient, input validation, train-only scaling และ serialization |
-| Python reference ของ Mojo | 2/2 ผ่าน |
-| CLI predict.py ของโครงงาน | ผ่าน: อ่าน CSV สามแถวและทาย [5, 2, 8] |
-| README code synchronization / local links / notebook schema | ผ่าน รวมเอกสาร prerequisites ฉบับใหม่ |
-| ลิงก์อ้างอิงภายนอก | 66/66 URL เปิดได้ ณ วันที่ตรวจ |
-| บท 02 ฉบับปรับปรุง | ผ่านการรันและสร้าง feature-audit.csv กับกราฟใหม่ |
+| Behavioral tests | 6/6 ผ่าน: gradient, invalid settings, overflow, pixel schema, train-only scaling และ serialization |
+| Mojo compiler | 2/2 บท compile/run ผ่านด้วย Mojo 1.2.0 (2016d0cd) |
+| Mojo เทียบ Python reference | พารามิเตอร์/MSE และผลจำแนกตรงกันภายใน tolerance ที่กำหนด |
+| CLI predict.py | ผ่าน: อ่าน CSV สามแถวและทาย [5, 2, 8] |
+| README/notebook synchronization, local links, notebook schema | ผ่าน |
 
-หลักฐานผลการรัน environment, metric และ SHA-256 ของ lesson.py อยู่ใน [verification-results.json](verification-results.json) ที่ current_wsl_run ส่วน previous_windows_revision คือประวัติฉบับก่อนปรับเนื้อหา
+โหมด `readmes` ดึงบล็อก Python จาก Markdown จริงแล้วรันใน process ใหม่แต่ละบล็อก จึงไม่อาศัยตัวแปรจากบทก่อน สำหรับ Mojo ตรวจให้โค้ดใน README ตรงกับไฟล์ .mojo ก่อน compile และรันเทียบ reference
 
-## ตัวอย่างผลที่สังเกตได้
+หลักฐานรุ่นแพ็กเกจ ผลแต่ละบท และ SHA-256 ของโค้ด/เอกสารอยู่ใน [verification-results.json](verification-results.json) ที่ `current_wsl_run` และ `mojo_compiler` หลักฐานฉบับก่อนอยู่ใน `previous_wsl_revision` กับ `previous_windows_revision`; ไม่ถือเป็นการรันฉบับปัจจุบันบนทุกแพลตฟอร์ม
 
-- บท 02 ใช้ feature ขนาดดอกไม้สี่ค่า และตัด target, species_name, sample_id ออกจาก X
-- บท 02 กัน train 120 แถว / test 30 แถวก่อนใช้ EDA ตัดสินใจเกี่ยวกับโมเดล
-- Iris KNN: test accuracy 0.9333 และ Python interop reference ทายห้าตัวแรก [0, 2, 1, 1, 0]
-- Digits: train 1,437 ภาพ / test 360 ภาพ, baseline accuracy 0.1000
-- Digits: best CV macro F1 0.9804, final test accuracy 0.9806, final test macro F1 0.9805
-- Gradient descent reference ห้าจุด: w≈3, b≈2 และ MSE ใกล้ศูนย์
+## ตัวอย่างผลที่ใช้ตรวจความเข้าใจ
 
-ค่าคะแนนเป็นจุดตรวจความสมเหตุสมผล ไม่ใช่ข้อกำหนดให้ floating point ตรงทุกหลัก หรือการรับรองผลกับข้อมูลภายนอก อ่านข้อจำกัดใน [model card](model-card.md)
+- บท 01: baseline ทายถูก 10 จาก 30 ดอก หรือ accuracy ประมาณ 0.333
+- บท 03: KNN accuracy ประมาณ 0.933 พร้อม baseline สำหรับเปรียบเทียบ
+- บท 04: test confusion matrix เป็น [[263, 4], [17, 16]] อ่านได้ว่า TP=16, FN=17 และ F1 ประมาณ 0.604
+- บท 06: baseline MAE ประมาณ 53.511 เทียบ Ridge ประมาณ 6.494 ในหน่วยค่าบริการจำลอง พร้อมตาราง feature หลังแปลง
+- บท 10: ตาราง CV มีหกคู่พารามิเตอร์ `mean_test_score` หมายถึง validation ภายใน CV ไม่ใช่ final test
+- บท 16: train 1,437 ภาพ / test 360 ภาพ, test accuracy ประมาณ 0.9806 และ macro F1 ประมาณ 0.9805
+- บท 17: random split มีคนซ้ำสองฝั่ง 41 คนและ accuracy 1.000; group split ไม่มีคนซ้ำและ accuracy ประมาณ 0.383 จึงเห็นว่าคะแนนตอบคำถามการใช้งานต่างกัน
+- M01: w≈3, b≈2 และ training MSE ประมาณ 1.59e-27 ตรงกับ Python
+- M02: accuracy ประมาณ 0.933333 และคำทำนายห้าตัวแรก [0, 2, 1, 1, 0] ตรงกับ Python
 
-## ยังไม่ได้ตรวจ
+ค่าคะแนนใช้ตรวจความสมเหตุสมผล ไม่ต้องให้ floating point ตรงทุกหลัก และไม่ใช่ผลรับรองกับข้อมูลภายนอก อ่านข้อจำกัดโครงงานใน [model card](model-card.md)
 
-- Mojo compiler และการรัน .mojo ทั้งสองไฟล์ แม้ตอนนี้ใช้ WSL ทำงานกับ repo ได้แล้ว
-- Colab, macOS และ Python 3.11
-- โค้ดบท 02 ฉบับปรับปรุงบน Windows native; ฉบับนี้ตรวจใหม่ด้วย WSL
-- GitHub Actions บน remote: มี workflow เตรียมไว้ แต่ยังไม่มีผล CI ของ repo ที่เผยแพร่
+## ขอบเขตผลตรวจ
+
+ผลในหน้านี้เป็นการรันบน WSL ของฉบับนี้ ยังไม่ได้รันฉบับนี้ใน Colab หรือ macOS ส่วนผล Windows/Linux และ Python รุ่นอื่นบน GitHub ให้ดู [Actions](https://github.com/KOPE-SOLUTION/machine-learning/actions) ของ commit ที่ต้องการตรวจ มี job สำหรับ Python 3.11/3.13 และ Mojo 1.2.0 แยกกัน
+
+ประวัติการเปิดลิงก์ภายนอก 66 URL เก็บไว้ใน `previous_external_link_check` ไม่ใช่การตรวจลิงก์ทั้งหมดซ้ำรอบนี้ ลิงก์วิดีโอพื้นฐานใช้ตามช่องที่ระบุใน [prerequisites](prerequisites.md)
 
 ## รันตรวจเอง
 
-สำหรับ uv ที่ติดตั้งใน WSL:
+จากโฟลเดอร์หลักใน WSL หลังติดตั้ง uv:
 
 ```bash
 export UV_PROJECT_ENVIRONMENT=.venv-wsl
@@ -50,11 +52,13 @@ uv run --frozen python scripts/sync_materials.py --check
 uv run --frozen python scripts/check_materials.py
 uv run --frozen python -m unittest discover -s tests -v
 uv run --frozen python scripts/verify_course.py --mode all
-uv run --frozen python mojo/01-gradient-descent/reference.py
-uv run --frozen python mojo/02-python-interop/reference.py
 uv run --frozen python lessons/16-digits-project/predict.py outputs/16-digits-project/example-input.csv
 ```
 
-หากใช้ venv โดยตรง ให้แทน uv run --frozen python ด้วย .venv-wsl/bin/python สำหรับ Windows native ใช้ environment ของ Windows ตาม [setup](setup.md)
+หากใช้ venv โดยตรง ให้แทน `uv run --frozen python` ด้วย `.venv-wsl/bin/python` ส่วน Mojo ติดตั้ง environment ตาม [คู่มือเสริม](../mojo/README.md) แล้วรัน:
 
-verify_course ใช้ backend กราฟ Agg และจำกัด thread แต่ละ script มี timeout 180 วินาที ส่วน notebook มี timeout ต่อ cell 180 วินาที Notebook ที่รันแล้วและ log อยู่ใน outputs/verification/ ส่วน notebook ใน lessons/ ว่าง output เพื่อให้ทดลองใหม่ได้
+```bash
+.venv-mojo/bin/python scripts/verify_mojo.py
+```
+
+verify_course ใช้ backend กราฟ Agg และจำกัด thread แต่ละ script/README block มี timeout 180 วินาที ส่วน notebook มี timeout ต่อ cell 180 วินาที หาก log มีคำเตือนว่า Agg ไม่แสดงหน้าต่างกราฟ ให้เปิด PNG ที่บันทึกใน outputs/ แทน Notebook ที่รันแล้วและ log อยู่ใน outputs/verification/ ส่วน notebook ใน lessons/ ว่าง output เพื่อให้ทดลองใหม่ได้

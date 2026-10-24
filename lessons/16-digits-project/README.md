@@ -5,6 +5,10 @@
 เวลาเรียนและทดลองโดยประมาณ: 90–150 นาที  
 สิ่งที่จะทำได้: ทำ workflow ตั้งแต่โจทย์จนถึง model artifact พร้อมรายงานผล ข้อจำกัด และ input contract ได้
 
+## ก่อนเริ่มบทนี้
+
+เรียนบท 03–06, 08 และ 10 ก่อน เพราะโครงงานรวม Pipeline, metric, CV และ SVM ไว้ด้วยกัน แต่โค้ดโหลดข้อมูลและฝึกใหม่ทั้งหมด ไม่ต้องอาศัยตัวแปรจาก notebook บทก่อน
+
 ## ขอบเขตโครงงาน
 
 ทำนายตัวเลข 0–9 จากภาพ grayscale 8×8 ในชุด digits ที่มากับ scikit-learn แต่ละภาพเป็น 64 pixel ค่า 0–16 ไม่ใช่ MNIST 28×28 และไม่ใช่ระบบอ่านเอกสารหรือภาพถ่ายทั่วไป
@@ -19,15 +23,26 @@ Input contract กำหนด array สองมิติ มี 64 คอล�
 
 ไฟล์ joblib ใช้กลไก pickle ซึ่งเรียกโค้ดได้ระหว่างโหลด จึงโหลดเฉพาะ artifact ที่สร้างเองหรือเชื่อถือ และใช้รุ่นไลบรารีตาม environment เดิม อ่าน [model card](../../docs/model-card.md) เพื่อบันทึกขอบเขตการใช้งาน
 
-## ทำนายหลังฝึกเสร็จ
+## แบ่งโครงงานออกเป็นหกขั้น
 
-จากโฟลเดอร์หลัก รันหลัง lesson.py:
+| ขั้น | ทำอะไร | หลักฐานที่ตรวจได้ |
+|---|---|---|
+| 1 | โหลดและตรวจ 1,797 ภาพ แต่ละภาพ 64 pixel | `validate_pixels` ผ่าน shape/ช่วงค่า |
+| 2 | กัน test 20% ก่อนเลือกโมเดล | train 1,437 และ test 360 ภาพ |
+| 3 | สร้าง baseline และลอง C/gamma รวมสี่คู่ | 3-fold CV รวม 12 fits และ refit ผู้ชนะ |
+| 4 | ใช้ macro F1 เลือก แล้วประเมิน test | baseline/model metric และ confusion matrix |
+| 5 | บันทึก Pipeline ทั้งเส้นแล้วโหลดกลับ | คำทำนายก่อนและหลังบันทึกตรงกัน |
+| 6 | อ่าน CSV สามแถวผ่าน schema เดิม | คำทำนายตัวอย่างพร้อมรัน CLI ต่อได้ |
 
-```bash
-uv run --frozen python lessons/16-digits-project/predict.py outputs/16-digits-project/example-input.csv
-```
+**Macro F1** คือคำนวณ F1 แบบหนึ่งคลาสเทียบกับคลาสอื่นทีละคลาส แล้วเฉลี่ยสิบคลาสเท่ากัน ส่วน **artifact** คือไฟล์ผลลัพธ์ที่นำกลับมาใช้ เช่น `model.joblib` ไม่ได้เก็บแค่เลขคะแนน แต่เก็บ scaler ที่ fit แล้วและ SVC ที่เลือกไว้ด้วย
 
-CSV ต้องไม่มี header และเรียง pixel แบบ row-major ตามภาพ 8×8 ตัวอย่างนี้มาจาก holdout เพื่อแสดงการโหลดโมเดล ไม่ใช่การประเมินกับข้อมูลภายนอก
+ฟังก์ชัน `main()` รวมขั้นตอนที่ต้องรันเมื่อเริ่มโปรแกรม ส่วน `if __name__ == "__main__"` ทำให้การ import ฟังก์ชันตรวจ input จาก `lesson.py` ใน CLI ไม่ฝึกโมเดลซ้ำ หากก๊อปโค้ดไป notebook เปล่า ให้รันทั้งบล็อก; เงื่อนไขนี้ทำงานใน notebook ได้เช่นกัน
+
+## อ่านความผิดพลาดก่อนนำกลับไปใช้
+
+confusion matrix มีเลข 0–9 บนทั้งสองแกน ช่องแนวทแยงคือทายถูก ส่วนช่องแถว 8 คอลัมน์ 3 คือเลขจริง 8 ที่ทายเป็น 3 รูป `errors.png` จะแสดงได้ไม่เกินหกตัวอย่างแรก จึงไม่ใช่ความผิดพลาดทั้งหมด
+
+CSV ใช้ลำดับ pixel ไล่ซ้ายไปขวาทีละแถวจากบนลงล่าง (row-major) ค่า 0 เป็นพื้นหลังและค่าที่สูงกว่าบอกส่วนของเส้นตัวเลข โค้ดใช้ colormap `gray_r` ให้เส้นแสดงเป็นสีเข้ม ภาพที่กลับสีหรือมีช่วง 0–255 ต้องเตรียมให้ตรงความหมายเดิม ไม่ใช่เพียงทำให้ผ่าน shape
 
 ## ลงมือรัน
 
@@ -96,6 +111,7 @@ def main():
         "split": "stratified random holdout 20%; seed 42; not a writer-group split",
         "train_rows": len(train_idx), "test_rows": len(test_idx),
         "baseline_accuracy": accuracy_score(y_test, baseline.predict(X_test)),
+        "baseline_macro_f1": f1_score(y_test, baseline.predict(X_test), average="macro", zero_division=0),
         "best_params": search.best_params_, "cv_macro_f1": search.best_score_,
         "test_accuracy": accuracy_score(y_test, pred),
         "test_macro_f1": f1_score(y_test, pred, average="macro"),
@@ -111,6 +127,9 @@ def main():
     np.savetxt(out / "example-input.csv", X_test[:3], delimiter=",")
     restored = joblib.load(out / "model.joblib")  # โหลดเฉพาะไฟล์ที่เพิ่งสร้างเอง
     np.testing.assert_array_equal(pred, restored.predict(X_test))
+    csv_pixels = validate_pixels(np.loadtxt(out / "example-input.csv", delimiter=",", ndmin=2))
+    print("Predictions from saved CSV:", restored.predict(csv_pixels).tolist())
+    print("True labels for these examples:", y_test[:3].tolist())
     errors = np.flatnonzero(pred != y_test)
     print("Misclassified held-out examples:", len(errors))
     fig, ax = plt.subplots(figsize=(6, 5))
@@ -141,6 +160,16 @@ if __name__ == "__main__":
 ## อ่านผลที่ได้
 
 เกิด outputs/16-digits-project/model.joblib, metrics.json, split-indices.npz, example-input.csv และกราฟ ผลจากโมเดลที่โหลดกลับต้องตรงกับโมเดลก่อนบันทึก ค่าทศนิยมอาจต่างเล็กน้อยตามแพลตฟอร์ม
+
+## ทำนายหลังฝึกเสร็จ
+
+จากโฟลเดอร์หลัก รันหลัง lesson.py:
+
+```bash
+uv run --frozen python lessons/16-digits-project/predict.py outputs/16-digits-project/example-input.csv
+```
+
+CSV ต้องไม่มี header และเรียง pixel แบบ row-major ตามภาพ 8×8 ตัวอย่างนี้มาจาก holdout เพื่อแสดงการโหลดโมเดล ไม่ใช่การประเมินกับข้อมูลภายนอก
 
 ## ภาพตัวอย่างจากการรัน
 

@@ -5,9 +5,13 @@
 เวลาเรียนและทดลองโดยประมาณ: 50–70 นาที  
 สิ่งที่จะทำได้: สร้าง ColumnTransformer, imputation และ one-hot encoding ใน Pipeline ได้
 
+## ก่อนเริ่มบทนี้
+
+ใช้การเลือกคอลัมน์และจัดการ missing จาก pandas ร่วมกับ Pipeline ในบท 03 และ regression ในบท 05 บทนี้เน้นใช้กฎที่เรียนจาก train ซ้ำกับข้อมูลใหม่
+
 ## จาก pandas สู่ preprocessing ที่เรียนจาก train
 
-จากส่วนที่ 3 คุณจัดการค่าหาย รวมตาราง และเลือกคอลัมน์ได้แล้ว จุดใหม่ในบทนี้คือแยกการแปลงแบบมีกฎคงที่ออกจากการแปลงที่ต้องเรียนสถิติ เช่น median, ค่าเฉลี่ย หรือ vocabulary ขั้นที่ต้องเรียนต้อง fit ใหม่ภายใน training fold จึงย้ายมาอยู่ใน Pipeline เพื่อใช้กฎเดิมกับข้อมูลใหม่
+จากพื้นฐาน pandas คุณจัดการค่าหาย รวมตาราง และเลือกคอลัมน์ได้แล้ว จุดใหม่ในบทนี้คือแยกการแปลงแบบมีกฎคงที่ออกจากการแปลงที่ต้องเรียนสถิติ เช่น median, ค่าเฉลี่ย หรือ vocabulary ขั้นที่ต้องเรียนต้อง fit ใหม่ภายใน training fold จึงย้ายมาอยู่ใน Pipeline เพื่อใช้กฎเดิมกับข้อมูลใหม่
 
 ## โมเดลต้องเห็น feature ที่มีความหมาย
 
@@ -22,6 +26,24 @@ Median imputation เรียนค่าทดแทนจาก train แล�
 `ColumnTransformer` ระบุว่าแต่ละคอลัมน์ผ่านขั้นตอนไหน แล้วต่อกับ Ridge ซึ่งเพิ่มโทษขนาด coefficient เพื่อจำกัดความซับซ้อน พารามิเตอร์ alpha ยิ่งมากยิ่งลงโทษมาก การปรับ alpha ต้องใช้ validation/CV
 
 เมื่อใช้ข้อมูลจริง ให้ตรวจว่า feature มีอยู่ก่อนเวลาทำนาย เช่นค่าบริการสุดท้ายหรือสถานะส่งสำเร็จจะรั่วข้อมูลเข้าสู่โจทย์ที่ต้องทำนายตอนรับคำสั่งซื้อ
+
+## ดูหนึ่งแถวก่อนและหลังแปลง
+
+สมมติ `service` มีแค่ standard กับ express การเข้ารหัสแบบ one-hot จะได้สองคอลัมน์: standard เป็น `[1, 0]` และ express เป็น `[0, 1] ลำดับจริงดูจาก `get_feature_names_out()` ส่วน same_day ที่ไม่เคยอยู่ใน train จะเป็น `[0, 0]` ในตัวอย่างนี้ จึงไม่มีระยะห่างสมมติแบบรหัส 0, 1, 2
+
+**Imputation** คือการแทนค่าที่หาย ค่ากลางอย่าง median ต้องคำนวณจาก train ส่วน **regularization** คือการเพิ่มเงื่อนไขให้โมเดลไม่ใช้ coefficient ใหญ่เกินไป Ridge เป็น linear regression ที่เพิ่มโทษแบบนี้ โดยใช้ `alpha` ควบคุมความแรง
+
+## ตามรอยข้อมูลใน Pipeline
+
+| ข้อมูลเข้า | ขั้นตอน | ผลที่ส่งต่อ |
+|---|---|---|
+| distance_km, weight_kg | เติม median → scale | ตัวเลขสองคอลัมน์ที่ใช้สถิติ train |
+| service | เติมหมวดหมู่ที่พบบ่อย → one-hot | คอลัมน์บอกการเป็นสมาชิกแต่ละบริการ |
+| ผลจากทั้งสองทาง | ColumnTransformer ต่อคอลัมน์ → Ridge | คำทำนายค่าบริการหนึ่งค่าต่อแถว |
+
+`ColumnTransformer` ในตัวอย่างทิ้งคอลัมน์ที่ไม่ได้ระบุโดยปริยาย จึงต้องเพิ่มชื่อคอลัมน์ในรายการ numeric ด้วยเมื่อทำแบบฝึกหัด หลัง fit โค้ดพิมพ์ตัวอย่างสามแถวที่แปลงแล้วเพื่อให้ตรวจด้วย pandas ได้
+
+MAE ของ baseline มัธยฐานและ Ridge ใช้หน่วยค่าบริการจำลองเดียวกัน ส่วนตัวอย่าง same_day ใช้สาธิตการรับ input ที่ไม่รู้จัก การรันสำเร็จยังไม่บอกว่าค่าทำนายบริการใหม่เชื่อถือได้
 
 ## ลงมือรัน
 
@@ -40,6 +62,7 @@ uv run --frozen python lessons/06-feature-engineering/lesson.py
 import numpy as np
 import pandas as pd
 from sklearn.compose import ColumnTransformer
+from sklearn.dummy import DummyRegressor
 from sklearn.impute import SimpleImputer
 from sklearn.linear_model import Ridge
 from sklearn.metrics import mean_absolute_error
@@ -69,8 +92,13 @@ preprocess = ColumnTransformer([
 ])
 model = make_pipeline(preprocess, Ridge(alpha=1.0))
 model.fit(X_train, y_train)
+baseline = DummyRegressor(strategy="median").fit(X_train, y_train)
+print(f"Baseline MAE: {mean_absolute_error(y_test, baseline.predict(X_test)):.3f}")
 print(f"Test MAE (synthetic cost units): {mean_absolute_error(y_test, model.predict(X_test)):.3f}")
 print("Transformed columns:", preprocess.get_feature_names_out())
+preview = preprocess.transform(X_train.iloc[:3])
+print("First three transformed rows:\n",
+      pd.DataFrame(preview, columns=preprocess.get_feature_names_out()).round(3).to_string(index=False))
 
 # %% หมวดหมู่ที่ไม่เคยเห็นจะไม่ทำให้โปรแกรมหยุด แต่ผลอาจไม่น่าเชื่อถือ
 new_order = pd.DataFrame({"distance_km": [20.0], "weight_kg": [np.nan], "service": ["same_day"]})

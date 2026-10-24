@@ -1,4 +1,4 @@
-# Target syntax: Mojo documentation 1.2.0; compiler execution not verified here.
+# Verified with Mojo 1.2.0 on Ubuntu 24.04 / WSL; see mojo/README.md.
 from std.python import Python
 
 def main() raises:

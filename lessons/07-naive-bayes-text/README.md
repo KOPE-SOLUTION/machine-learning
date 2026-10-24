@@ -5,6 +5,10 @@
 เวลาเรียนและทดลองโดยประมาณ: 45–60 นาที  
 สิ่งที่จะทำได้: แปลงข้อความเป็น bag-of-words อธิบาย smoothing และข้อจำกัดของข้อความนอกเรื่องได้
 
+## ก่อนเริ่มบทนี้
+
+ต่อจาก Pipeline และ one-hot ในบท 06 บทนี้เปลี่ยนจากหนึ่งหมวดหมู่ต่อแถวเป็นคำหลายคำในหนึ่งข้อความ โดยยังฝึกและทำนายด้วย API เดิม
+
 ## จากประโยคเป็นเวกเตอร์
 
 CountVectorizer สร้างคำศัพท์จาก train แล้วนับจำนวนคำในแต่ละข้อความ ลำดับคำหายไปในรูปแบบ bag-of-words ดังนั้นประโยคที่ใช้คำเหมือนกันแต่สื่อความตรงข้ามอาจมีเวกเตอร์คล้ายกัน
@@ -18,6 +22,20 @@ Smoothing ด้วย alpha เพิ่มน้ำหนักให้คำ
 ข้อความเกี่ยวกับอาหารในตัวอย่างอาจไม่มีคำใน vocabulary เลย โมเดลยังคืน sport หรือ tech เพราะมีเพียงสองทางเลือกและอาศัย prior ได้ จึงต้องดู known-token count และออกแบบกรณีนอกขอบเขตเพิ่มเติม
 
 ข้อความทั้งหมดแต่งขึ้นและมีเพียง 24 รายการ ผลบนชุดทดสอบเล็กนี้แสดงวิธีใช้ API เท่านั้น ไม่ใช่ benchmark ของระบบจำแนกข้อความจริง สำหรับภาษาไทยต้องพิจารณาการตัดคำหรือ character n-grams เพิ่มเติม
+
+## ตัวอย่าง bag-of-words ขนาดเล็ก
+
+ถ้าคำศัพท์มี `goal, team, wins` ข้อความ “team wins” จะเป็น `[0, 1, 1]` ส่วน “team team goal” จะเป็น `[1, 2, 0]` คอลัมน์แทนคำและค่าคือจำนวนครั้งที่พบ ดังนั้น “wins team” จะเหมือน “team wins” ในตัวแทนแบบนี้
+
+**Vocabulary** คือรายการคำที่เรียนจาก train; **prior** คือสัดส่วนคลาสก่อนอ่านข้อความ; **likelihood** บอกความสอดคล้องของคำกับคลาส; **posterior** คือคะแนนความน่าจะเป็นของคลาสหลังเห็นคำ สัญลักษณ์ `P(คลาส | คำ)` อ่านว่าโอกาสเป็นคลาสนั้นเมื่อทราบคำ ไม่ใช่โอกาสพบคำเมื่อทราบคลาส
+
+โมเดลรวมหลักฐานจากความถี่คำในแต่ละคลาส คำที่ไม่เคยพบในคลาสหนึ่งยังมีน้ำหนักเล็กน้อยจาก smoothing ทำให้คะแนนไม่เป็นศูนย์ทันที ส่วนคำที่ไม่เคยอยู่ใน vocabulary ของ train เลยจะไม่สร้างคอลัมน์ใหม่ตอน predict
+
+## ตามรอยโค้ด
+
+ข้อมูล 24 ประโยคแบ่งเป็น train 18 และ test 6 รายการ `CountVectorizer` คืน **sparse matrix** ซึ่งเก็บเฉพาะค่าที่ไม่เป็นศูนย์เพื่อลดพื้นที่ โค้ดแสดงตัวอย่างเล็กด้วย `toarray()` ให้เห็นค่าจริง แต่ไม่ควรแปลง sparse matrix ขนาดใหญ่ทั้งหมดแบบนี้
+
+`named_steps` ใช้หยิบตัวนับคำที่ fit แล้วออกมาตรวจ ไม่ได้สร้าง vocabulary ใหม่ ผลรวมแต่ละแถวคือ known-token count ซึ่งนับจำนวนคำที่รู้จักรวมคำซ้ำ ไม่ใช่จำนวนคำไม่ซ้ำ Probability ที่สูงก็อาจผิดได้เมื่อข้อความอยู่นอกขอบเขต เช่นเรื่องอาหาร
 
 ## ลงมือรัน
 
@@ -60,7 +78,12 @@ model = make_pipeline(CountVectorizer(), MultinomialNB(alpha=1.0))
 model.fit(X_train, y_train)
 print(classification_report(y_test, model.predict(X_test), zero_division=0))
 examples = ["team scores a goal", "developer fixes software", "recipe with vegetables"]
-vectors = model.named_steps["countvectorizer"].transform(examples)
+vectorizer = model.named_steps["countvectorizer"]
+vectors = vectorizer.transform(examples)
+print("Vocabulary size:", len(vectorizer.get_feature_names_out()))
+used_columns = np.asarray(vectors.sum(axis=0)).ravel() > 0
+print("Words present in examples:", vectorizer.get_feature_names_out()[used_columns])
+print("Counts for these words:\n", vectors[:, used_columns].toarray())
 for text, label, token_count in zip(examples, model.predict(examples), vectors.sum(axis=1).A1):
     print(f"{text!r} -> {label}; known-token count={token_count}")
 print("Class order:", model.classes_)
@@ -74,10 +97,14 @@ print("Probabilities (not guaranteed calibrated):\n", model.predict_proba(exampl
 
 ## แบบฝึกหัด
 
-ลอง CountVectorizer(analyzer='char', ngram_range=(2, 4)) แล้วออกแบบชุดข้อความภาษาไทยอย่างน้อยคลาสละ 20 รายการ โดยแยกข้อความใกล้ซ้ำให้ไม่ข้าม train/test
+เริ่มจากเทียบ known-token count ของข้อความสามรายการกับ vocabulary ที่พิมพ์ออกมา อธิบายว่าทำไมข้อความอาหารยังได้ label ทั้งที่ count=0
+
+แบบฝึกหัดต่อยอด: ลอง CountVectorizer(analyzer='char', ngram_range=(2, 4)) แล้วออกแบบชุดข้อความภาษาไทยอย่างน้อยคลาสละ 20 รายการ โดยแยกข้อความใกล้ซ้ำให้ไม่ข้าม train/test
 
 <details>
 <summary>แนวคำตอบ — ลองทำก่อนเปิดอ่าน</summary>
+
+เมื่อไม่มีคำที่รู้จัก โมเดลยังมี prior ของสองคลาสให้เลือก จึงไม่ได้ตรวจพบข้อความนอกเรื่องโดยอัตโนมัติ
 
 character n-grams ใช้ส่วนย่อยของตัวอักษรจึงไม่พึ่งช่องว่างแบ่งคำ แต่จำนวน feature และความไวต่อการสะกดเปลี่ยนไป ต้องประเมินกับข้อความคนละแหล่งและดูข้อผิดพลาดจริง ไม่สรุปว่าเหมาะกว่าจากตัวอย่างเล็ก
 

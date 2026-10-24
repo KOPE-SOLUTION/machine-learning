@@ -1,4 +1,4 @@
-# Target syntax: Mojo documentation 1.2.0; compiler execution not verified here.
+# Verified with Mojo 1.2.0 on Ubuntu 24.04 / WSL; see mojo/README.md.
 def main():
     var x: List[Float64] = [-1.0, -0.5, 0.0, 0.5, 1.0]
     var y: List[Float64] = [-1.0, 0.5, 2.0, 3.5, 5.0]
@@ -7,7 +7,7 @@ def main():
     var learning_rate: Float64 = 0.1
     var n = len(x)
 
-    for step in range(300):
+    for _ in range(300):
         var dw: Float64 = 0.0
         var db: Float64 = 0.0
         for i in range(n):

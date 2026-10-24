@@ -4,7 +4,7 @@
 
 **17 บท ML + 1 บทตรวจความพร้อม + 2 บทเสริม Mojo** · ใช้ CPU · ไม่มีบริการเสียเงินหรือ API key · ใช้ข้อมูลใน scikit-learn และข้อมูลจำลอง
 
-ทุกบทมีคำอธิบายสำหรับผู้เรียน โค้ดที่คัดลอกได้ครบชุด ไฟล์ Python, Jupyter notebook, แบบฝึกหัดพร้อมแนวคำตอบ และลิงก์อ่านต่อ เนื้อหาภาษาไทยและตัวอย่างใน repo นี้เขียนขึ้นใหม่
+ทุกบทเริ่มด้วยพื้นฐานที่ใช้ต่อ อธิบายคำศัพท์ ML ใหม่และไล่ขั้นตอนก่อนรัน มีคำอธิบายสำหรับผู้เรียน โค้ดที่คัดลอกได้ครบชุด ไฟล์ Python, Jupyter notebook, แบบฝึกหัดพร้อมแนวคำตอบ และลิงก์อ่านต่อ เนื้อหาภาษาไทยและตัวอย่างใน repo นี้เขียนขึ้นใหม่
 
 ## พื้นฐานก่อนเข้าเรียน
 
@@ -81,7 +81,7 @@ flowchart LR
 | M01 | [Gradient descent ด้วย Mojo](mojo/01-gradient-descent/README.md) | คำนวณ w,b ด้วย typed loop |
 | M02 | [เรียก scikit-learn จาก Mojo](mojo/02-python-interop/README.md) | ใช้ Python pipeline จากโปรแกรม Mojo |
 
-Mojo เป็นเส้นทางเสริม แยก environment จากบทหลัก และยังไม่ได้ทดสอบ compiler ในการตรวจรอบนี้ อ่าน [สถานะและการติดตั้ง Mojo](mojo/README.md) ก่อนเริ่ม
+Mojo เป็นเส้นทางเสริม แยก environment จากบทหลัก ทั้งสองบททดสอบกับ Mojo 1.2.0 บน Ubuntu 24.04 ผ่าน WSL แล้ว อ่าน [สถานะและการติดตั้ง Mojo](mojo/README.md) ก่อนเริ่ม
 
 ## วิธีใช้แต่ละบท
 
@@ -89,6 +89,8 @@ Mojo เป็นเส้นทางเสริม แยก environment จ�
 2. รัน `lesson.py` หรือเปิด `lesson.ipynb` จากต้นจนจบ เลือกอย่างใดอย่างหนึ่ง
 3. เปลี่ยนตัวแปรหนึ่งอย่าง บันทึกผลและอธิบายว่าทำไมจึงเปลี่ยน
 4. ทำแบบฝึกหัดก่อนเปิดแนวคำตอบ และเทียบกับแหล่งอ่านต่อ
+
+คัดลอกบล็อก `python` ทั้งชุดไป notebook ใหม่แล้วรันตามลำดับได้ บล็อก `bash` ใช้ใน terminal หลังติดตั้งแพ็กเกจตามคู่มือ โค้ดแต่ละบทเตรียมข้อมูลเอง ไม่ต้องรันบทก่อนหน้าเพื่อสร้างตัวแปร
 
 ทุก `lesson.py` ทำงานได้อิสระ เมื่อรันจากโฟลเดอร์หลัก รูปและโมเดลจะถูกบันทึกใน `outputs/` ซึ่งไม่รวมเข้า Git เพื่อไม่เก็บ artifact ที่เกิดจากแต่ละการทดลอง
 
@@ -117,10 +119,11 @@ Mojo เป็นเส้นทางเสริม แยก environment จ�
 uv run --frozen python scripts/check_materials.py
 uv run --frozen python -m unittest discover -s tests -v
 uv run --frozen python scripts/verify_course.py
+uv run --frozen python scripts/verify_course.py --mode readmes
 uv run --frozen python scripts/verify_course.py --mode notebooks
 ```
 
-ผลตรวจอยู่ใน `outputs/verification/` มี GitHub Actions สำหรับตรวจ Python 3.11/3.13 บน Windows/Linux เมื่อ repo ถูกเผยแพร่ สถานะในเครื่องนี้บันทึกแยกจากสถานะ CI เพื่อไม่สับสนว่าทดสอบแพลตฟอร์มใดแล้ว
+โหมด `readmes` ดึงบล็อก Python จากหน้าแต่ละบทมารันใน process ใหม่ จึงตรวจเส้นทางที่คัดลอกไปวางโดยตรง ผลตรวจอยู่ใน `outputs/verification/` มี GitHub Actions สำหรับตรวจ Python 3.11/3.13 บน Windows/Linux เมื่อ repo ถูกเผยแพร่ สถานะในเครื่องนี้บันทึกแยกจากสถานะ CI เพื่อไม่สับสนว่าทดสอบแพลตฟอร์มใดแล้ว
 
 ## การใช้เนื้อหาและการอ้างอิง
 

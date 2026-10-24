@@ -64,7 +64,17 @@ python3 -m venv .venv-wsl
 
 ## Notebook และ kernel
 
-เปิด JupyterLab จาก environment เดียวกับที่ติดตั้งแพ็กเกจแล้ว เลือก Python 3 และ Restart Kernel → Run All เมื่อทดสอบใหม่ หากเปิดจาก VS Code ให้เลือก interpreter ใน .venv ของ repo
+เปิด JupyterLab จาก environment เดียวกับที่ติดตั้งแพ็กเกจแล้ว เลือก Python 3 และ Restart Kernel → Run All เมื่อทดสอบใหม่ หากเปิดจาก VS Code ให้เลือก interpreter ใน .venv ของ repo หรือ .venv-wsl เมื่อใช้ WSL
+
+## คัดลอกโค้ดจาก README
+
+1. ติดตั้งแพ็กเกจด้วยวิธีใดวิธีหนึ่งข้างต้น แล้วเปิด notebook ด้วย environment นั้น
+2. คัดลอกบล็อกที่ระบุภาษา `python` ทั้งชุด รวม import และฟังก์ชัน ไป cell เดียวใน notebook เปล่าแล้วรัน หรือบันทึกเป็นไฟล์ `.py` แล้วรันจาก terminal
+3. บล็อก `bash`/`powershell` เป็นคำสั่ง terminal ไม่วางใน cell Python ตรง ๆ ส่วนบล็อก `mojo` ให้บันทึกเป็นไฟล์ `.mojo` ตามคู่มือเสริม
+4. รูปและไฟล์ที่สร้างจะอยู่ใน `outputs/` ใต้ working directory ปัจจุบัน หากต้องการให้ตรงเส้นทางในคู่มือ ให้เริ่มที่ root ของ repo
+5. หากทดลองเปลี่ยนตัวแปร ให้ Restart Kernel → Run All ก่อนสรุปผล เพื่อไม่ใช้ object ที่ fit จากการทดลองก่อนหน้าโดยไม่ตั้งใจ
+
+README แต่ละบทมีข้อมูลตัวอย่างอยู่ในโค้ดหรือ loader ของ scikit-learn ครบ ไม่ต้องหา CSV เพิ่ม บท 16 สร้าง input CSV ตัวอย่างหลังฝึกเสร็จ ให้รันคำสั่งทำนายหลังเห็นไฟล์นั้นแล้ว
 
 Notebook มี cell แรกสำหรับกลับไป working directory ของ repo เมื่อเปิดจากโฟลเดอร์บทเรียน โค้ดตัวอย่างไม่จำเป็นต้องรันบทก่อนหน้า หากคัดลอกไป notebook เปล่า ให้รัน Python block ทั้งชุดตามลำดับ
 
@@ -102,7 +112,10 @@ Notebook มี cell แรกสำหรับกลับไป working direc
 ```bash
 uv run --frozen python scripts/sync_materials.py
 uv run --frozen python scripts/sync_materials.py --check
+uv run --frozen python scripts/verify_course.py --mode readmes
 ```
 
 คำสั่งสร้าง notebook ใหม่จะล้าง output และการแก้ cell ที่ทำเฉพาะใน notebook หากต้องการเก็บการทดลองส่วนตัว ให้ Save As ชื่ออื่นก่อน
 
+
+โหมด `readmes` รันบล็อก Python จาก README ทุกบทและตัวอย่างคณิตศาสตร์ใน process ใหม่แต่ละบล็อก ส่วน `--mode all` รวมสคริปต์ บล็อก README และ notebook การตรวจ Mojo ใช้ `python scripts/verify_mojo.py` จาก environment เสริมตาม [คู่มือ Mojo](../mojo/README.md)

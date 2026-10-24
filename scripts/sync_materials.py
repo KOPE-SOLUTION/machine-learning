@@ -62,6 +62,21 @@ def main():
                     stale.append(str(path.relative_to(ROOT)))
             else:
                 path.write_text(content, encoding="utf-8", newline="\n")
+    for source in sorted(ROOT.glob("mojo/*/main.mojo")):
+        readme = source.with_name("README.md")
+        rendered = readme.read_text(encoding="utf-8")
+        for label, language, file in (("MOJO", "mojo", source),
+                                      ("PYTHON", "python", source.with_name("reference.py"))):
+            start, end = f"<!-- {label}:START -->", f"<!-- {label}:END -->"
+            before, rest = rendered.split(start, 1)
+            _, after = rest.split(end, 1)
+            code = file.read_text(encoding="utf-8").rstrip() + "\n"
+            rendered = before + start + f"\n```{language}\n" + code + "```\n" + end + after
+        if args.check:
+            if readme.read_text(encoding="utf-8") != rendered:
+                stale.append(str(readme.relative_to(ROOT)))
+        else:
+            readme.write_text(rendered, encoding="utf-8", newline="\n")
     if stale:
         raise SystemExit("Out of sync: " + ", ".join(stale))
     print("README code and notebooks:", "in sync" if args.check else "generated")

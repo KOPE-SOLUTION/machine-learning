@@ -5,6 +5,10 @@
 เวลาเรียนและทดลองโดยประมาณ: 50–70 นาที  
 สิ่งที่จะทำได้: ใช้ GridSearchCV อ่านพารามิเตอร์แบบ step__name และตีความ learning curve อย่างระมัดระวังได้
 
+## ก่อนเริ่มบทนี้
+
+ใช้ KNN/Pipeline จากบท 03 และ 5-fold CV จากบท 08 บทนี้ให้เครื่องลองค่าที่กำหนดอย่างเป็นระบบ แทนการแก้ค่าทีละครั้งแล้วมองคะแนน test
+
 ## แยกสิ่งที่เรียนกับสิ่งที่เลือก
 
 Parameter เป็นค่าที่โมเดลเรียน เช่น coefficient ของเส้นตรง ส่วน hyperparameter เป็นการตั้งค่าของวิธีเรียน เช่นจำนวนเพื่อนบ้าน k หรือความลึกสูงสุดของต้นไม้ เราต้องเลือกค่าหลังด้วยข้อมูลที่ไม่ได้ใช้ fit ในรอบนั้น
@@ -18,6 +22,26 @@ Scaler ต้องอยู่ภายใน Pipeline ที่ส่งเข
 Learning curve เปรียบเทียบคะแนน train กับ validation เมื่อเพิ่มจำนวนข้อมูลฝึก ถ้าสองเส้นต่ำและใกล้กัน ให้ตรวจความสามารถของโมเดลและ feature; ถ้า train สูงกว่า validation มาก ให้พิจารณาการลดความซับซ้อนหรือเพิ่มข้อมูล
 
 กราฟเป็นเครื่องมือวินิจฉัย ไม่ใช่คำรับรองว่าข้อมูลเพิ่มจะช่วยเสมอ บทนี้ใช้ hyperparameter ที่เลือกจาก train มาสร้างกราฟ จึงไม่ถือว่าคะแนนกราฟเป็นการประเมินอิสระอีกชุดหนึ่ง
+
+## อ่านตารางการค้นหาก่อนดูผู้ชนะ
+
+KNN มี `weights="uniform"` ให้เพื่อนบ้านทุกตัวลงคะแนนเท่ากัน และ `weights="distance"` ให้น้ำหนักเพื่อนบ้านที่ใกล้มากกว่า เมื่อลองคู่กับ k=3, 5, 9 จะมีหกทางเลือก `GridSearchCV` fit Pipeline ใหม่ให้แต่ละคู่และแต่ละ fold แล้วเฉลี่ยคะแนน validation
+
+ในตารางผล `mean_test_score` หมายถึงค่าเฉลี่ย **validation ใน CV** ส่วน `std_test_score` คือการกระจายระหว่าง fold ไม่ใช่คะแนน final test ความต่างเล็กน้อยบน Iris ไม่ได้ยืนยันว่าคู่หนึ่งดีกว่าเสมอในงานอื่น
+
+`best_params_` เก็บคู่ที่เลือก `best_score_` เก็บคะแนน CV ของคู่นั้น และ `best_estimator_` เป็น Pipeline ที่ refit ด้วย train ทั้งชุดโดยปริยาย จึงใช้ `search.predict(X_test)` ได้โดยไม่ต้อง fit เองซ้ำ
+
+## แกนของ learning curve บอกอะไร
+
+ข้อมูล train มี 120 แถว แต่ละ CV fold ฝึกได้มากสุด 96 แถว แกนนอนจึงไม่ได้จบที่ 120 เส้นแต่ละจุดเฉลี่ยจากหลาย fold เมื่อเลือกสัดส่วนข้อมูลฝึก 0.4, 0.6, 0.8 และ 1.0
+
+| ลักษณะที่เห็น | สิ่งที่ควรตรวจต่อ |
+|---|---|
+| train และ validation ต่ำใกล้กัน | feature ให้ข้อมูลพอหรือไม่ โมเดลเรียบง่ายเกินไปหรือไม่ |
+| train สูง แต่ validation ต่ำกว่า | overfitting, ขนาดข้อมูล และการจำกัดความซับซ้อน |
+| validation สูงขึ้นเมื่อเพิ่มข้อมูล | อาจได้ประโยชน์จากข้อมูลเพิ่มที่เหมาะกับการใช้งาน |
+
+กราฟไม่ได้สร้างข้อมูลใหม่จริงนอกชุดที่มี และไม่พิสูจน์ว่ายิ่งเพิ่มข้อมูลยิ่งดีเสมอ คำว่า **nested CV** ที่กล่าวถึงข้างต้นเป็นวิธีขั้นสูงที่แยกรอบเลือกค่ากับรอบประเมินกระบวนการออกจากกัน รอบแรกใช้ train/CV/test ให้ถูกก่อน
 
 ## ลงมือรัน
 
@@ -36,6 +60,7 @@ uv run --frozen python lessons/10-tuning-and-learning-curves/lesson.py
 from pathlib import Path
 
 import matplotlib.pyplot as plt
+import pandas as pd
 from sklearn.datasets import load_iris
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import GridSearchCV, StratifiedKFold, learning_curve, train_test_split
@@ -52,6 +77,10 @@ search = GridSearchCV(
     scoring="accuracy", cv=cv, n_jobs=1,
 )
 search.fit(X_train, y_train)
+results = pd.DataFrame(search.cv_results_)
+print(results[["param_knn__n_neighbors", "param_knn__weights",
+               "mean_test_score", "std_test_score", "rank_test_score"]]
+      .sort_values("rank_test_score").round(3).to_string(index=False))
 print("Best parameters:", search.best_params_)
 print(f"Best CV accuracy: {search.best_score_:.3f}")
 

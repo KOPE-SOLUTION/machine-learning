@@ -3,6 +3,7 @@
 from pathlib import Path
 
 import matplotlib.pyplot as plt
+import pandas as pd
 from sklearn.datasets import load_iris
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import GridSearchCV, StratifiedKFold, learning_curve, train_test_split
@@ -19,6 +20,10 @@ search = GridSearchCV(
     scoring="accuracy", cv=cv, n_jobs=1,
 )
 search.fit(X_train, y_train)
+results = pd.DataFrame(search.cv_results_)
+print(results[["param_knn__n_neighbors", "param_knn__weights",
+               "mean_test_score", "std_test_score", "rank_test_score"]]
+      .sort_values("rank_test_score").round(3).to_string(index=False))
 print("Best parameters:", search.best_params_)
 print(f"Best CV accuracy: {search.best_score_:.3f}")
 

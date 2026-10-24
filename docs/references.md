@@ -60,7 +60,7 @@
 - [Python interoperability](https://mojolang.org/docs/manual/python/) — ภาพรวมการเชื่อม Python
 - [Calling Python from Mojo](https://mojolang.org/docs/manual/python/python-from-mojo/) — การ import และเลือก Python runtime
 
-เอกสาร Mojo ที่ตรวจแสดงรุ่น 1.2.0 ตัวอย่าง Mojo ใน repo ยังไม่ได้ทดสอบด้วย compiler; อย่าใช้รายการอ้างอิงนี้แทนผลการทดสอบจริง ดู [สถานะเส้นทางเสริม](../mojo/README.md)
+เอกสารและ compiler ที่ใช้ตรวจ Mojo เป็นรุ่น 1.2.0 ทั้งสองบท compile/run ผ่านบน Ubuntu 24.04 / WSL และเทียบผลกับ Python reference แล้ว ดู [สถานะเส้นทางเสริม](../mojo/README.md)
 
 ## สิทธิ์ของแหล่งข้อมูล
 

@@ -3,7 +3,7 @@
 import numpy as np
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_absolute_error
-from sklearn.model_selection import GroupShuffleSplit, TimeSeriesSplit
+from sklearn.model_selection import GroupShuffleSplit, TimeSeriesSplit, train_test_split
 from sklearn.neighbors import KNeighborsClassifier
 
 rng = np.random.default_rng(42)
@@ -12,10 +12,19 @@ user_signal = rng.normal(size=(60, 3))
 X = user_signal[groups] + rng.normal(0, 0.05, (len(groups), 3))
 user_label = rng.integers(0, 2, size=60)
 y = user_label[groups]
+
+# การสุ่มแถวใช้เทียบให้เห็นการปะปนของคนเดิม ไม่ใช้เลือกวิธีประเมินจากคะแนนสูง
+row_train, row_test = train_test_split(np.arange(len(X)), test_size=0.2, random_state=42)
+row_model = KNeighborsClassifier(n_neighbors=3).fit(X[row_train], y[row_train])
+shared_users = set(groups[row_train]) & set(groups[row_test])
+print("Random row split - shared users:", len(shared_users))
+print(f"Random row-split accuracy: {row_model.score(X[row_test], y[row_test]):.3f}")
+
 split = GroupShuffleSplit(n_splits=1, test_size=0.2, random_state=42)
 train_idx, test_idx = next(split.split(X, y, groups))
 assert set(groups[train_idx]).isdisjoint(groups[test_idx])
 model = KNeighborsClassifier(n_neighbors=3).fit(X[train_idx], y[train_idx])
+print("Group split - shared users:", len(set(groups[train_idx]) & set(groups[test_idx])))
 print("Held-out user groups:", len(np.unique(groups[test_idx])))
 print(f"New-user accuracy (random user labels): {model.score(X[test_idx], y[test_idx]):.3f}")
 

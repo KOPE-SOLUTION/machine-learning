@@ -15,7 +15,7 @@
 
 ## การประเมิน
 
-แบ่ง 80/20 แบบ stratified ด้วย seed 42; เลือก hyperparameter ตาม macro F1 และเทียบกับ baseline ที่ทายคลาสพบบ่อยที่สุด ดูค่าที่วัดจริงของการรันตนเองใน outputs/16-digits-project/metrics.json พร้อม Python/scikit-learn version และ split-indices.npz
+แบ่ง 80/20 แบบ stratified ด้วย seed 42; เลือก hyperparameter ตาม macro F1 และเทียบกับ baseline ที่ทายคลาสพบบ่อยที่สุด โดยรายงานทั้ง accuracy และ macro F1 ของ baseline กับโมเดล ดูค่าที่วัดจริงของการรันตนเองใน outputs/16-digits-project/metrics.json พร้อม Python/scikit-learn version และ split-indices.npz
 
 CV score ใช้เลือกโมเดล ส่วน test score ใช้รายงานครั้งสุดท้าย ภาพ error analysis ใช้ทำความเข้าใจข้อจำกัด หากใช้ภาพเหล่านี้ปรับโมเดลต่อ ต้องออกแบบการประเมินอิสระใหม่
 

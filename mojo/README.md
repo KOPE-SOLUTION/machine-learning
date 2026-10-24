@@ -11,36 +11,40 @@
 
 ## สถานะของตัวอย่าง
 
-**ยังไม่ได้ compile/run ไฟล์ .mojo ในการตรวจรอบนี้** การตรวจฉบับแรกทำบน Windows; ฉบับปรับพื้นฐานผู้เรียนย้าย repo และตรวจ Python ผ่าน Ubuntu 24.04 บน WSL แล้ว แต่ยังไม่ได้ติดตั้ง/ตรวจ Mojo compiler ตัวอย่างอ้างอิง syntax จากเอกสาร Mojo ที่แสดงรุ่น 1.2.0 ณ วันที่ตรวจ 24 ตุลาคม 2026; ไม่ใช่การยืนยันความเข้ากันได้ของ compiler ที่ติดตั้งบนเครื่องผู้เรียน
+**ทั้งสองบท compile และรันผ่านด้วย Mojo 1.2.0 บน Ubuntu 24.04 / WSL (x86_64), CPython 3.12.3** ตรวจเมื่อ 24 ตุลาคม 2026 โดยเทียบผลกับ Python reference ใน environment เดียวกัน
 
-Python reference ทั้งสองไฟล์รันตรวจแยกได้ และใช้เทียบความถูกต้องก่อนวัดความเร็ว หาก compiler ใช้คนละรุ่นให้ตรวจ import, function syntax และ Python interop ตามเอกสารรุ่นนั้นก่อน ไม่ควรแก้ Python environment หลักเพื่อลองไลบรารีเสริม
+- M01: w≈3, b≈2 และ MSE ใกล้ศูนย์ ตรงกับ Python ภายใน tolerance ที่กำหนด
+- M02: accuracy 0.933333 และคำทำนายห้าตัวแรก `[0, 2, 1, 1, 0]` ตรงกับ Python
+
+ไฟล์ `requirements.lock` ล็อก dependency ของเส้นทาง Mojo แยกจากหลักสูตร Python ผลตรวจนี้เป็นของ Linux x86_64 ผ่าน WSL; ยังไม่ได้ตรวจบน macOS หรือ CPU สถาปัตยกรรมอื่น
 
 ## เตรียม environment แยก
 
-เอกสารทางการระบุ Linux/macOS และ Windows ผ่าน WSL ตรวจ [system requirements](https://mojolang.org/docs/requirements/) และ [คู่มือติดตั้ง](https://mojolang.org/install/) ก่อน คำสั่งต่อไปนี้สำหรับ shell บนระบบที่รองรับ; บน Windows ให้ใช้ shell ภายใน WSL ไม่ใช่ PowerShell
-
-จากโฟลเดอร์ repo ในระบบที่รองรับ หลังติดตั้ง uv แล้ว:
+ใช้ terminal ภายใน WSL บน Windows ตาม [system requirements](https://mojolang.org/docs/requirements/) และ [คู่มือติดตั้งทางการ](https://mojolang.org/install/) เริ่มจากโฟลเดอร์หลักของ repo หลังติดตั้ง uv แล้ว:
 
 ```bash
-uv venv .venv-mojo --python 3.13
-uv pip install --python .venv-mojo/bin/python mojo==1.2.0 numpy==2.2.6 scikit-learn==1.7.1 scipy==1.16.1 joblib==1.5.1
-.venv-mojo/bin/mojo --version
-.venv-mojo/bin/python --version
+uv venv .venv-mojo --python 3.12
+uv pip sync --python .venv-mojo/bin/python mojo/requirements.lock
+source .venv-mojo/bin/activate
+mojo --version
+python --version
 ```
 
-แพ็กเกจ Mojo ถูกระบุรุ่นตามเอกสารที่ใช้เขียนตัวอย่าง แต่ environment เส้นทางนี้ยังไม่มี lockfile ที่ผ่านการ resolve และทดสอบจริง หากแพ็กเกจ/รุ่นนั้นไม่มีสำหรับแพลตฟอร์มของคุณ ให้ยึดคู่มือติดตั้งทางการและบันทึกรุ่นที่ได้; บทหลัก Python ยังเรียนต่อได้ตามปกติ
+ถ้าไม่มี Python 3.12 ให้ใช้ `uv python install 3.12` แล้วรันคำสั่งสร้าง environment อีกครั้ง การ activate นี้เลือก Mojo และ Python จาก `.venv-mojo` สำหรับ terminal ปัจจุบัน ไม่ติดตั้ง compiler ทับ environment ของหลักสูตรหลัก
 
-เพื่อให้ Mojo และ Python ใช้ environment เดียวกัน:
+## รันตามลำดับ
 
 ```bash
-source .venv-mojo/bin/activate
 mojo mojo/01-gradient-descent/main.mojo
 python mojo/01-gradient-descent/reference.py
 mojo mojo/02-python-interop/main.mojo
 python mojo/02-python-interop/reference.py
+python scripts/verify_mojo.py
 ```
 
-Mojo ที่เรียก Python ต้องหา CPython dynamic library และแพ็กเกจเจอ หาก import Python ไม่สำเร็จ ให้ตรวจ [Calling Python from Mojo](https://mojolang.org/docs/manual/python/python-from-mojo/) ไม่ตั้ง path ไปยัง Python ของ Windows จาก WSL
+คำสั่งสุดท้ายรันทั้งสองภาษาและตรวจผลเทียบอัตโนมัติ บันทึกหลักฐานใน `outputs/verification/mojo/` เมื่อจะกลับไปบท Python ใช้ `deactivate` แล้วรัน environment หลักตาม [setup](../docs/setup.md)
+
+หาก Mojo หา Python library ไม่เจอ ให้ตรวจว่า `which mojo` และ `which python` ชี้ `.venv-mojo/bin/` ทั้งคู่ แล้วรัน `python -c "import sklearn; print(sklearn.__version__)"` อ่าน [Calling Python from Mojo](https://mojolang.org/docs/manual/python/python-from-mojo/) หากยังมีปัญหา ไม่ชี้ WSL ไปยัง Python executable ของ Windows
 
 ## อ่านผลอย่างถูกต้อง
 

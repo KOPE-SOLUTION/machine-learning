@@ -31,6 +31,18 @@ class LearningContracts(unittest.TestCase):
         with self.assertRaises(ValueError):
             module.fit_gradient_descent([1, 2], [3])
 
+    def test_gradient_descent_rejects_invalid_settings(self):
+        module = load_lesson("15-gradient-descent")
+        for kwargs in ({"learning_rate": np.nan}, {"learning_rate": np.inf},
+                       {"learning_rate": 0}, {"steps": 1.5}, {"steps": 0}):
+            with self.subTest(kwargs=kwargs), self.assertRaises(ValueError):
+                module.fit_gradient_descent([0, 1], [2, 5], **kwargs)
+
+    def test_gradient_descent_stops_when_loss_overflows(self):
+        module = load_lesson("15-gradient-descent")
+        with self.assertRaisesRegex(FloatingPointError, "reduce learning_rate"):
+            module.fit_gradient_descent([1, 2], [3, 5], learning_rate=1e200)
+
     def test_pixel_contract_rejects_bad_inputs(self):
         module = load_lesson("16-digits-project")
         for bad in (np.zeros(64), np.zeros((1, 63)), np.full((1, 64), np.nan),
