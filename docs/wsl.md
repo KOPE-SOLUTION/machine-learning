@@ -58,7 +58,16 @@ git remote -v
 
 repo เป็นสาธารณะ ผู้เรียน clone เพื่ออ่าน/รันได้โดยไม่ต้อง login GitHub ส่วนการ push ต้องมีสิทธิ์และตั้ง authentication ของ Git ใน WSL แยกตามวิธีที่ใช้
 
-จากนั้นไป [คู่มือตั้ง environment](setup.md) เลือก uv หรือ venv + pip สร้าง environment **ใหม่ในตำแหน่งใหม่** อย่าคัดลอก `.venv`, `.venv-wsl` หรือ `.venv-mojo` จาก checkout เก่า เพราะ environment มี path ของ interpreter และอาจมี binary คนละระบบปฏิบัติการ
+จากนั้นติดตั้งเครื่องมือ Python และสร้าง environment แยกสำหรับ repo:
+
+```bash
+sudo apt install -y python3.12-venv
+python3.12 -m venv .venv
+.venv/bin/python -m pip install -r requirements.txt
+.venv/bin/python -m jupyterlab
+```
+
+อ่าน [คู่มือติดตั้ง](setup.md) เพิ่มเติมเมื่อต้องการแก้ปัญหา kernel ให้สร้าง environment **ใหม่ในตำแหน่งใหม่** อย่าคัดลอก `.venv`, `.venv-wsl` หรือ `.venv-mojo` จาก checkout เก่า เพราะ environment มี path ของ interpreter และอาจมี binary คนละระบบปฏิบัติการ
 
 ## 3. ย้ายจากโฟลเดอร์ Windows โดยไม่ทำงานหาย
 
@@ -102,7 +111,7 @@ explorer.exe .
 | NVIDIA driver บน Windows | ให้ระบบและ WSL 2 ติดต่อ GPU |
 | CUDA runtime ของ framework | ไลบรารีที่โปรแกรม GPU เรียกใช้; วิธีติดตั้งขึ้นกับ framework และรุ่น |
 | CUDA Toolkit / `nvcc` | เครื่องมือสำหรับคอมไพล์โค้ด CUDA หรือ extension ที่ต้อง build; ไม่จำเป็นต้องมีเพื่อรันทุกโปรแกรม GPU |
-| uv / venv | แยก Python และแพ็กเกจ; ไม่จัดการไดรเวอร์ Windows |
+| venv / pip | แยก Python และแพ็กเกจ; ไม่จัดการไดรเวอร์ Windows |
 
 [NVIDIA ระบุให้ใช้ไดรเวอร์ Windows ที่รองรับ WSL และไม่ติดตั้ง Linux display driver ใน WSL](https://docs.nvidia.com/cuda/wsl-user-guide/index.html) หากต้องคอมไพล์ CUDA ให้ทำตามตัวเลือก Toolkit สำหรับ WSL ในคู่มือทางการ อย่าติดตั้งแพ็กเกจรวมไดรเวอร์ Linux ตามคู่มือ Ubuntu บนเครื่องจริงโดยตรง
 

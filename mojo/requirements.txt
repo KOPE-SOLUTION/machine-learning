@@ -1,0 +1,15 @@
+# Optional Mojo course on Linux; pinned separately from the Python notebook course.
+click==8.5.0
+joblib==1.5.1
+mblack==26.7.0
+mojo==1.2.0
+mojo-compiler==1.2.0
+mojo-compiler-mojo-libs==1.2.0
+mojo-lldb-libs==1.2.0
+mypy-extensions==1.1.0
+numpy==2.2.6
+pathspec==1.1.1
+platformdirs==4.13.5
+scikit-learn==1.7.1
+scipy==1.16.1
+threadpoolctl==3.7.0

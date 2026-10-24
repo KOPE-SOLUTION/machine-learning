@@ -1,7 +1,6 @@
 .venv/
 .venv-wsl/
 .venv-mojo/
-.uv-cache/
 __pycache__/
 *.py[cod]
 .ipynb_checkpoints/

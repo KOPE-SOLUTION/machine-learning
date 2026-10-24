@@ -29,7 +29,7 @@ CV score ใช้เลือกโมเดล ส่วน test score ใช�
 
 ## การนำ artifact กลับมาใช้
 
-เก็บ model.joblib คู่กับ lockfile และ metrics.json ใช้ environment รุ่นเดิม โหลดเฉพาะไฟล์ที่สร้างเองหรือเชื่อถือ ใช้ validate_pixels ก่อน predict และตรวจ preprocessing ของภาพให้เหมือนข้อมูลฝึก
+เก็บ model.joblib คู่กับ requirements.txt และ metrics.json พร้อมบันทึกรุ่นแพ็กเกจที่ใช้จริง เพื่อสร้าง environment รุ่นเดิม โหลดเฉพาะไฟล์ที่สร้างเองหรือเชื่อถือ ใช้ validate_pixels ก่อน predict และตรวจ preprocessing ของภาพให้เหมือนข้อมูลฝึก
 
 ## บันทึกการทดลองของผู้เรียน
 

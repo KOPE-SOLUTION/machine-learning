@@ -1,509 +1,493 @@
 {
   "checked_date": "2026-10-24",
   "timezone": "Asia/Bangkok",
-  "revision": "Simple .ipynb workflow matching visualization-with-matplotlib; no setup steps in main lessons",
-  "previous_setup_wsl_run": {
-    "python": "3.12.3",
-    "platform": "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+  "revision": "pip installation and notebook-based learning",
+  "base_commit": "2511d9e29b423a1075512433316d9ed3ddba087f",
+  "previous_report_url": "https://github.com/KOPE-SOLUTION/machine-learning/blob/2511d9e29b423a1075512433316d9ed3ddba087f/docs/verification-results.json",
+  "windows_pip_verification": {
+    "python": "3.13.7",
+    "platform": "Windows-11-10.0.26200-SP0",
     "packages": {
       "numpy": "2.2.6",
       "pandas": "2.3.2",
+      "matplotlib": "3.10.3",
       "scikit-learn": "1.7.1",
-      "matplotlib": "3.10.3"
+      "scipy": "1.16.1",
+      "joblib": "1.5.1",
+      "jupyterlab": "4.4.6",
+      "ipykernel": "6.30.1",
+      "nbformat": "5.10.4",
+      "nbclient": "0.10.2",
+      "pip": "25.2"
     },
-    "results": [
+    "checked_date": "2026-10-24",
+    "timezone": "Asia/Bangkok",
+    "method": "Fresh Windows environment created by Python venv; install requirements.txt with pip; existing user Python and Jupyter unchanged",
+    "steps": [
       {
-        "lesson": "00-setup",
-        "kind": "script",
-        "passed": true,
-        "seconds": 8.26
+        "name": "create-environment",
+        "returncode": 0,
+        "seconds": 7.44
       },
       {
-        "lesson": "01-ml-workflow",
-        "kind": "script",
-        "passed": true,
-        "seconds": 8.34
+        "name": "pip-install",
+        "returncode": 0,
+        "seconds": 111.52
       },
       {
-        "lesson": "02-data-and-plots",
-        "kind": "script",
-        "passed": true,
-        "seconds": 18.66
+        "name": "pip-check",
+        "returncode": 0,
+        "seconds": 2.28
       },
       {
-        "lesson": "03-first-classifier",
-        "kind": "script",
-        "passed": true,
-        "seconds": 12.66
+        "name": "sync-check",
+        "returncode": 0,
+        "seconds": 0.55
       },
       {
-        "lesson": "04-validation-and-metrics",
-        "kind": "script",
-        "passed": true,
-        "seconds": 9.48
+        "name": "material-check",
+        "returncode": 0,
+        "seconds": 1.77
       },
       {
-        "lesson": "05-linear-regression",
-        "kind": "script",
-        "passed": true,
-        "seconds": 10.8
+        "name": "behavioral-tests",
+        "returncode": 0,
+        "seconds": 7.14
       },
       {
-        "lesson": "06-feature-engineering",
-        "kind": "script",
-        "passed": true,
-        "seconds": 9.55
-      },
-      {
-        "lesson": "07-naive-bayes-text",
-        "kind": "script",
-        "passed": true,
-        "seconds": 8.77
-      },
-      {
-        "lesson": "08-support-vector-machines",
-        "kind": "script",
-        "passed": true,
-        "seconds": 11.49
-      },
-      {
-        "lesson": "09-trees-and-forests",
-        "kind": "script",
-        "passed": true,
-        "seconds": 11.4
-      },
-      {
-        "lesson": "10-tuning-and-learning-curves",
-        "kind": "script",
-        "passed": true,
-        "seconds": 10.83
-      },
-      {
-        "lesson": "11-principal-components",
-        "kind": "script",
-        "passed": true,
-        "seconds": 11.9
-      },
-      {
-        "lesson": "12-manifold-learning",
-        "kind": "script",
-        "passed": true,
-        "seconds": 14.01
-      },
-      {
-        "lesson": "13-kmeans-clustering",
-        "kind": "script",
-        "passed": true,
-        "seconds": 12.48
-      },
-      {
-        "lesson": "14-mixtures-and-density",
-        "kind": "script",
-        "passed": true,
-        "seconds": 11.8
-      },
-      {
-        "lesson": "15-gradient-descent",
-        "kind": "script",
-        "passed": true,
-        "seconds": 10.41
-      },
-      {
-        "lesson": "16-digits-project",
-        "kind": "script",
-        "passed": true,
-        "seconds": 11.74
-      },
-      {
-        "lesson": "17-time-and-groups",
-        "kind": "script",
-        "passed": true,
-        "seconds": 8.91
-      },
-      {
-        "lesson": "00-setup",
-        "kind": "readme",
-        "block": 1,
-        "passed": true,
-        "seconds": 8.5
-      },
-      {
-        "lesson": "01-ml-workflow",
-        "kind": "readme",
-        "block": 1,
-        "passed": true,
-        "seconds": 8.69
-      },
-      {
-        "lesson": "02-data-and-plots",
-        "kind": "readme",
-        "block": 1,
-        "passed": true,
-        "seconds": 10.37
-      },
-      {
-        "lesson": "03-first-classifier",
-        "kind": "readme",
-        "block": 1,
-        "passed": true,
-        "seconds": 9.05
-      },
-      {
-        "lesson": "04-validation-and-metrics",
-        "kind": "readme",
-        "block": 1,
-        "passed": true,
-        "seconds": 9.11
-      },
-      {
-        "lesson": "05-linear-regression",
-        "kind": "readme",
-        "block": 1,
-        "passed": true,
-        "seconds": 10.85
-      },
-      {
-        "lesson": "06-feature-engineering",
-        "kind": "readme",
-        "block": 1,
-        "passed": true,
-        "seconds": 9.09
-      },
-      {
-        "lesson": "07-naive-bayes-text",
-        "kind": "readme",
-        "block": 1,
-        "passed": true,
-        "seconds": 8.44
-      },
-      {
-        "lesson": "08-support-vector-machines",
-        "kind": "readme",
-        "block": 1,
-        "passed": true,
-        "seconds": 11.4
-      },
-      {
-        "lesson": "09-trees-and-forests",
-        "kind": "readme",
-        "block": 1,
-        "passed": true,
-        "seconds": 11.0
-      },
-      {
-        "lesson": "10-tuning-and-learning-curves",
-        "kind": "readme",
-        "block": 1,
-        "passed": true,
-        "seconds": 11.03
-      },
-      {
-        "lesson": "11-principal-components",
-        "kind": "readme",
-        "block": 1,
-        "passed": true,
-        "seconds": 11.26
-      },
-      {
-        "lesson": "12-manifold-learning",
-        "kind": "readme",
-        "block": 1,
-        "passed": true,
-        "seconds": 13.0
-      },
-      {
-        "lesson": "13-kmeans-clustering",
-        "kind": "readme",
-        "block": 1,
-        "passed": true,
-        "seconds": 12.22
-      },
-      {
-        "lesson": "14-mixtures-and-density",
-        "kind": "readme",
-        "block": 1,
-        "passed": true,
-        "seconds": 12.27
-      },
-      {
-        "lesson": "15-gradient-descent",
-        "kind": "readme",
-        "block": 1,
-        "passed": true,
-        "seconds": 10.55
-      },
-      {
-        "lesson": "16-digits-project",
-        "kind": "readme",
-        "block": 1,
-        "passed": true,
-        "seconds": 12.28
-      },
-      {
-        "lesson": "17-time-and-groups",
-        "kind": "readme",
-        "block": 1,
-        "passed": true,
-        "seconds": 9.01
-      },
-      {
-        "lesson": "01-gradient-descent",
-        "kind": "readme",
-        "block": 1,
-        "passed": true,
-        "seconds": 0.95
-      },
-      {
-        "lesson": "02-python-interop",
-        "kind": "readme",
-        "block": 1,
-        "passed": true,
-        "seconds": 9.12
-      },
-      {
-        "lesson": "math-primer",
-        "kind": "readme",
-        "block": 1,
-        "passed": true,
-        "seconds": 0.8
-      },
-      {
-        "lesson": "00-setup",
-        "kind": "notebook",
-        "passed": true,
-        "seconds": 12.21
-      },
-      {
-        "lesson": "01-ml-workflow",
-        "kind": "notebook",
-        "passed": true,
-        "seconds": 12.28
-      },
-      {
-        "lesson": "02-data-and-plots",
-        "kind": "notebook",
-        "passed": true,
-        "seconds": 13.84
-      },
-      {
-        "lesson": "03-first-classifier",
-        "kind": "notebook",
-        "passed": true,
-        "seconds": 12.7
-      },
-      {
-        "lesson": "04-validation-and-metrics",
-        "kind": "notebook",
-        "passed": true,
-        "seconds": 12.32
-      },
-      {
-        "lesson": "05-linear-regression",
-        "kind": "notebook",
-        "passed": true,
-        "seconds": 13.8
-      },
-      {
-        "lesson": "06-feature-engineering",
-        "kind": "notebook",
-        "passed": true,
-        "seconds": 12.28
-      },
-      {
-        "lesson": "07-naive-bayes-text",
-        "kind": "notebook",
-        "passed": true,
-        "seconds": 11.78
-      },
-      {
-        "lesson": "08-support-vector-machines",
-        "kind": "notebook",
-        "passed": true,
-        "seconds": 14.24
-      },
-      {
-        "lesson": "09-trees-and-forests",
-        "kind": "notebook",
-        "passed": true,
-        "seconds": 14.41
-      },
-      {
-        "lesson": "10-tuning-and-learning-curves",
-        "kind": "notebook",
-        "passed": true,
-        "seconds": 14.14
-      },
-      {
-        "lesson": "11-principal-components",
-        "kind": "notebook",
-        "passed": true,
-        "seconds": 14.12
-      },
-      {
-        "lesson": "12-manifold-learning",
-        "kind": "notebook",
-        "passed": true,
-        "seconds": 16.59
-      },
-      {
-        "lesson": "13-kmeans-clustering",
-        "kind": "notebook",
-        "passed": true,
-        "seconds": 14.98
-      },
-      {
-        "lesson": "14-mixtures-and-density",
-        "kind": "notebook",
-        "passed": true,
-        "seconds": 15.15
-      },
-      {
-        "lesson": "15-gradient-descent",
-        "kind": "notebook",
-        "passed": true,
-        "seconds": 13.66
-      },
-      {
-        "lesson": "16-digits-project",
-        "kind": "notebook",
-        "passed": true,
-        "seconds": 14.71
-      },
-      {
-        "lesson": "17-time-and-groups",
-        "kind": "notebook",
-        "passed": true,
-        "seconds": 12.2
+        "name": "all-course-examples",
+        "returncode": 0,
+        "seconds": 170.3
       }
-    ]
-  },
-  "behavioral_tests": {
-    "passed": 6,
-    "total": 6
-  },
-  "mojo_compiler": {
-    "mojo": "Mojo 1.2.0 (2016d0cd)",
-    "python": "3.12.3",
-    "platform": "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.39",
-    "results": [
-      {
-        "lesson": "01-gradient-descent",
-        "passed": true,
-        "outputs": {
-          "mojo": "w: 2.9999999999999436\nb: 1.9999999999999996\ntraining MSE: 1.5881051921069951e-27\n",
-          "python": "w: 2.9999999999999436\nb: 1.9999999999999996\ntraining MSE: 1.5881051921069951e-27\n"
+    ],
+    "behavioral_tests_passed": 6,
+    "course": {
+      "python": "3.13.7",
+      "platform": "Windows-11-10.0.26200-SP0",
+      "packages": {
+        "numpy": "2.2.6",
+        "pandas": "2.3.2",
+        "scikit-learn": "1.7.1",
+        "matplotlib": "3.10.3"
+      },
+      "results": [
+        {
+          "lesson": "00-setup",
+          "kind": "script",
+          "passed": true,
+          "seconds": 1.97
+        },
+        {
+          "lesson": "01-ml-workflow",
+          "kind": "script",
+          "passed": true,
+          "seconds": 2.04
+        },
+        {
+          "lesson": "02-data-and-plots",
+          "kind": "script",
+          "passed": true,
+          "seconds": 2.86
+        },
+        {
+          "lesson": "03-first-classifier",
+          "kind": "script",
+          "passed": true,
+          "seconds": 2.39
+        },
+        {
+          "lesson": "04-validation-and-metrics",
+          "kind": "script",
+          "passed": true,
+          "seconds": 2.11
+        },
+        {
+          "lesson": "05-linear-regression",
+          "kind": "script",
+          "passed": true,
+          "seconds": 2.8
+        },
+        {
+          "lesson": "06-feature-engineering",
+          "kind": "script",
+          "passed": true,
+          "seconds": 2.2
+        },
+        {
+          "lesson": "07-naive-bayes-text",
+          "kind": "script",
+          "passed": true,
+          "seconds": 2.07
+        },
+        {
+          "lesson": "08-support-vector-machines",
+          "kind": "script",
+          "passed": true,
+          "seconds": 3.1
+        },
+        {
+          "lesson": "09-trees-and-forests",
+          "kind": "script",
+          "passed": true,
+          "seconds": 3.78
+        },
+        {
+          "lesson": "10-tuning-and-learning-curves",
+          "kind": "script",
+          "passed": true,
+          "seconds": 2.76
+        },
+        {
+          "lesson": "11-principal-components",
+          "kind": "script",
+          "passed": true,
+          "seconds": 3.08
+        },
+        {
+          "lesson": "12-manifold-learning",
+          "kind": "script",
+          "passed": true,
+          "seconds": 4.38
+        },
+        {
+          "lesson": "13-kmeans-clustering",
+          "kind": "script",
+          "passed": true,
+          "seconds": 3.06
+        },
+        {
+          "lesson": "14-mixtures-and-density",
+          "kind": "script",
+          "passed": true,
+          "seconds": 2.71
+        },
+        {
+          "lesson": "15-gradient-descent",
+          "kind": "script",
+          "passed": true,
+          "seconds": 2.65
+        },
+        {
+          "lesson": "16-digits-project",
+          "kind": "script",
+          "passed": true,
+          "seconds": 3.42
+        },
+        {
+          "lesson": "17-time-and-groups",
+          "kind": "script",
+          "passed": true,
+          "seconds": 2.0
+        },
+        {
+          "lesson": "00-setup",
+          "kind": "readme",
+          "block": 1,
+          "passed": true,
+          "seconds": 2.04
+        },
+        {
+          "lesson": "01-ml-workflow",
+          "kind": "readme",
+          "block": 1,
+          "passed": true,
+          "seconds": 2.14
+        },
+        {
+          "lesson": "02-data-and-plots",
+          "kind": "readme",
+          "block": 1,
+          "passed": true,
+          "seconds": 2.56
+        },
+        {
+          "lesson": "03-first-classifier",
+          "kind": "readme",
+          "block": 1,
+          "passed": true,
+          "seconds": 2.12
+        },
+        {
+          "lesson": "04-validation-and-metrics",
+          "kind": "readme",
+          "block": 1,
+          "passed": true,
+          "seconds": 2.13
+        },
+        {
+          "lesson": "05-linear-regression",
+          "kind": "readme",
+          "block": 1,
+          "passed": true,
+          "seconds": 2.51
+        },
+        {
+          "lesson": "06-feature-engineering",
+          "kind": "readme",
+          "block": 1,
+          "passed": true,
+          "seconds": 2.07
+        },
+        {
+          "lesson": "07-naive-bayes-text",
+          "kind": "readme",
+          "block": 1,
+          "passed": true,
+          "seconds": 2.14
+        },
+        {
+          "lesson": "08-support-vector-machines",
+          "kind": "readme",
+          "block": 1,
+          "passed": true,
+          "seconds": 2.79
+        },
+        {
+          "lesson": "09-trees-and-forests",
+          "kind": "readme",
+          "block": 1,
+          "passed": true,
+          "seconds": 3.82
+        },
+        {
+          "lesson": "10-tuning-and-learning-curves",
+          "kind": "readme",
+          "block": 1,
+          "passed": true,
+          "seconds": 3.05
+        },
+        {
+          "lesson": "11-principal-components",
+          "kind": "readme",
+          "block": 1,
+          "passed": true,
+          "seconds": 2.98
+        },
+        {
+          "lesson": "12-manifold-learning",
+          "kind": "readme",
+          "block": 1,
+          "passed": true,
+          "seconds": 4.32
+        },
+        {
+          "lesson": "13-kmeans-clustering",
+          "kind": "readme",
+          "block": 1,
+          "passed": true,
+          "seconds": 2.82
+        },
+        {
+          "lesson": "14-mixtures-and-density",
+          "kind": "readme",
+          "block": 1,
+          "passed": true,
+          "seconds": 2.91
+        },
+        {
+          "lesson": "15-gradient-descent",
+          "kind": "readme",
+          "block": 1,
+          "passed": true,
+          "seconds": 2.68
+        },
+        {
+          "lesson": "16-digits-project",
+          "kind": "readme",
+          "block": 1,
+          "passed": true,
+          "seconds": 3.37
+        },
+        {
+          "lesson": "17-time-and-groups",
+          "kind": "readme",
+          "block": 1,
+          "passed": true,
+          "seconds": 2.04
+        },
+        {
+          "lesson": "01-gradient-descent",
+          "kind": "readme",
+          "block": 1,
+          "passed": true,
+          "seconds": 0.42
+        },
+        {
+          "lesson": "02-python-interop",
+          "kind": "readme",
+          "block": 1,
+          "passed": true,
+          "seconds": 2.12
+        },
+        {
+          "lesson": "math-primer",
+          "kind": "readme",
+          "block": 1,
+          "passed": true,
+          "seconds": 0.24
+        },
+        {
+          "lesson": "00-setup",
+          "kind": "notebook",
+          "passed": true,
+          "seconds": 4.34
+        },
+        {
+          "lesson": "01-ml-workflow",
+          "kind": "notebook",
+          "passed": true,
+          "seconds": 3.02
+        },
+        {
+          "lesson": "02-data-and-plots",
+          "kind": "notebook",
+          "passed": true,
+          "seconds": 3.64
+        },
+        {
+          "lesson": "03-first-classifier",
+          "kind": "notebook",
+          "passed": true,
+          "seconds": 3.15
+        },
+        {
+          "lesson": "04-validation-and-metrics",
+          "kind": "notebook",
+          "passed": true,
+          "seconds": 3.22
+        },
+        {
+          "lesson": "05-linear-regression",
+          "kind": "notebook",
+          "passed": true,
+          "seconds": 3.75
+        },
+        {
+          "lesson": "06-feature-engineering",
+          "kind": "notebook",
+          "passed": true,
+          "seconds": 3.25
+        },
+        {
+          "lesson": "07-naive-bayes-text",
+          "kind": "notebook",
+          "passed": true,
+          "seconds": 3.04
+        },
+        {
+          "lesson": "08-support-vector-machines",
+          "kind": "notebook",
+          "passed": true,
+          "seconds": 3.96
+        },
+        {
+          "lesson": "09-trees-and-forests",
+          "kind": "notebook",
+          "passed": true,
+          "seconds": 4.78
+        },
+        {
+          "lesson": "10-tuning-and-learning-curves",
+          "kind": "notebook",
+          "passed": true,
+          "seconds": 3.83
+        },
+        {
+          "lesson": "11-principal-components",
+          "kind": "notebook",
+          "passed": true,
+          "seconds": 3.79
+        },
+        {
+          "lesson": "12-manifold-learning",
+          "kind": "notebook",
+          "passed": true,
+          "seconds": 5.33
+        },
+        {
+          "lesson": "13-kmeans-clustering",
+          "kind": "notebook",
+          "passed": true,
+          "seconds": 3.75
+        },
+        {
+          "lesson": "14-mixtures-and-density",
+          "kind": "notebook",
+          "passed": true,
+          "seconds": 3.77
+        },
+        {
+          "lesson": "15-gradient-descent",
+          "kind": "notebook",
+          "passed": true,
+          "seconds": 3.59
+        },
+        {
+          "lesson": "16-digits-project",
+          "kind": "notebook",
+          "passed": true,
+          "seconds": 4.35
+        },
+        {
+          "lesson": "17-time-and-groups",
+          "kind": "notebook",
+          "passed": true,
+          "seconds": 3.1
         }
+      ]
+    }
+  },
+  "mojo_pip_verification": {
+    "method": "Fresh Linux environment created by Python venv, install mojo/requirements.txt with pip",
+    "steps": [
+      {
+        "name": "create-environment",
+        "returncode": 0,
+        "seconds": 2.73
       },
       {
-        "lesson": "02-python-interop",
-        "passed": true,
-        "outputs": {
-          "mojo": "test accuracy: 0.9333333333333333\nfirst five predictions: [0 2 1 1 0]\n",
-          "python": "test accuracy: 0.9333333333333333\nfirst five predictions: [0 2 1 1 0]\n"
+        "name": "pip-install-mojo",
+        "returncode": 0,
+        "seconds": 15.71
+      },
+      {
+        "name": "pip-check",
+        "returncode": 0,
+        "seconds": 0.37
+      },
+      {
+        "name": "mojo-compile-and-reference",
+        "returncode": 0,
+        "seconds": 4.87
+      }
+    ],
+    "compiler": {
+      "mojo": "Mojo 1.2.0 (2016d0cd)",
+      "python": "3.12.3",
+      "platform": "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+      "results": [
+        {
+          "lesson": "01-gradient-descent",
+          "passed": true,
+          "outputs": {
+            "mojo": "w: 2.9999999999999436\nb: 1.9999999999999996\ntraining MSE: 1.5881051921069951e-27\n",
+            "python": "w: 2.9999999999999436\nb: 1.9999999999999996\ntraining MSE: 1.5881051921069951e-27\n"
+          }
+        },
+        {
+          "lesson": "02-python-interop",
+          "passed": true,
+          "outputs": {
+            "mojo": "test accuracy: 0.9333333333333333\nfirst five predictions: [0 2 1 1 0]\n",
+            "python": "test accuracy: 0.9333333333333333\nfirst five predictions: [0 2 1 1 0]\n"
+          }
         }
-      }
-    ]
+      ]
+    }
   },
-  "cli_prediction": {
-    "passed": true,
-    "predictions": [
-      5,
-      2,
-      8
-    ]
-  },
-  "digits": {
-    "dataset": "sklearn load_digits; 8x8 pixels; range 0..16",
-    "split": "stratified random holdout 20%; seed 42; not a writer-group split",
-    "train_rows": 1437,
-    "test_rows": 360,
-    "baseline_accuracy": 0.1,
-    "baseline_macro_f1": 0.01818181818181818,
-    "best_params": {
-      "svc__C": 10.0,
-      "svc__gamma": "scale"
-    },
-    "cv_macro_f1": 0.98035727190855,
-    "test_accuracy": 0.9805555555555555,
-    "test_macro_f1": 0.9805015284652674,
-    "classification_report": {
-      "0": {
-        "precision": 1.0,
-        "recall": 1.0,
-        "f1-score": 1.0,
-        "support": 36.0
-      },
-      "1": {
-        "precision": 0.9722222222222222,
-        "recall": 0.9722222222222222,
-        "f1-score": 0.9722222222222222,
-        "support": 36.0
-      },
-      "2": {
-        "precision": 1.0,
-        "recall": 1.0,
-        "f1-score": 1.0,
-        "support": 35.0
-      },
-      "3": {
-        "precision": 1.0,
-        "recall": 1.0,
-        "f1-score": 1.0,
-        "support": 37.0
-      },
-      "4": {
-        "precision": 0.9459459459459459,
-        "recall": 0.9722222222222222,
-        "f1-score": 0.958904109589041,
-        "support": 36.0
-      },
-      "5": {
-        "precision": 0.9736842105263158,
-        "recall": 1.0,
-        "f1-score": 0.9866666666666667,
-        "support": 37.0
-      },
-      "6": {
-        "precision": 0.972972972972973,
-        "recall": 1.0,
-        "f1-score": 0.9863013698630136,
-        "support": 36.0
-      },
-      "7": {
-        "precision": 0.9459459459459459,
-        "recall": 0.9722222222222222,
-        "f1-score": 0.958904109589041,
-        "support": 36.0
-      },
-      "8": {
-        "precision": 1.0,
-        "recall": 0.9428571428571428,
-        "f1-score": 0.9705882352941176,
-        "support": 35.0
-      },
-      "9": {
-        "precision": 1.0,
-        "recall": 0.9444444444444444,
-        "f1-score": 0.9714285714285714,
-        "support": 36.0
-      },
-      "accuracy": 0.9805555555555555,
-      "macro avg": {
-        "precision": 0.9810771297613403,
-        "recall": 0.9803968253968254,
-        "f1-score": 0.9805015284652674,
-        "support": 360.0
-      },
-      "weighted avg": {
-        "precision": 0.9810040303461357,
-        "recall": 0.9805555555555555,
-        "f1-score": 0.9805461907746357,
-        "support": 360.0
-      }
-    },
-    "python": "3.12.3",
-    "sklearn": "1.7.1"
-  },
+  "lesson_sources_unchanged": true,
+  "markdown_files_checked": 33,
+  "hash_format": "SHA-256 of UTF-8 text normalized to LF",
   "lesson_source_sha256": {
     "lessons/00-setup/lesson.py": "cf7889207e8ca524fc056cc752eaad6eb8b30f663594b3cf8d0d536f29d6af8a",
     "lessons/01-ml-workflow/lesson.py": "e65ee2c94a312eb27d4f91faafa313bf279b3fc9e2e1842b0857bf291fc38e43",
@@ -525,1948 +509,69 @@
     "lessons/17-time-and-groups/lesson.py": "b72bd881de0cd241b3355ea3db7e1cd10a9a5651c368092b96f3367bb49ee2a6"
   },
   "material_sha256": {
-    "lessons/00-setup/README.md": "fe07ca75e638b19ac1ad094b6cd4adf87266c305acde59c35be77bb89e8cc455",
     "lessons/00-setup/lesson.ipynb": "16bd0682548a899360d76bb9f5f2c3c19957ca5ce0c62df6f5a5414b989f25df",
-    "lessons/01-ml-workflow/README.md": "ef33cddb614251c2e66859fb8ce23173058d907579f9c854f185eab43c6db516",
+    "lessons/00-setup/README.md": "fe07ca75e638b19ac1ad094b6cd4adf87266c305acde59c35be77bb89e8cc455",
     "lessons/01-ml-workflow/lesson.ipynb": "0092ef0267b7b26ee4cb0a35a20d89b3a60f5e81519e525fd0ac478baf422a79",
-    "lessons/02-data-and-plots/README.md": "bda1e5366b73517e1423f6005ec13827b686e4015a456e4b32d1a89de0e79dfc",
+    "lessons/01-ml-workflow/README.md": "ef33cddb614251c2e66859fb8ce23173058d907579f9c854f185eab43c6db516",
     "lessons/02-data-and-plots/lesson.ipynb": "097f10491180b0f34951519d24d616f9b58320663aa89d7c7a037d66ff6355b1",
-    "lessons/03-first-classifier/README.md": "5f1d2085431815b4f5a6e729da0fffba34a9f0703746608bcd649b917b4fa594",
+    "lessons/02-data-and-plots/README.md": "bda1e5366b73517e1423f6005ec13827b686e4015a456e4b32d1a89de0e79dfc",
     "lessons/03-first-classifier/lesson.ipynb": "8df64a5d3cff114d3774c394e31aea87d8b5b3db9dea32e33676dcc0825609b8",
-    "lessons/04-validation-and-metrics/README.md": "a473f4d1ee972bce078c83c6992f4f893bfac1f839bf5c9d280e93bc09dc7230",
+    "lessons/03-first-classifier/README.md": "5f1d2085431815b4f5a6e729da0fffba34a9f0703746608bcd649b917b4fa594",
     "lessons/04-validation-and-metrics/lesson.ipynb": "72657136e51d31d227ab8dfaa9a76a7f28794cdac4746fd7b18cd612bff134c4",
-    "lessons/05-linear-regression/README.md": "c58021483cdae8c6897707224a3712573efe3940eabc1f04b310e2fb39958db5",
+    "lessons/04-validation-and-metrics/README.md": "a473f4d1ee972bce078c83c6992f4f893bfac1f839bf5c9d280e93bc09dc7230",
     "lessons/05-linear-regression/lesson.ipynb": "13281c08ac5120d70a6da10ba38a42c9d566b6e8e005bcbd2d199ae0d9cf8438",
-    "lessons/06-feature-engineering/README.md": "9b485755f6b106014d4ca1d5b626f6a9ceb6721f74420a7b8ea1d30e26917cb8",
+    "lessons/05-linear-regression/README.md": "c58021483cdae8c6897707224a3712573efe3940eabc1f04b310e2fb39958db5",
     "lessons/06-feature-engineering/lesson.ipynb": "07e4af1c73fb146148c95f3f850e1fab93b47eb058af2f6c3012829e83c710bb",
-    "lessons/07-naive-bayes-text/README.md": "8fd6fdbb170c71a213222a9e13d164d2b429b6685a59097a4362ec053e615dda",
+    "lessons/06-feature-engineering/README.md": "9b485755f6b106014d4ca1d5b626f6a9ceb6721f74420a7b8ea1d30e26917cb8",
     "lessons/07-naive-bayes-text/lesson.ipynb": "d6c7f159709fce1c1f7a287b14f00fdb90ab91ffe379fff60c2a51c350b862eb",
-    "lessons/08-support-vector-machines/README.md": "afbeb2d373115fd55acd343a53c0e20d326341a09c8540fa23391adb047c2b63",
+    "lessons/07-naive-bayes-text/README.md": "8fd6fdbb170c71a213222a9e13d164d2b429b6685a59097a4362ec053e615dda",
     "lessons/08-support-vector-machines/lesson.ipynb": "7cbaeea7ca4953885e9893b2a75514f9588d382f21c3d2ffde155d9b780a9d77",
-    "lessons/09-trees-and-forests/README.md": "7593ff4958cd452bede0320e216591e82d1c04fdf2a8b127abb4e9a1aee5a58c",
+    "lessons/08-support-vector-machines/README.md": "afbeb2d373115fd55acd343a53c0e20d326341a09c8540fa23391adb047c2b63",
     "lessons/09-trees-and-forests/lesson.ipynb": "cb572f102fc20b97dceff44a4d156961569b63426ee8b87ac1a43c009602babc",
-    "lessons/10-tuning-and-learning-curves/README.md": "7ccd810b6afee0b0ba97538b4901c14f15f4e2bc0402a9063e1bb239919c3ae9",
+    "lessons/09-trees-and-forests/README.md": "7593ff4958cd452bede0320e216591e82d1c04fdf2a8b127abb4e9a1aee5a58c",
     "lessons/10-tuning-and-learning-curves/lesson.ipynb": "d11046d2590e87f7c7d683434a83233801555367fe67de8dc56cf789c9bd8498",
-    "lessons/11-principal-components/README.md": "71a9cd55c72997cc775eb538823ae9ccb40a317c2e5fea2bf16b4361b607e6e3",
+    "lessons/10-tuning-and-learning-curves/README.md": "7ccd810b6afee0b0ba97538b4901c14f15f4e2bc0402a9063e1bb239919c3ae9",
     "lessons/11-principal-components/lesson.ipynb": "ffd156870bd24699d0be97d866d367b003b8b2195103090ff416d583df271b42",
-    "lessons/12-manifold-learning/README.md": "1d1f99c5cbec66edfb8d2095676aff8e91456bc7409e49ddbf9300f96140e3c2",
+    "lessons/11-principal-components/README.md": "71a9cd55c72997cc775eb538823ae9ccb40a317c2e5fea2bf16b4361b607e6e3",
     "lessons/12-manifold-learning/lesson.ipynb": "3955efda7a00faab1cb86cdfcbdb869a356b07298be57441d39060c082646ec0",
-    "lessons/13-kmeans-clustering/README.md": "f10629fea0f890e7ecdf1aaf93c9365a65fc514b568ca8d6ac7feddd462e2173",
+    "lessons/12-manifold-learning/README.md": "1d1f99c5cbec66edfb8d2095676aff8e91456bc7409e49ddbf9300f96140e3c2",
     "lessons/13-kmeans-clustering/lesson.ipynb": "7ccdb17bb26f9e2324962d0ec002ad7071dd3b3b3c15b664f2c44f94fe4ad894",
-    "lessons/14-mixtures-and-density/README.md": "ea5b417f66f0b3cbd2ee2f0a4ac9a4fbeda4e82d7a1405ebb48b530ed94e2258",
+    "lessons/13-kmeans-clustering/README.md": "f10629fea0f890e7ecdf1aaf93c9365a65fc514b568ca8d6ac7feddd462e2173",
     "lessons/14-mixtures-and-density/lesson.ipynb": "1a2cec041b86b407a6d54c79dff62d0d632c650a26ab450fc1cd45d589549894",
-    "lessons/15-gradient-descent/README.md": "0a0e3dbc082870421bcb53ffd15901e66682412ac360066681670b3ae7ef949a",
+    "lessons/14-mixtures-and-density/README.md": "ea5b417f66f0b3cbd2ee2f0a4ac9a4fbeda4e82d7a1405ebb48b530ed94e2258",
     "lessons/15-gradient-descent/lesson.ipynb": "3dc382c82070c9ce0f6a9bf550d9cfbd04e8eb9dcfe6344fa964b4ad96cbfad0",
-    "lessons/16-digits-project/README.md": "0783e8101faba529bf979f3b00093c7b542cd3906c39126ddf89c8dcb074188c",
+    "lessons/15-gradient-descent/README.md": "0a0e3dbc082870421bcb53ffd15901e66682412ac360066681670b3ae7ef949a",
     "lessons/16-digits-project/lesson.ipynb": "080f72777ec9b2765d2c612a7015d3c887bb043d28d089cf65172ca09c9d3269",
-    "lessons/17-time-and-groups/README.md": "3e466059ec662c1d8cbebb2af03130850196a7f70d5d14d49f78784b4d91d82a",
+    "lessons/16-digits-project/README.md": "0783e8101faba529bf979f3b00093c7b542cd3906c39126ddf89c8dcb074188c",
     "lessons/17-time-and-groups/lesson.ipynb": "afb1f3eba0076fafebbc55affd702e69d2081843884933473b230eec952a8c69",
+    "lessons/17-time-and-groups/README.md": "3e466059ec662c1d8cbebb2af03130850196a7f70d5d14d49f78784b4d91d82a",
     "mojo/01-gradient-descent/main.mojo": "01252bd2b454495bcd856dcff74dfed1b5b5b7a34d04e29a0a4111e6494dc3b2",
     "mojo/01-gradient-descent/reference.py": "710e7a1e72d1039d02bc2c839ff3480dc9618fe8f547c0aa81877df874afdb4b",
     "mojo/02-python-interop/main.mojo": "ea3137d849b4f35b3c4046329c38dc1ece2cae8a23cf44efc00cb5ee1dd2da76",
     "mojo/02-python-interop/reference.py": "10558e08b33b16fe4ebb333ad33dda79027024d10e7cecc8e991141fe2919e87"
   },
-  "previous_wsl_revision": {
-    "revision": "Prerequisites: Python Data Science Handbook parts 1-4; ML data audit",
-    "source_commit": "73bae3e31a163c752aec931b272e4eb5b388d728",
-    "run": {
-      "python": "3.12.3",
-      "platform": "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.39",
-      "packages": {
-        "numpy": "2.2.6",
-        "pandas": "2.3.2",
-        "scikit-learn": "1.7.1",
-        "matplotlib": "3.10.3"
-      },
-      "results": [
-        {
-          "lesson": "00-setup",
-          "kind": "script",
-          "passed": true,
-          "seconds": 8.3
-        },
-        {
-          "lesson": "01-ml-workflow",
-          "kind": "script",
-          "passed": true,
-          "seconds": 8.46
-        },
-        {
-          "lesson": "02-data-and-plots",
-          "kind": "script",
-          "passed": true,
-          "seconds": 11.97
-        },
-        {
-          "lesson": "03-first-classifier",
-          "kind": "script",
-          "passed": true,
-          "seconds": 9.23
-        },
-        {
-          "lesson": "04-validation-and-metrics",
-          "kind": "script",
-          "passed": true,
-          "seconds": 8.58
-        },
-        {
-          "lesson": "05-linear-regression",
-          "kind": "script",
-          "passed": true,
-          "seconds": 10.14
-        },
-        {
-          "lesson": "06-feature-engineering",
-          "kind": "script",
-          "passed": true,
-          "seconds": 8.77
-        },
-        {
-          "lesson": "07-naive-bayes-text",
-          "kind": "script",
-          "passed": true,
-          "seconds": 8.33
-        },
-        {
-          "lesson": "08-support-vector-machines",
-          "kind": "script",
-          "passed": true,
-          "seconds": 11.24
-        },
-        {
-          "lesson": "09-trees-and-forests",
-          "kind": "script",
-          "passed": true,
-          "seconds": 10.88
-        },
-        {
-          "lesson": "10-tuning-and-learning-curves",
-          "kind": "script",
-          "passed": true,
-          "seconds": 10.57
-        },
-        {
-          "lesson": "11-principal-components",
-          "kind": "script",
-          "passed": true,
-          "seconds": 10.62
-        },
-        {
-          "lesson": "12-manifold-learning",
-          "kind": "script",
-          "passed": true,
-          "seconds": 13.54
-        },
-        {
-          "lesson": "13-kmeans-clustering",
-          "kind": "script",
-          "passed": true,
-          "seconds": 13.46
-        },
-        {
-          "lesson": "14-mixtures-and-density",
-          "kind": "script",
-          "passed": true,
-          "seconds": 12.49
-        },
-        {
-          "lesson": "15-gradient-descent",
-          "kind": "script",
-          "passed": true,
-          "seconds": 10.27
-        },
-        {
-          "lesson": "16-digits-project",
-          "kind": "script",
-          "passed": true,
-          "seconds": 11.39
-        },
-        {
-          "lesson": "17-time-and-groups",
-          "kind": "script",
-          "passed": true,
-          "seconds": 8.62
-        },
-        {
-          "lesson": "00-setup",
-          "kind": "notebook",
-          "passed": true,
-          "seconds": 15.19
-        },
-        {
-          "lesson": "01-ml-workflow",
-          "kind": "notebook",
-          "passed": true,
-          "seconds": 11.88
-        },
-        {
-          "lesson": "02-data-and-plots",
-          "kind": "notebook",
-          "passed": true,
-          "seconds": 12.8
-        },
-        {
-          "lesson": "03-first-classifier",
-          "kind": "notebook",
-          "passed": true,
-          "seconds": 11.66
-        },
-        {
-          "lesson": "04-validation-and-metrics",
-          "kind": "notebook",
-          "passed": true,
-          "seconds": 11.42
-        },
-        {
-          "lesson": "05-linear-regression",
-          "kind": "notebook",
-          "passed": true,
-          "seconds": 12.71
-        },
-        {
-          "lesson": "06-feature-engineering",
-          "kind": "notebook",
-          "passed": true,
-          "seconds": 11.65
-        },
-        {
-          "lesson": "07-naive-bayes-text",
-          "kind": "notebook",
-          "passed": true,
-          "seconds": 11.02
-        },
-        {
-          "lesson": "08-support-vector-machines",
-          "kind": "notebook",
-          "passed": true,
-          "seconds": 13.81
-        },
-        {
-          "lesson": "09-trees-and-forests",
-          "kind": "notebook",
-          "passed": true,
-          "seconds": 13.6
-        },
-        {
-          "lesson": "10-tuning-and-learning-curves",
-          "kind": "notebook",
-          "passed": true,
-          "seconds": 13.57
-        },
-        {
-          "lesson": "11-principal-components",
-          "kind": "notebook",
-          "passed": true,
-          "seconds": 13.29
-        },
-        {
-          "lesson": "12-manifold-learning",
-          "kind": "notebook",
-          "passed": true,
-          "seconds": 15.74
-        },
-        {
-          "lesson": "13-kmeans-clustering",
-          "kind": "notebook",
-          "passed": true,
-          "seconds": 14.15
-        },
-        {
-          "lesson": "14-mixtures-and-density",
-          "kind": "notebook",
-          "passed": true,
-          "seconds": 13.88
-        },
-        {
-          "lesson": "15-gradient-descent",
-          "kind": "notebook",
-          "passed": true,
-          "seconds": 13.32
-        },
-        {
-          "lesson": "16-digits-project",
-          "kind": "notebook",
-          "passed": true,
-          "seconds": 14.48
-        },
-        {
-          "lesson": "17-time-and-groups",
-          "kind": "notebook",
-          "passed": true,
-          "seconds": 11.86
-        }
-      ]
-    },
-    "lesson_source_sha256": {
-      "lessons/00-setup/lesson.py": "caac3263cd4a9808c2d53c4b78909304816ec6d58274b6ff38b7f971779b7d36",
-      "lessons/01-ml-workflow/lesson.py": "cee269d9290492890fce952ce0c8ef8f1aa169a1a942b3efafd8dff2e57436e4",
-      "lessons/02-data-and-plots/lesson.py": "e8b4975e32c91e8ce4d851db46b906c7f9b4937ce01616443247b1b3166c867b",
-      "lessons/03-first-classifier/lesson.py": "84f0a19aab08a4b32545d89e50412a68037e0c21324d303a654456185bfcc687",
-      "lessons/04-validation-and-metrics/lesson.py": "a57a412de39572d120b1cc2eb51b2640da7585c655cc71341adf24c209725210",
-      "lessons/05-linear-regression/lesson.py": "7b8145c3afde5de2935702a94fe66273c27a3256d7cf15caa8927e4862a85cca",
-      "lessons/06-feature-engineering/lesson.py": "b8d0a4675e28e6fe5f5195449186889593a3784991a136970acff8a1d5734a21",
-      "lessons/07-naive-bayes-text/lesson.py": "e3d0bdb8387978837ae68a8d642e87cacfbefad4d72bca77b17796759288099c",
-      "lessons/08-support-vector-machines/lesson.py": "7b9db2f6dd2f3bff62407fcd89c3b498fd1fc101fd7dc01bd63078b3b724e8b7",
-      "lessons/09-trees-and-forests/lesson.py": "7b46dd2698d82fb2a2f6db29064d9b3fd7843e1505fd467d05e9ca050703b187",
-      "lessons/10-tuning-and-learning-curves/lesson.py": "ab71863068cbbee308d5fa5f93956dc827a84f32847ae154bf44aeba031ed011",
-      "lessons/11-principal-components/lesson.py": "609aa65ff5342c3b4f32a2726689ef5b92a97b7d4bc8ed0a5b82064af63fa3ba",
-      "lessons/12-manifold-learning/lesson.py": "20956d9647bc976674c05dfc9e1c89bd639f110a65e0b7b706018357fa3b5ce5",
-      "lessons/13-kmeans-clustering/lesson.py": "b5d7651f429aef66f8f777d14b36e6b2bb8693b2fbf471d1a3269a469fae644a",
-      "lessons/14-mixtures-and-density/lesson.py": "ef65d9c8ea1feceeba873bc5c07bffa26176136df1f2d6a218dc43eefbce491d",
-      "lessons/15-gradient-descent/lesson.py": "a698db92cbd0e8600bdcdac851a62ac7746209b8b6d9921031b65932ccaa671d",
-      "lessons/16-digits-project/lesson.py": "50afd170ed72110a6901e3e3096230072ae3bc0d72b6ac11a16928b87f44e0b7",
-      "lessons/17-time-and-groups/lesson.py": "4c90ff77193943b5b03af475b47b5bd5a89d549da34d2f4d7d51198c7290a387"
-    }
-  },
-  "previous_external_link_check": {
-    "checked_date": "2026-10-24",
-    "results": [
-      {
-        "url": "https://colab.research.google.com/",
-        "status": 200,
-        "final_url": "https://colab.research.google.com/"
-      },
-      {
-        "url": "https://developers.google.com/machine-learning/crash-course",
-        "status": 200,
-        "final_url": "https://developers.google.com/machine-learning/crash-course"
-      },
-      {
-        "url": "https://developers.google.com/machine-learning/crash-course/classification",
-        "status": 200,
-        "final_url": "https://developers.google.com/machine-learning/crash-course/classification"
-      },
-      {
-        "url": "https://developers.google.com/machine-learning/crash-course/linear-regression/gradient-descent",
-        "status": 200,
-        "final_url": "https://developers.google.com/machine-learning/crash-course/linear-regression/gradient-descent"
-      },
-      {
-        "url": "https://developers.google.com/machine-learning/crash-course/production-ml-systems",
-        "status": 200,
-        "final_url": "https://developers.google.com/machine-learning/crash-course/production-ml-systems"
-      },
-      {
-        "url": "https://developers.google.com/machine-learning/glossary",
-        "status": 200,
-        "final_url": "https://developers.google.com/machine-learning/glossary"
-      },
-      {
-        "url": "https://docs.astral.sh/uv/getting-started/installation/",
-        "status": 200,
-        "final_url": "https://docs.astral.sh/uv/getting-started/installation/"
-      },
-      {
-        "url": "https://docs.astral.sh/uv/guides/projects/",
-        "status": 200,
-        "final_url": "https://docs.astral.sh/uv/guides/projects/"
-      },
-      {
-        "url": "https://inria.github.io/scikit-learn-mooc/",
-        "status": 200,
-        "final_url": "https://inria.github.io/scikit-learn-mooc/"
-      },
-      {
-        "url": "https://jakevdp.github.io/PythonDataScienceHandbook/",
-        "status": 200,
-        "final_url": "https://jakevdp.github.io/PythonDataScienceHandbook/"
-      },
-      {
-        "url": "https://jakevdp.github.io/PythonDataScienceHandbook/01.00-ipython-beyond-normal-python.html",
-        "status": 200,
-        "final_url": "https://jakevdp.github.io/PythonDataScienceHandbook/01.00-ipython-beyond-normal-python.html"
-      },
-      {
-        "url": "https://jakevdp.github.io/PythonDataScienceHandbook/02.00-introduction-to-numpy.html",
-        "status": 200,
-        "final_url": "https://jakevdp.github.io/PythonDataScienceHandbook/02.00-introduction-to-numpy.html"
-      },
-      {
-        "url": "https://jakevdp.github.io/PythonDataScienceHandbook/03.00-introduction-to-pandas.html",
-        "status": 200,
-        "final_url": "https://jakevdp.github.io/PythonDataScienceHandbook/03.00-introduction-to-pandas.html"
-      },
-      {
-        "url": "https://jakevdp.github.io/PythonDataScienceHandbook/04.00-introduction-to-matplotlib.html",
-        "status": 200,
-        "final_url": "https://jakevdp.github.io/PythonDataScienceHandbook/04.00-introduction-to-matplotlib.html"
-      },
-      {
-        "url": "https://jakevdp.github.io/PythonDataScienceHandbook/05.00-machine-learning.html",
-        "status": 200,
-        "final_url": "https://jakevdp.github.io/PythonDataScienceHandbook/05.00-machine-learning.html"
-      },
-      {
-        "url": "https://jakevdp.github.io/PythonDataScienceHandbook/05.01-what-is-machine-learning.html",
-        "status": 200,
-        "final_url": "https://jakevdp.github.io/PythonDataScienceHandbook/05.01-what-is-machine-learning.html"
-      },
-      {
-        "url": "https://jakevdp.github.io/PythonDataScienceHandbook/05.02-introducing-scikit-learn.html",
-        "status": 200,
-        "final_url": "https://jakevdp.github.io/PythonDataScienceHandbook/05.02-introducing-scikit-learn.html"
-      },
-      {
-        "url": "https://jakevdp.github.io/PythonDataScienceHandbook/05.03-hyperparameters-and-model-validation.html",
-        "status": 200,
-        "final_url": "https://jakevdp.github.io/PythonDataScienceHandbook/05.03-hyperparameters-and-model-validation.html"
-      },
-      {
-        "url": "https://jakevdp.github.io/PythonDataScienceHandbook/05.04-feature-engineering.html",
-        "status": 200,
-        "final_url": "https://jakevdp.github.io/PythonDataScienceHandbook/05.04-feature-engineering.html"
-      },
-      {
-        "url": "https://jakevdp.github.io/PythonDataScienceHandbook/05.05-naive-bayes.html",
-        "status": 200,
-        "final_url": "https://jakevdp.github.io/PythonDataScienceHandbook/05.05-naive-bayes.html"
-      },
-      {
-        "url": "https://jakevdp.github.io/PythonDataScienceHandbook/05.06-linear-regression.html",
-        "status": 200,
-        "final_url": "https://jakevdp.github.io/PythonDataScienceHandbook/05.06-linear-regression.html"
-      },
-      {
-        "url": "https://jakevdp.github.io/PythonDataScienceHandbook/05.07-support-vector-machines.html",
-        "status": 200,
-        "final_url": "https://jakevdp.github.io/PythonDataScienceHandbook/05.07-support-vector-machines.html"
-      },
-      {
-        "url": "https://jakevdp.github.io/PythonDataScienceHandbook/05.08-random-forests.html",
-        "status": 200,
-        "final_url": "https://jakevdp.github.io/PythonDataScienceHandbook/05.08-random-forests.html"
-      },
-      {
-        "url": "https://jakevdp.github.io/PythonDataScienceHandbook/05.09-principal-component-analysis.html",
-        "status": 200,
-        "final_url": "https://jakevdp.github.io/PythonDataScienceHandbook/05.09-principal-component-analysis.html"
-      },
-      {
-        "url": "https://jakevdp.github.io/PythonDataScienceHandbook/05.10-manifold-learning.html",
-        "status": 200,
-        "final_url": "https://jakevdp.github.io/PythonDataScienceHandbook/05.10-manifold-learning.html"
-      },
-      {
-        "url": "https://jakevdp.github.io/PythonDataScienceHandbook/05.11-k-means.html",
-        "status": 200,
-        "final_url": "https://jakevdp.github.io/PythonDataScienceHandbook/05.11-k-means.html"
-      },
-      {
-        "url": "https://jakevdp.github.io/PythonDataScienceHandbook/05.12-gaussian-mixtures.html",
-        "status": 200,
-        "final_url": "https://jakevdp.github.io/PythonDataScienceHandbook/05.12-gaussian-mixtures.html"
-      },
-      {
-        "url": "https://jakevdp.github.io/PythonDataScienceHandbook/05.13-kernel-density-estimation.html",
-        "status": 200,
-        "final_url": "https://jakevdp.github.io/PythonDataScienceHandbook/05.13-kernel-density-estimation.html"
-      },
-      {
-        "url": "https://jakevdp.github.io/PythonDataScienceHandbook/05.14-image-features.html",
-        "status": 200,
-        "final_url": "https://jakevdp.github.io/PythonDataScienceHandbook/05.14-image-features.html"
-      },
-      {
-        "url": "https://matplotlib.org/stable/users/explain/quick_start.html",
-        "status": 200,
-        "final_url": "https://matplotlib.org/stable/users/explain/quick_start.html"
-      },
-      {
-        "url": "https://mojolang.org/docs/manual/python/",
-        "status": 200,
-        "final_url": "https://mojolang.org/docs/manual/python/"
-      },
-      {
-        "url": "https://mojolang.org/docs/manual/python/python-from-mojo/",
-        "status": 200,
-        "final_url": "https://mojolang.org/docs/manual/python/python-from-mojo/"
-      },
-      {
-        "url": "https://mojolang.org/docs/manual/quickstart/",
-        "status": 200,
-        "final_url": "https://mojolang.org/docs/manual/quickstart/"
-      },
-      {
-        "url": "https://mojolang.org/docs/requirements/",
-        "status": 200,
-        "final_url": "https://mojolang.org/docs/requirements/"
-      },
-      {
-        "url": "https://mojolang.org/install/",
-        "status": 200,
-        "final_url": "https://mojolang.org/install/"
-      },
-      {
-        "url": "https://numpy.org/doc/stable/user/absolute_beginners.html",
-        "status": 200,
-        "final_url": "https://numpy.org/doc/stable/user/absolute_beginners.html"
-      },
-      {
-        "url": "https://pandas.pydata.org/docs/getting_started/intro_tutorials/index.html",
-        "status": 200,
-        "final_url": "https://pandas.pydata.org/docs/getting_started/intro_tutorials/index.html"
-      },
-      {
-        "url": "https://scikit-learn.org/1.7/common_pitfalls.html",
-        "status": 200,
-        "final_url": "https://scikit-learn.org/1.7/common_pitfalls.html"
-      },
-      {
-        "url": "https://scikit-learn.org/1.7/datasets/sample_generators.html",
-        "status": 200,
-        "final_url": "https://scikit-learn.org/1.7/datasets/sample_generators.html"
-      },
-      {
-        "url": "https://scikit-learn.org/1.7/glossary.html",
-        "status": 200,
-        "final_url": "https://scikit-learn.org/1.7/glossary.html"
-      },
-      {
-        "url": "https://scikit-learn.org/1.7/model_persistence.html",
-        "status": 200,
-        "final_url": "https://scikit-learn.org/1.7/model_persistence.html"
-      },
-      {
-        "url": "https://scikit-learn.org/1.7/modules/clustering.html",
-        "status": 200,
-        "final_url": "https://scikit-learn.org/1.7/modules/clustering.html"
-      },
-      {
-        "url": "https://scikit-learn.org/1.7/modules/compose.html",
-        "status": 200,
-        "final_url": "https://scikit-learn.org/1.7/modules/compose.html"
-      },
-      {
-        "url": "https://scikit-learn.org/1.7/modules/cross_validation.html",
-        "status": 200,
-        "final_url": "https://scikit-learn.org/1.7/modules/cross_validation.html"
-      },
-      {
-        "url": "https://scikit-learn.org/1.7/modules/decomposition.html",
-        "status": 200,
-        "final_url": "https://scikit-learn.org/1.7/modules/decomposition.html"
-      },
-      {
-        "url": "https://scikit-learn.org/1.7/modules/density.html",
-        "status": 200,
-        "final_url": "https://scikit-learn.org/1.7/modules/density.html"
-      },
-      {
-        "url": "https://scikit-learn.org/1.7/modules/ensemble.html",
-        "status": 200,
-        "final_url": "https://scikit-learn.org/1.7/modules/ensemble.html"
-      },
-      {
-        "url": "https://scikit-learn.org/1.7/modules/feature_extraction.html",
-        "status": 200,
-        "final_url": "https://scikit-learn.org/1.7/modules/feature_extraction.html"
-      },
-      {
-        "url": "https://scikit-learn.org/1.7/modules/generated/sklearn.datasets.load_digits.html",
-        "status": 200,
-        "final_url": "https://scikit-learn.org/1.7/modules/generated/sklearn.datasets.load_digits.html"
-      },
-      {
-        "url": "https://scikit-learn.org/1.7/modules/generated/sklearn.datasets.load_iris.html",
-        "status": 200,
-        "final_url": "https://scikit-learn.org/1.7/modules/generated/sklearn.datasets.load_iris.html"
-      },
-      {
-        "url": "https://scikit-learn.org/1.7/modules/generated/sklearn.datasets.make_classification.html",
-        "status": 200,
-        "final_url": "https://scikit-learn.org/1.7/modules/generated/sklearn.datasets.make_classification.html"
-      },
-      {
-        "url": "https://scikit-learn.org/1.7/modules/generated/sklearn.dummy.DummyClassifier.html",
-        "status": 200,
-        "final_url": "https://scikit-learn.org/1.7/modules/generated/sklearn.dummy.DummyClassifier.html"
-      },
-      {
-        "url": "https://scikit-learn.org/1.7/modules/grid_search.html",
-        "status": 200,
-        "final_url": "https://scikit-learn.org/1.7/modules/grid_search.html"
-      },
-      {
-        "url": "https://scikit-learn.org/1.7/modules/impute.html",
-        "status": 200,
-        "final_url": "https://scikit-learn.org/1.7/modules/impute.html"
-      },
-      {
-        "url": "https://scikit-learn.org/1.7/modules/learning_curve.html",
-        "status": 200,
-        "final_url": "https://scikit-learn.org/1.7/modules/learning_curve.html"
-      },
-      {
-        "url": "https://scikit-learn.org/1.7/modules/linear_model.html",
-        "status": 200,
-        "final_url": "https://scikit-learn.org/1.7/modules/linear_model.html"
-      },
-      {
-        "url": "https://scikit-learn.org/1.7/modules/manifold.html",
-        "status": 200,
-        "final_url": "https://scikit-learn.org/1.7/modules/manifold.html"
-      },
-      {
-        "url": "https://scikit-learn.org/1.7/modules/mixture.html",
-        "status": 200,
-        "final_url": "https://scikit-learn.org/1.7/modules/mixture.html"
-      },
-      {
-        "url": "https://scikit-learn.org/1.7/modules/model_evaluation.html",
-        "status": 200,
-        "final_url": "https://scikit-learn.org/1.7/modules/model_evaluation.html"
-      },
-      {
-        "url": "https://scikit-learn.org/1.7/modules/naive_bayes.html",
-        "status": 200,
-        "final_url": "https://scikit-learn.org/1.7/modules/naive_bayes.html"
-      },
-      {
-        "url": "https://scikit-learn.org/1.7/modules/neighbors.html",
-        "status": 200,
-        "final_url": "https://scikit-learn.org/1.7/modules/neighbors.html"
-      },
-      {
-        "url": "https://scikit-learn.org/1.7/modules/permutation_importance.html",
-        "status": 200,
-        "final_url": "https://scikit-learn.org/1.7/modules/permutation_importance.html"
-      },
-      {
-        "url": "https://scikit-learn.org/1.7/modules/svm.html",
-        "status": 200,
-        "final_url": "https://scikit-learn.org/1.7/modules/svm.html"
-      },
-      {
-        "url": "https://scikit-learn.org/1.7/user_guide.html",
-        "status": 200,
-        "final_url": "https://scikit-learn.org/1.7/user_guide.html"
-      },
-      {
-        "url": "https://www.python.org/downloads/",
-        "status": 200,
-        "final_url": "https://www.python.org/downloads/"
-      },
-      {
-        "url": "https://www.statlearning.com/",
-        "status": 200,
-        "final_url": "https://www.statlearning.com/"
-      }
-    ]
-  },
-  "previous_windows_revision": {
-    "scripts": {
-      "python": "3.13.7",
-      "platform": "Windows-11-10.0.26200-SP0",
-      "packages": {
-        "numpy": "2.2.6",
-        "pandas": "2.3.2",
-        "scikit-learn": "1.7.1",
-        "matplotlib": "3.10.3"
-      },
-      "results": [
-        {
-          "lesson": "00-setup",
-          "kind": "script",
-          "passed": true,
-          "seconds": 6.72
-        },
-        {
-          "lesson": "01-ml-workflow",
-          "kind": "script",
-          "passed": true,
-          "seconds": 3.16
-        },
-        {
-          "lesson": "02-data-and-plots",
-          "kind": "script",
-          "passed": true,
-          "seconds": 4.69
-        },
-        {
-          "lesson": "03-first-classifier",
-          "kind": "script",
-          "passed": true,
-          "seconds": 3.3
-        },
-        {
-          "lesson": "04-validation-and-metrics",
-          "kind": "script",
-          "passed": true,
-          "seconds": 3.08
-        },
-        {
-          "lesson": "05-linear-regression",
-          "kind": "script",
-          "passed": true,
-          "seconds": 3.58
-        },
-        {
-          "lesson": "06-feature-engineering",
-          "kind": "script",
-          "passed": true,
-          "seconds": 3.24
-        },
-        {
-          "lesson": "07-naive-bayes-text",
-          "kind": "script",
-          "passed": true,
-          "seconds": 2.87
-        },
-        {
-          "lesson": "08-support-vector-machines",
-          "kind": "script",
-          "passed": true,
-          "seconds": 4.1
-        },
-        {
-          "lesson": "09-trees-and-forests",
-          "kind": "script",
-          "passed": true,
-          "seconds": 4.87
-        },
-        {
-          "lesson": "10-tuning-and-learning-curves",
-          "kind": "script",
-          "passed": true,
-          "seconds": 3.89
-        },
-        {
-          "lesson": "11-principal-components",
-          "kind": "script",
-          "passed": true,
-          "seconds": 3.9
-        },
-        {
-          "lesson": "12-manifold-learning",
-          "kind": "script",
-          "passed": true,
-          "seconds": 5.61
-        },
-        {
-          "lesson": "13-kmeans-clustering",
-          "kind": "script",
-          "passed": true,
-          "seconds": 4.23
-        },
-        {
-          "lesson": "14-mixtures-and-density",
-          "kind": "script",
-          "passed": true,
-          "seconds": 4.06
-        },
-        {
-          "lesson": "15-gradient-descent",
-          "kind": "script",
-          "passed": true,
-          "seconds": 3.79
-        },
-        {
-          "lesson": "16-digits-project",
-          "kind": "script",
-          "passed": true,
-          "seconds": 4.67
-        },
-        {
-          "lesson": "17-time-and-groups",
-          "kind": "script",
-          "passed": true,
-          "seconds": 3.09
-        }
-      ]
-    },
-    "notebooks": {
-      "python": "3.13.7",
-      "platform": "Windows-11-10.0.26200-SP0",
-      "packages": {
-        "numpy": "2.2.6",
-        "pandas": "2.3.2",
-        "scikit-learn": "1.7.1",
-        "matplotlib": "3.10.3"
-      },
-      "results": [
-        {
-          "lesson": "00-setup",
-          "kind": "notebook",
-          "passed": true,
-          "seconds": 4.02
-        },
-        {
-          "lesson": "01-ml-workflow",
-          "kind": "notebook",
-          "passed": true,
-          "seconds": 3.17
-        },
-        {
-          "lesson": "02-data-and-plots",
-          "kind": "notebook",
-          "passed": true,
-          "seconds": 3.9
-        },
-        {
-          "lesson": "03-first-classifier",
-          "kind": "notebook",
-          "passed": true,
-          "seconds": 3.46
-        },
-        {
-          "lesson": "04-validation-and-metrics",
-          "kind": "notebook",
-          "passed": true,
-          "seconds": 3.22
-        },
-        {
-          "lesson": "05-linear-regression",
-          "kind": "notebook",
-          "passed": true,
-          "seconds": 3.68
-        },
-        {
-          "lesson": "06-feature-engineering",
-          "kind": "notebook",
-          "passed": true,
-          "seconds": 3.19
-        },
-        {
-          "lesson": "07-naive-bayes-text",
-          "kind": "notebook",
-          "passed": true,
-          "seconds": 3.09
-        },
-        {
-          "lesson": "08-support-vector-machines",
-          "kind": "notebook",
-          "passed": true,
-          "seconds": 3.99
-        },
-        {
-          "lesson": "09-trees-and-forests",
-          "kind": "notebook",
-          "passed": true,
-          "seconds": 5.03
-        },
-        {
-          "lesson": "10-tuning-and-learning-curves",
-          "kind": "notebook",
-          "passed": true,
-          "seconds": 4.36
-        },
-        {
-          "lesson": "11-principal-components",
-          "kind": "notebook",
-          "passed": true,
-          "seconds": 3.81
-        },
-        {
-          "lesson": "12-manifold-learning",
-          "kind": "notebook",
-          "passed": true,
-          "seconds": 5.57
-        },
-        {
-          "lesson": "13-kmeans-clustering",
-          "kind": "notebook",
-          "passed": true,
-          "seconds": 4.03
-        },
-        {
-          "lesson": "14-mixtures-and-density",
-          "kind": "notebook",
-          "passed": true,
-          "seconds": 3.9
-        },
-        {
-          "lesson": "15-gradient-descent",
-          "kind": "notebook",
-          "passed": true,
-          "seconds": 3.81
-        },
-        {
-          "lesson": "16-digits-project",
-          "kind": "notebook",
-          "passed": true,
-          "seconds": 4.86
-        },
-        {
-          "lesson": "17-time-and-groups",
-          "kind": "notebook",
-          "passed": true,
-          "seconds": 3.14
-        }
-      ]
-    },
-    "checked_date": "2026-10-24",
-    "timezone": "Asia/Bangkok",
-    "digits": {
-      "dataset": "sklearn load_digits; 8x8 pixels; range 0..16",
-      "split": "stratified random holdout 20%; seed 42; not a writer-group split",
-      "train_rows": 1437,
-      "test_rows": 360,
-      "baseline_accuracy": 0.1,
-      "best_params": {
-        "svc__C": 10.0,
-        "svc__gamma": "scale"
-      },
-      "cv_macro_f1": 0.98035727190855,
-      "test_accuracy": 0.9805555555555555,
-      "test_macro_f1": 0.9805015284652674,
-      "classification_report": {
-        "0": {
-          "precision": 1.0,
-          "recall": 1.0,
-          "f1-score": 1.0,
-          "support": 36.0
-        },
-        "1": {
-          "precision": 0.9722222222222222,
-          "recall": 0.9722222222222222,
-          "f1-score": 0.9722222222222222,
-          "support": 36.0
-        },
-        "2": {
-          "precision": 1.0,
-          "recall": 1.0,
-          "f1-score": 1.0,
-          "support": 35.0
-        },
-        "3": {
-          "precision": 1.0,
-          "recall": 1.0,
-          "f1-score": 1.0,
-          "support": 37.0
-        },
-        "4": {
-          "precision": 0.9459459459459459,
-          "recall": 0.9722222222222222,
-          "f1-score": 0.958904109589041,
-          "support": 36.0
-        },
-        "5": {
-          "precision": 0.9736842105263158,
-          "recall": 1.0,
-          "f1-score": 0.9866666666666667,
-          "support": 37.0
-        },
-        "6": {
-          "precision": 0.972972972972973,
-          "recall": 1.0,
-          "f1-score": 0.9863013698630136,
-          "support": 36.0
-        },
-        "7": {
-          "precision": 0.9459459459459459,
-          "recall": 0.9722222222222222,
-          "f1-score": 0.958904109589041,
-          "support": 36.0
-        },
-        "8": {
-          "precision": 1.0,
-          "recall": 0.9428571428571428,
-          "f1-score": 0.9705882352941176,
-          "support": 35.0
-        },
-        "9": {
-          "precision": 1.0,
-          "recall": 0.9444444444444444,
-          "f1-score": 0.9714285714285714,
-          "support": 36.0
-        },
-        "accuracy": 0.9805555555555555,
-        "macro avg": {
-          "precision": 0.9810771297613403,
-          "recall": 0.9803968253968254,
-          "f1-score": 0.9805015284652674,
-          "support": 360.0
-        },
-        "weighted avg": {
-          "precision": 0.9810040303461357,
-          "recall": 0.9805555555555555,
-          "f1-score": 0.9805461907746357,
-          "support": 360.0
-        }
-      },
-      "python": "3.13.7",
-      "sklearn": "1.7.1"
-    },
-    "external_links": [
-      {
-        "url": "https://colab.research.google.com/",
-        "status": 200,
-        "final_url": "https://colab.research.google.com/",
-        "method": "GET"
-      },
-      {
-        "url": "https://developers.google.com/machine-learning/crash-course",
-        "status": 200,
-        "final_url": "https://developers.google.com/machine-learning/crash-course"
-      },
-      {
-        "url": "https://developers.google.com/machine-learning/crash-course/classification",
-        "status": 200,
-        "final_url": "https://developers.google.com/machine-learning/crash-course/classification"
-      },
-      {
-        "url": "https://developers.google.com/machine-learning/crash-course/linear-regression/gradient-descent",
-        "status": 200,
-        "final_url": "https://developers.google.com/machine-learning/crash-course/linear-regression/gradient-descent"
-      },
-      {
-        "url": "https://developers.google.com/machine-learning/crash-course/production-ml-systems",
-        "status": 200,
-        "final_url": "https://developers.google.com/machine-learning/crash-course/production-ml-systems"
-      },
-      {
-        "url": "https://developers.google.com/machine-learning/glossary",
-        "status": 200,
-        "final_url": "https://developers.google.com/machine-learning/glossary"
-      },
-      {
-        "url": "https://docs.astral.sh/uv/getting-started/installation/",
-        "status": 200,
-        "final_url": "https://docs.astral.sh/uv/getting-started/installation/"
-      },
-      {
-        "url": "https://docs.astral.sh/uv/guides/projects/",
-        "status": 200,
-        "final_url": "https://docs.astral.sh/uv/guides/projects/"
-      },
-      {
-        "url": "https://docs.python.org/3/library/venv.html",
-        "status": 200,
-        "final_url": "https://docs.python.org/3/library/venv.html"
-      },
-      {
-        "url": "https://inria.github.io/scikit-learn-mooc/",
-        "status": 200,
-        "final_url": "https://inria.github.io/scikit-learn-mooc/"
-      },
-      {
-        "url": "https://jakevdp.github.io/PythonDataScienceHandbook/",
-        "status": 200,
-        "final_url": "https://jakevdp.github.io/PythonDataScienceHandbook/"
-      },
-      {
-        "url": "https://jakevdp.github.io/PythonDataScienceHandbook/05.00-machine-learning.html",
-        "status": 200,
-        "final_url": "https://jakevdp.github.io/PythonDataScienceHandbook/05.00-machine-learning.html"
-      },
-      {
-        "url": "https://jakevdp.github.io/PythonDataScienceHandbook/05.01-what-is-machine-learning.html",
-        "status": 200,
-        "final_url": "https://jakevdp.github.io/PythonDataScienceHandbook/05.01-what-is-machine-learning.html"
-      },
-      {
-        "url": "https://jakevdp.github.io/PythonDataScienceHandbook/05.02-introducing-scikit-learn.html",
-        "status": 200,
-        "final_url": "https://jakevdp.github.io/PythonDataScienceHandbook/05.02-introducing-scikit-learn.html"
-      },
-      {
-        "url": "https://jakevdp.github.io/PythonDataScienceHandbook/05.03-hyperparameters-and-model-validation.html",
-        "status": 200,
-        "final_url": "https://jakevdp.github.io/PythonDataScienceHandbook/05.03-hyperparameters-and-model-validation.html"
-      },
-      {
-        "url": "https://jakevdp.github.io/PythonDataScienceHandbook/05.04-feature-engineering.html",
-        "status": 200,
-        "final_url": "https://jakevdp.github.io/PythonDataScienceHandbook/05.04-feature-engineering.html"
-      },
-      {
-        "url": "https://jakevdp.github.io/PythonDataScienceHandbook/05.05-naive-bayes.html",
-        "status": 200,
-        "final_url": "https://jakevdp.github.io/PythonDataScienceHandbook/05.05-naive-bayes.html"
-      },
-      {
-        "url": "https://jakevdp.github.io/PythonDataScienceHandbook/05.06-linear-regression.html",
-        "status": 200,
-        "final_url": "https://jakevdp.github.io/PythonDataScienceHandbook/05.06-linear-regression.html"
-      },
-      {
-        "url": "https://jakevdp.github.io/PythonDataScienceHandbook/05.07-support-vector-machines.html",
-        "status": 200,
-        "final_url": "https://jakevdp.github.io/PythonDataScienceHandbook/05.07-support-vector-machines.html"
-      },
-      {
-        "url": "https://jakevdp.github.io/PythonDataScienceHandbook/05.08-random-forests.html",
-        "status": 200,
-        "final_url": "https://jakevdp.github.io/PythonDataScienceHandbook/05.08-random-forests.html"
-      },
-      {
-        "url": "https://jakevdp.github.io/PythonDataScienceHandbook/05.09-principal-component-analysis.html",
-        "status": 200,
-        "final_url": "https://jakevdp.github.io/PythonDataScienceHandbook/05.09-principal-component-analysis.html"
-      },
-      {
-        "url": "https://jakevdp.github.io/PythonDataScienceHandbook/05.10-manifold-learning.html",
-        "status": 200,
-        "final_url": "https://jakevdp.github.io/PythonDataScienceHandbook/05.10-manifold-learning.html"
-      },
-      {
-        "url": "https://jakevdp.github.io/PythonDataScienceHandbook/05.11-k-means.html",
-        "status": 200,
-        "final_url": "https://jakevdp.github.io/PythonDataScienceHandbook/05.11-k-means.html"
-      },
-      {
-        "url": "https://jakevdp.github.io/PythonDataScienceHandbook/05.12-gaussian-mixtures.html",
-        "status": 200,
-        "final_url": "https://jakevdp.github.io/PythonDataScienceHandbook/05.12-gaussian-mixtures.html"
-      },
-      {
-        "url": "https://jakevdp.github.io/PythonDataScienceHandbook/05.13-kernel-density-estimation.html",
-        "status": 200,
-        "final_url": "https://jakevdp.github.io/PythonDataScienceHandbook/05.13-kernel-density-estimation.html"
-      },
-      {
-        "url": "https://jakevdp.github.io/PythonDataScienceHandbook/05.14-image-features.html",
-        "status": 200,
-        "final_url": "https://jakevdp.github.io/PythonDataScienceHandbook/05.14-image-features.html"
-      },
-      {
-        "url": "https://matplotlib.org/stable/users/explain/quick_start.html",
-        "status": 200,
-        "final_url": "https://matplotlib.org/stable/users/explain/quick_start.html"
-      },
-      {
-        "url": "https://mojolang.org/docs/manual/python/",
-        "status": 200,
-        "final_url": "https://mojolang.org/docs/manual/python/"
-      },
-      {
-        "url": "https://mojolang.org/docs/manual/python/python-from-mojo/",
-        "status": 200,
-        "final_url": "https://mojolang.org/docs/manual/python/python-from-mojo/"
-      },
-      {
-        "url": "https://mojolang.org/docs/manual/quickstart/",
-        "status": 200,
-        "final_url": "https://mojolang.org/docs/manual/quickstart/"
-      },
-      {
-        "url": "https://mojolang.org/docs/requirements/",
-        "status": 200,
-        "final_url": "https://mojolang.org/docs/requirements/"
-      },
-      {
-        "url": "https://mojolang.org/install/",
-        "status": 200,
-        "final_url": "https://mojolang.org/install/"
-      },
-      {
-        "url": "https://numpy.org/doc/stable/user/absolute_beginners.html",
-        "status": 200,
-        "final_url": "https://numpy.org/doc/stable/user/absolute_beginners.html"
-      },
-      {
-        "url": "https://pandas.pydata.org/docs/getting_started/intro_tutorials/index.html",
-        "status": 200,
-        "final_url": "https://pandas.pydata.org/docs/getting_started/intro_tutorials/index.html"
-      },
-      {
-        "url": "https://scikit-learn.org/1.7/common_pitfalls.html",
-        "status": 200,
-        "final_url": "https://scikit-learn.org/1.7/common_pitfalls.html"
-      },
-      {
-        "url": "https://scikit-learn.org/1.7/datasets/sample_generators.html",
-        "status": 200,
-        "final_url": "https://scikit-learn.org/1.7/datasets/sample_generators.html"
-      },
-      {
-        "url": "https://scikit-learn.org/1.7/glossary.html",
-        "status": 200,
-        "final_url": "https://scikit-learn.org/1.7/glossary.html"
-      },
-      {
-        "url": "https://scikit-learn.org/1.7/model_persistence.html",
-        "status": 200,
-        "final_url": "https://scikit-learn.org/1.7/model_persistence.html"
-      },
-      {
-        "url": "https://scikit-learn.org/1.7/modules/clustering.html",
-        "status": 200,
-        "final_url": "https://scikit-learn.org/1.7/modules/clustering.html"
-      },
-      {
-        "url": "https://scikit-learn.org/1.7/modules/compose.html",
-        "status": 200,
-        "final_url": "https://scikit-learn.org/1.7/modules/compose.html"
-      },
-      {
-        "url": "https://scikit-learn.org/1.7/modules/cross_validation.html",
-        "status": 200,
-        "final_url": "https://scikit-learn.org/1.7/modules/cross_validation.html"
-      },
-      {
-        "url": "https://scikit-learn.org/1.7/modules/decomposition.html",
-        "status": 200,
-        "final_url": "https://scikit-learn.org/1.7/modules/decomposition.html"
-      },
-      {
-        "url": "https://scikit-learn.org/1.7/modules/density.html",
-        "status": 200,
-        "final_url": "https://scikit-learn.org/1.7/modules/density.html"
-      },
-      {
-        "url": "https://scikit-learn.org/1.7/modules/ensemble.html",
-        "status": 200,
-        "final_url": "https://scikit-learn.org/1.7/modules/ensemble.html"
-      },
-      {
-        "url": "https://scikit-learn.org/1.7/modules/feature_extraction.html",
-        "status": 200,
-        "final_url": "https://scikit-learn.org/1.7/modules/feature_extraction.html"
-      },
-      {
-        "url": "https://scikit-learn.org/1.7/modules/generated/sklearn.datasets.load_digits.html",
-        "status": 200,
-        "final_url": "https://scikit-learn.org/1.7/modules/generated/sklearn.datasets.load_digits.html"
-      },
-      {
-        "url": "https://scikit-learn.org/1.7/modules/generated/sklearn.datasets.load_iris.html",
-        "status": 200,
-        "final_url": "https://scikit-learn.org/1.7/modules/generated/sklearn.datasets.load_iris.html"
-      },
-      {
-        "url": "https://scikit-learn.org/1.7/modules/generated/sklearn.datasets.make_classification.html",
-        "status": 200,
-        "final_url": "https://scikit-learn.org/1.7/modules/generated/sklearn.datasets.make_classification.html"
-      },
-      {
-        "url": "https://scikit-learn.org/1.7/modules/generated/sklearn.dummy.DummyClassifier.html",
-        "status": 200,
-        "final_url": "https://scikit-learn.org/1.7/modules/generated/sklearn.dummy.DummyClassifier.html"
-      },
-      {
-        "url": "https://scikit-learn.org/1.7/modules/grid_search.html",
-        "status": 200,
-        "final_url": "https://scikit-learn.org/1.7/modules/grid_search.html"
-      },
-      {
-        "url": "https://scikit-learn.org/1.7/modules/impute.html",
-        "status": 200,
-        "final_url": "https://scikit-learn.org/1.7/modules/impute.html"
-      },
-      {
-        "url": "https://scikit-learn.org/1.7/modules/learning_curve.html",
-        "status": 200,
-        "final_url": "https://scikit-learn.org/1.7/modules/learning_curve.html"
-      },
-      {
-        "url": "https://scikit-learn.org/1.7/modules/linear_model.html",
-        "status": 200,
-        "final_url": "https://scikit-learn.org/1.7/modules/linear_model.html"
-      },
-      {
-        "url": "https://scikit-learn.org/1.7/modules/manifold.html",
-        "status": 200,
-        "final_url": "https://scikit-learn.org/1.7/modules/manifold.html"
-      },
-      {
-        "url": "https://scikit-learn.org/1.7/modules/mixture.html",
-        "status": 200,
-        "final_url": "https://scikit-learn.org/1.7/modules/mixture.html"
-      },
-      {
-        "url": "https://scikit-learn.org/1.7/modules/model_evaluation.html",
-        "status": 200,
-        "final_url": "https://scikit-learn.org/1.7/modules/model_evaluation.html"
-      },
-      {
-        "url": "https://scikit-learn.org/1.7/modules/naive_bayes.html",
-        "status": 200,
-        "final_url": "https://scikit-learn.org/1.7/modules/naive_bayes.html"
-      },
-      {
-        "url": "https://scikit-learn.org/1.7/modules/neighbors.html",
-        "status": 200,
-        "final_url": "https://scikit-learn.org/1.7/modules/neighbors.html"
-      },
-      {
-        "url": "https://scikit-learn.org/1.7/modules/permutation_importance.html",
-        "status": 200,
-        "final_url": "https://scikit-learn.org/1.7/modules/permutation_importance.html"
-      },
-      {
-        "url": "https://scikit-learn.org/1.7/modules/svm.html",
-        "status": 200,
-        "final_url": "https://scikit-learn.org/1.7/modules/svm.html"
-      },
-      {
-        "url": "https://scikit-learn.org/1.7/user_guide.html",
-        "status": 200,
-        "final_url": "https://scikit-learn.org/1.7/user_guide.html"
-      },
-      {
-        "url": "https://www.python.org/downloads/",
-        "status": 200,
-        "final_url": "https://www.python.org/downloads/"
-      },
-      {
-        "url": "https://www.statlearning.com/",
-        "status": 200,
-        "final_url": "https://www.statlearning.com/"
-      }
-    ],
-    "behavioral_tests": {
-      "passed": 4,
-      "total": 4
-    },
-    "mojo_python_references": {
-      "passed": 2,
-      "total": 2
-    },
-    "mojo_compiler": "not executed",
-    "notebook_code_comparison": [
-      {
-        "lesson": "00-setup",
-        "matches_executed_code": true
-      },
-      {
-        "lesson": "01-ml-workflow",
-        "matches_executed_code": true
-      },
-      {
-        "lesson": "02-data-and-plots",
-        "matches_executed_code": true
-      },
-      {
-        "lesson": "03-first-classifier",
-        "matches_executed_code": true
-      },
-      {
-        "lesson": "04-validation-and-metrics",
-        "matches_executed_code": true
-      },
-      {
-        "lesson": "05-linear-regression",
-        "matches_executed_code": true
-      },
-      {
-        "lesson": "06-feature-engineering",
-        "matches_executed_code": true
-      },
-      {
-        "lesson": "07-naive-bayes-text",
-        "matches_executed_code": true
-      },
-      {
-        "lesson": "08-support-vector-machines",
-        "matches_executed_code": true
-      },
-      {
-        "lesson": "09-trees-and-forests",
-        "matches_executed_code": true
-      },
-      {
-        "lesson": "10-tuning-and-learning-curves",
-        "matches_executed_code": true
-      },
-      {
-        "lesson": "11-principal-components",
-        "matches_executed_code": true
-      },
-      {
-        "lesson": "12-manifold-learning",
-        "matches_executed_code": true
-      },
-      {
-        "lesson": "13-kmeans-clustering",
-        "matches_executed_code": true
-      },
-      {
-        "lesson": "14-mixtures-and-density",
-        "matches_executed_code": true
-      },
-      {
-        "lesson": "15-gradient-descent",
-        "matches_executed_code": true
-      },
-      {
-        "lesson": "16-digits-project",
-        "matches_executed_code": true
-      },
-      {
-        "lesson": "17-time-and-groups",
-        "matches_executed_code": true
-      }
-    ]
-  },
-  "setup_verification": {
-    "python": "3.12.3",
-    "uv": "0.8.18",
-    "checks": [
-      {
-        "name": "uv-version",
-        "returncode": 0
-      },
-      {
-        "name": "uv-sync",
-        "returncode": 0
-      },
-      {
-        "name": "uv-lesson00",
-        "returncode": 0
-      },
-      {
-        "name": "uv-jupyter",
-        "returncode": 0
-      },
-      {
-        "name": "venv-create",
-        "returncode": 0,
-        "filesystem": "Linux /tmp"
-      },
-      {
-        "name": "pip-install",
-        "returncode": 0,
-        "filesystem": "Linux /tmp"
-      },
-      {
-        "name": "pip-check",
-        "returncode": 0,
-        "filesystem": "Linux /tmp"
-      },
-      {
-        "name": "venv-lesson00",
-        "returncode": 0,
-        "filesystem": "Linux /tmp"
-      },
-      {
-        "name": "venv-jupyter",
-        "returncode": 0,
-        "filesystem": "Linux /tmp"
-      }
-    ],
-    "jupyterlab": "4.4.6",
-    "bash_syntax_blocks": 17,
-    "uv_filesystem": "WSL scratch project on /mnt/c",
-    "manual_venv_filesystem": "Linux /tmp",
-    "interrupted_attempt": "Slow pip install on /mnt/c intentionally stopped; manual setup passed from a fresh Linux temporary environment.",
-    "limitations": [
-      "No WSL/system package/driver installation performed",
-      "No checkout migration or deletion performed",
-      "No CUDA workload or Windows browser forwarding test performed",
-      "uv installer downloaded with curl but not executed"
-    ]
-  },
-  "new_external_link_check": [
-    {
-      "url": "https://code.visualstudio.com/docs/remote/wsl",
-      "status": 200,
-      "final_url": "https://code.visualstudio.com/docs/remote/wsl"
-    },
-    {
-      "url": "https://creativecommons.org/licenses/by-nc-nd/3.0/us/legalcode",
-      "status": 200,
-      "final_url": "https://creativecommons.org/licenses/by-nc-nd/3.0/us/legalcode"
-    },
-    {
-      "url": "https://docs.astral.sh/uv/",
-      "status": 200,
-      "final_url": "https://docs.astral.sh/uv/"
-    },
-    {
-      "url": "https://docs.astral.sh/uv/concepts/projects/sync/",
-      "status": 200,
-      "final_url": "https://docs.astral.sh/uv/concepts/projects/sync/"
-    },
-    {
-      "url": "https://docs.nvidia.com/cuda/wsl-user-guide/index.html",
-      "status": 200,
-      "final_url": "https://docs.nvidia.com/cuda/wsl-user-guide/index.html"
-    },
-    {
-      "url": "https://docs.nvidia.com/deploy/nvidia-smi/index.html",
-      "status": 200,
-      "final_url": "https://docs.nvidia.com/deploy/nvidia-smi/index.html"
-    },
-    {
-      "url": "https://docs.python.org/3.12/library/venv.html",
-      "status": 200,
-      "final_url": "https://docs.python.org/3.12/library/venv.html"
-    },
-    {
-      "url": "https://learn.microsoft.com/en-us/windows/wsl/",
-      "status": 200,
-      "final_url": "https://learn.microsoft.com/en-us/windows/wsl/"
-    },
-    {
-      "url": "https://learn.microsoft.com/en-us/windows/wsl/disk-space",
-      "status": 200,
-      "final_url": "https://learn.microsoft.com/en-us/windows/wsl/disk-space"
-    },
-    {
-      "url": "https://learn.microsoft.com/en-us/windows/wsl/filesystems",
-      "status": 200,
-      "final_url": "https://learn.microsoft.com/en-us/windows/wsl/filesystems"
-    },
-    {
-      "url": "https://learn.microsoft.com/en-us/windows/wsl/install",
-      "status": 200,
-      "final_url": "https://learn.microsoft.com/en-us/windows/wsl/install"
-    },
-    {
-      "url": "https://learn.microsoft.com/en-us/windows/wsl/networking",
-      "status": 200,
-      "final_url": "https://learn.microsoft.com/en-us/windows/wsl/networking"
-    },
-    {
-      "url": "https://matplotlib.org/stable/",
-      "status": 200,
-      "final_url": "https://matplotlib.org/stable/"
-    },
-    {
-      "url": "https://mojolang.org/docs/manual/",
-      "status": 200,
-      "final_url": "https://mojolang.org/docs/manual/"
-    },
-    {
-      "url": "https://numpy.org/doc/stable/",
-      "status": 200,
-      "final_url": "https://numpy.org/doc/stable/"
-    },
-    {
-      "url": "https://opensource.org/license/mit",
-      "status": 200,
-      "final_url": "https://opensource.org/license/mit"
-    },
-    {
-      "url": "https://pandas.pydata.org/docs/",
-      "status": 200,
-      "final_url": "https://pandas.pydata.org/docs/"
-    },
-    {
-      "url": "https://scikit-learn.org/1.7/datasets/toy_dataset.html",
-      "status": 200,
-      "final_url": "https://scikit-learn.org/1.7/datasets/toy_dataset.html"
-    },
-    {
-      "url": "https://www.wipo.int/en/web/copyright/faq-copyright",
-      "status": 200,
-      "final_url": "https://www.wipo.int/en/web/copyright/faq-copyright"
-    }
-  ],
-  "mojo_unchanged_since_prior_run": true,
   "documentation_sha256": {
-    "README.md": "a640a41f863dfeacc6486e43f79283bdc021da7c8c2a72448b5333052938174d",
-    "THIRD_PARTY_NOTICES.md": "ae38bf9b3141a8b945815d832d785b3deaa294bb6349dd8b5e34d9942ddcaf45",
-    "docs/content-origin.md": "68fd029e28389503caeab782f764a35bb4522bb27338fd0d8315d35f1f99e956",
+    "docs/content-origin.md": "6577e48939c1eb027b9b639ea3eff8fe1ccf302b00c224507c9541620258b60e",
+    "docs/datasets.md": "ae176e6173e75241ca90a5ca37437bd9d58f47d4203abca7bc5b98936df0beae",
+    "docs/glossary.md": "c20672449f466724a52630fbd1205268c8d4ac2ddca63f71de8e876797a6bd8e",
+    "docs/math-primer.md": "47bef4e48f6f336a3b9f8e36c4a17b82c0f1e07d1a2a383325eafdf6bfdb9427",
+    "docs/model-card.md": "bf95db9296e0b6f32e0807271e23e45513ebea970caf84429de134b5de701a01",
     "docs/prerequisites.md": "8d3fa10b5a3275fa3fecb37162b084299bdfcd6269b235597efa1777edff499e",
-    "docs/references.md": "948c30ebe8e2d1b5eec7e73ecf0f8ac321fb84d4573176ffe677be0ceee4c4d1",
-    "docs/setup.md": "16154bc1834ff9915656abec2c47e3f95f32dec1df5e29c729002a5a7c88fc20",
+    "docs/references.md": "e52e58e4836ea711ca0ad1bf6f05c51d17472ba35be4a46319256283f23cce79",
+    "docs/setup.md": "69d3752160ef8e4eb9b2b6baf350bcf8c4d35e41343b011f537745a72a197261",
     "docs/start-here.md": "d2e8388f109df02efad7c33fbf3991c0a0d53415c41c88562a398f9692c70bf0",
-    "docs/verification.md": "a98576c8ba219d5eac6094d7a75a16207e696454177e14ce14646c091fcfc332",
-    "docs/wsl.md": "93872f9cc82e45de780f43b72860b4fcf57b4e3939bbc452cd3d499403dc8c56"
+    "docs/verification.md": "9e5fe68a04408f3aeac8c9a53d6be2e49db6ae9ee05b055c4346645c332a77a0",
+    "docs/wsl.md": "aa82895490f39d8506ba453d96bd43a89182af0a13a333a2367ad01c943fb8a6",
+    "mojo/01-gradient-descent/README.md": "a944ea80e199cc2e51ca78a9437eab3d523a891c54fab3bba4af547227879208",
+    "mojo/02-python-interop/README.md": "5c107bb96dd271e0f9187a65ef86b8bf8de40f5325970584ccdf2022f9e0ef31",
+    "mojo/README.md": "41106f3e66a8f2d5918acd30e7d6367cf06b8363eb56dc828d54ad67a57bebb3",
+    "README.md": "a640a41f863dfeacc6486e43f79283bdc021da7c8c2a72448b5333052938174d",
+    "THIRD_PARTY_NOTICES.md": "41cf8f9e19deb05b3a2ca1c79650a3934e0712803f048405969205e152c97de3"
   },
-  "previous_setup_hashes": {
-    "material_sha256": {
-      "lessons/00-setup/README.md": "ea7f55a0836d890e205e7d97cff4f143746f30671e35ae4d4d5a64dff84b94c7",
-      "lessons/00-setup/lesson.ipynb": "8c113e5049d4f5eae7bdcfc36b5b47017e203565d601f0235fe81441d2f8b24e",
-      "lessons/01-ml-workflow/README.md": "d23480cda08e090b0994aab7f27098a01ab2e51b4a72757c83b36133372df0a8",
-      "lessons/01-ml-workflow/lesson.ipynb": "51872e396eacf06a29d9f3d55a36471a9486acfbf24d964a5252b90192fec237",
-      "lessons/02-data-and-plots/README.md": "f7e4849cfcf2dfc3b231e4d772c4b9395fb46c19ddd76be9a5cbc7d558294f59",
-      "lessons/02-data-and-plots/lesson.ipynb": "380b32fd1999fbf9f6b2b82c50cfe70383c3c24d93219d8896c8b794fa4daeff",
-      "lessons/03-first-classifier/README.md": "a0507698355c7e4d1694fda318dba5bad322d6c13b4082a2b16f5bb6c8cf5a0e",
-      "lessons/03-first-classifier/lesson.ipynb": "7e00eff0dd0b3596440322645e7f9dc07fbdc2dc0f3121b5470d78f186f81f39",
-      "lessons/04-validation-and-metrics/README.md": "8e50f8189e3b30c7ccd69aba0d85d739a85213d058214a13bb8b98c0636f61ab",
-      "lessons/04-validation-and-metrics/lesson.ipynb": "9798bc537874569b9d8b04b650b4921623d2aef1a69dbcb5812fc23aa74609b1",
-      "lessons/05-linear-regression/README.md": "06870baa95e1e8b07143140b3ec241136fa1bf51044e2fe6ce76db5c25b3f53c",
-      "lessons/05-linear-regression/lesson.ipynb": "cf79d6e3e88748ad7b75e10d3759b6e172299a7e5b8f4d628e21a3e340c3c039",
-      "lessons/06-feature-engineering/README.md": "3ee428ed7be947274307e3670a7d37ae0a09c01336e315325f4278e643211238",
-      "lessons/06-feature-engineering/lesson.ipynb": "c62e09eb8b864683a9bc12e4ed931e276e5eb43dd7c91b3db1218c1e43e5e822",
-      "lessons/07-naive-bayes-text/README.md": "f6ea148dee08976dd369bb4de49a1376f45d68a05557a4d15f287cad31c0c1b9",
-      "lessons/07-naive-bayes-text/lesson.ipynb": "7931e8ea4d1d229cc4899c73fbf806813ff5104aca713aff3390ec6f00dcd618",
-      "lessons/08-support-vector-machines/README.md": "be8109a208562b29b67f84ee70a4b10eec3be73d1079b3905e15b731212d22ef",
-      "lessons/08-support-vector-machines/lesson.ipynb": "ba74d12d925851458f1c066cf5316381adc58ecbdf57faac064a1691a45a0dfc",
-      "lessons/09-trees-and-forests/README.md": "9dbf2eb6c931111a10d037037604f298e1b99d0e4c07b7d132f2ce7ea4c6eecb",
-      "lessons/09-trees-and-forests/lesson.ipynb": "de3236f50a9cb534d18b37655823197b46cfab2c479f279171587547c678cbe6",
-      "lessons/10-tuning-and-learning-curves/README.md": "db513f87d0b0bd6ae660c17b296b97933804e5014be34b3969db384a0afe52e5",
-      "lessons/10-tuning-and-learning-curves/lesson.ipynb": "15811daf8f330e45cbc16f70e6d66d8a34adb4e0ad188219c807690c7cf0f8fb",
-      "lessons/11-principal-components/README.md": "7b1df13c4dc9a9b95460e9800e7dbb1708a0dd83fc90cbc6de8d40e80d04ff69",
-      "lessons/11-principal-components/lesson.ipynb": "301fdf274a5673fc7685488272c088800f98ac42702fb7fbbdb94c873a8feae7",
-      "lessons/12-manifold-learning/README.md": "5ed3704000bc3f0fbe9e6503496dcda059681b0f46805248c952b88ed1705400",
-      "lessons/12-manifold-learning/lesson.ipynb": "43edf803453f17cd7707f88f4e03b11a7ab3f345589efec9c8be27bef4e4cd8e",
-      "lessons/13-kmeans-clustering/README.md": "db770e9260a753124afc50f20343ee3ae93d2645af76664e9e41efbe22ceae2a",
-      "lessons/13-kmeans-clustering/lesson.ipynb": "8a7926d16fe2d287e68f6f31dfc72a2cfbbf5f784cafcd81ec5a7d90c6db5581",
-      "lessons/14-mixtures-and-density/README.md": "8652e96e9eb8e016a0bf8523201348f2852c31f59e443537f11058f1b16cf650",
-      "lessons/14-mixtures-and-density/lesson.ipynb": "93c8b2517fb2939c97f033e3e258c3829d667a9fdfb39df96f38886a40baa2c6",
-      "lessons/15-gradient-descent/README.md": "5ef4eb55564720bb3cc09f825c1bc054ac17b70a998c3156a3fa29f813415d72",
-      "lessons/15-gradient-descent/lesson.ipynb": "a92c333b74c1929987889b02e5855a9700a31a9fab7958aee9d9c8670f349505",
-      "lessons/16-digits-project/README.md": "4e3f80db2b877c699784431a446a8ab81172b334dd258a296a3faebf3f7ce3aa",
-      "lessons/16-digits-project/lesson.ipynb": "2288560075854d6ef69eb1dc235a20163c9e3f35292ed024c176b158ae8b9f20",
-      "lessons/17-time-and-groups/README.md": "8991f4cf9f2573dd721db028fb234bcf0b68870e5c0d28925044aaf1a3f25fc6",
-      "lessons/17-time-and-groups/lesson.ipynb": "9ab1625c3cd327b21ed90b71d661d9c4e41f2cd243207d6836c0236546bedc7d",
-      "mojo/01-gradient-descent/main.mojo": "01252bd2b454495bcd856dcff74dfed1b5b5b7a34d04e29a0a4111e6494dc3b2",
-      "mojo/01-gradient-descent/reference.py": "710e7a1e72d1039d02bc2c839ff3480dc9618fe8f547c0aa81877df874afdb4b",
-      "mojo/02-python-interop/main.mojo": "ea3137d849b4f35b3c4046329c38dc1ece2cae8a23cf44efc00cb5ee1dd2da76",
-      "mojo/02-python-interop/reference.py": "10558e08b33b16fe4ebb333ad33dda79027024d10e7cecc8e991141fe2919e87"
-    },
-    "documentation_sha256": {
-      "README.md": "38d23abc5a8263d0c67ef5f2abceb39d00efb0c945545ea3295747d5256e5ee4",
-      "THIRD_PARTY_NOTICES.md": "ae38bf9b3141a8b945815d832d785b3deaa294bb6349dd8b5e34d9942ddcaf45",
-      "docs/setup.md": "4d74cca1a4cdad02c7759d90ef9fe2e923d6007dc1f6fd96ac8ad4f724405eb7",
-      "docs/wsl.md": "93872f9cc82e45de780f43b72860b4fcf57b4e3939bbc452cd3d499403dc8c56",
-      "docs/content-origin.md": "68fd029e28389503caeab782f764a35bb4522bb27338fd0d8315d35f1f99e956",
-      "docs/references.md": "533fbf5c2cf175eb4095c0526ec9954f7227f7084ab8a57416cedbbb7348567b",
-      "docs/verification.md": "d000af0de13ab16ad116b1c44792c6629eecbc9a3f3c7a41ea1dbdfd054c4c74"
-    }
-  },
-  "readme_learning_revision": {
-    "base_commit": "74058ee1c2af288f8649e230acf2772f8f0df273",
-    "python": "3.12.11",
-    "platform": "Ubuntu 24.04 WSL; Linux filesystem",
-    "method": "Literal README Python block per lesson, separate initially empty directory outside checkout, fresh process, no PYTHONPATH; CPU; MPLBACKEND=Agg",
-    "results": [
-      {
-        "lesson": "00-setup",
-        "returncode": 0,
-        "seconds": 1.929,
-        "readme_python_sha256": "4b84685c04887c5b5d7c5e8ba6fd359674f7657088097fef5c7c8a87b8a07a41",
-        "lesson_source_unchanged": true,
-        "notebook_code_unchanged": true,
-        "output_files": 0
-      },
-      {
-        "lesson": "01-ml-workflow",
-        "returncode": 0,
-        "seconds": 0.965,
-        "readme_python_sha256": "e65ee2c94a312eb27d4f91faafa313bf279b3fc9e2e1842b0857bf291fc38e43",
-        "lesson_source_unchanged": true,
-        "notebook_code_unchanged": true,
-        "output_files": 0
-      },
-      {
-        "lesson": "02-data-and-plots",
-        "returncode": 0,
-        "seconds": 1.552,
-        "readme_python_sha256": "e8b4975e32c91e8ce4d851db46b906c7f9b4937ce01616443247b1b3166c867b",
-        "lesson_source_unchanged": true,
-        "notebook_code_unchanged": true,
-        "output_files": 4
-      },
-      {
-        "lesson": "03-first-classifier",
-        "returncode": 0,
-        "seconds": 0.961,
-        "readme_python_sha256": "84f0a19aab08a4b32545d89e50412a68037e0c21324d303a654456185bfcc687",
-        "lesson_source_unchanged": true,
-        "notebook_code_unchanged": true,
-        "output_files": 0
-      },
-      {
-        "lesson": "04-validation-and-metrics",
-        "returncode": 0,
-        "seconds": 1.105,
-        "readme_python_sha256": "a57a412de39572d120b1cc2eb51b2640da7585c655cc71341adf24c209725210",
-        "lesson_source_unchanged": true,
-        "notebook_code_unchanged": true,
-        "output_files": 0
-      },
-      {
-        "lesson": "05-linear-regression",
-        "returncode": 0,
-        "seconds": 1.605,
-        "readme_python_sha256": "7b8145c3afde5de2935702a94fe66273c27a3256d7cf15caa8927e4862a85cca",
-        "lesson_source_unchanged": true,
-        "notebook_code_unchanged": true,
-        "output_files": 3
-      },
-      {
-        "lesson": "06-feature-engineering",
-        "returncode": 0,
-        "seconds": 1.018,
-        "readme_python_sha256": "d88c5000a759e8a711fba06d951e8b5241808cae2fc0795c712a80dd4c7ae6ea",
-        "lesson_source_unchanged": true,
-        "notebook_code_unchanged": true,
-        "output_files": 0
-      },
-      {
-        "lesson": "07-naive-bayes-text",
-        "returncode": 0,
-        "seconds": 0.851,
-        "readme_python_sha256": "a8746cd10fa8f81b0653cb518e32943e83d5c77f0bed20767ea3677290a69e7e",
-        "lesson_source_unchanged": true,
-        "notebook_code_unchanged": true,
-        "output_files": 0
-      },
-      {
-        "lesson": "08-support-vector-machines",
-        "returncode": 0,
-        "seconds": 1.563,
-        "readme_python_sha256": "7b9db2f6dd2f3bff62407fcd89c3b498fd1fc101fd7dc01bd63078b3b724e8b7",
-        "lesson_source_unchanged": true,
-        "notebook_code_unchanged": true,
-        "output_files": 3
-      },
-      {
-        "lesson": "09-trees-and-forests",
-        "returncode": 0,
-        "seconds": 2.499,
-        "readme_python_sha256": "7b46dd2698d82fb2a2f6db29064d9b3fd7843e1505fd467d05e9ca050703b187",
-        "lesson_source_unchanged": true,
-        "notebook_code_unchanged": true,
-        "output_files": 0
-      },
-      {
-        "lesson": "10-tuning-and-learning-curves",
-        "returncode": 0,
-        "seconds": 1.448,
-        "readme_python_sha256": "2a4813017e75e602e07438ca29be7c23e082b2689d3fa9548d16c53ca395f05e",
-        "lesson_source_unchanged": true,
-        "notebook_code_unchanged": true,
-        "output_files": 3
-      },
-      {
-        "lesson": "11-principal-components",
-        "returncode": 0,
-        "seconds": 1.442,
-        "readme_python_sha256": "609aa65ff5342c3b4f32a2726689ef5b92a97b7d4bc8ed0a5b82064af63fa3ba",
-        "lesson_source_unchanged": true,
-        "notebook_code_unchanged": true,
-        "output_files": 3
-      },
-      {
-        "lesson": "12-manifold-learning",
-        "returncode": 0,
-        "seconds": 2.777,
-        "readme_python_sha256": "20956d9647bc976674c05dfc9e1c89bd639f110a65e0b7b706018357fa3b5ce5",
-        "lesson_source_unchanged": true,
-        "notebook_code_unchanged": true,
-        "output_files": 3
-      },
-      {
-        "lesson": "13-kmeans-clustering",
-        "returncode": 0,
-        "seconds": 1.393,
-        "readme_python_sha256": "b5d7651f429aef66f8f777d14b36e6b2bb8693b2fbf471d1a3269a469fae644a",
-        "lesson_source_unchanged": true,
-        "notebook_code_unchanged": true,
-        "output_files": 3
-      },
-      {
-        "lesson": "14-mixtures-and-density",
-        "returncode": 0,
-        "seconds": 1.442,
-        "readme_python_sha256": "ef65d9c8ea1feceeba873bc5c07bffa26176136df1f2d6a218dc43eefbce491d",
-        "lesson_source_unchanged": true,
-        "notebook_code_unchanged": true,
-        "output_files": 3
-      },
-      {
-        "lesson": "15-gradient-descent",
-        "returncode": 0,
-        "seconds": 1.264,
-        "readme_python_sha256": "3008e6b04ab77e2857b9b49a7ae98fb12525d4db82d62d5e0b59b4153575385c",
-        "lesson_source_unchanged": true,
-        "notebook_code_unchanged": true,
-        "output_files": 3
-      },
-      {
-        "lesson": "16-digits-project",
-        "returncode": 0,
-        "seconds": 1.902,
-        "readme_python_sha256": "cb29db0fe86e37ec9435f97148ce00554c0b5a459b2433849d3b1a51191239b1",
-        "lesson_source_unchanged": true,
-        "notebook_code_unchanged": true,
-        "output_files": 8
-      },
-      {
-        "lesson": "17-time-and-groups",
-        "returncode": 0,
-        "seconds": 0.821,
-        "readme_python_sha256": "b72bd881de0cd241b3355ea3db7e1cd10a9a5651c368092b96f3367bb49ee2a6",
-        "lesson_source_unchanged": true,
-        "notebook_code_unchanged": true,
-        "output_files": 0
-      }
-    ],
-    "passed": 18,
-    "total": 18,
-    "colab_tested": false,
-    "install_cell": {
-      "method": "Fresh temporary uv-seeded venv, IPython shell executes literal %pip cell from docs/start-here.md, followed by lesson00 in fresh process and pip check",
-      "checks": [
-        {
-          "check": "create-venv",
-          "returncode": 0
-        },
-        {
-          "check": "prepare-notebook-shell",
-          "returncode": 0
-        },
-        {
-          "check": "literal-pip-cell",
-          "returncode": 0
-        },
-        {
-          "check": "fresh-interpreter-lesson00",
-          "returncode": 0
-        },
-        {
-          "check": "pip-check",
-          "returncode": 0
-        }
-      ],
-      "colab_tested": false,
-      "main_environment_modified": false
-    },
-    "lesson_sources_unchanged": true,
-    "mojo_unchanged": true,
-    "full_notebook_execution_repeated": false,
-    "markdown_files_checked": 33,
-    "canonical_notebook_hashes_exclude_local_user_metadata": true
-  },
-  "native_wsl_readiness": {
-    "checked_date": "2026-10-24",
-    "timezone": "Asia/Bangkok",
-    "git_commit": "74058ee1c2af288f8649e230acf2772f8f0df273",
-    "uv": "uv 0.8.18",
-    "python": "3.12.11",
-    "course_checks": {
-      "script": 18,
-      "readme": 21,
-      "notebook": 18
-    },
-    "behavioral_tests_passed": 6,
-    "mojo_checks_passed": 2,
-    "mojo": "Mojo 1.2.0 (2016d0cd)",
-    "jupyter": {
-      "wsl_api_status": 200,
-      "windows_login_http_status": 200,
-      "windows_jupyter_login_page": true,
-      "stopped": true
-    },
-    "scope": "Full course verification before the documentation-only README learning revision, Linux-native checkout"
-  },
-  "simple_notebook_revision": {
-    "python": "3.12.11",
-    "method": "Generated notebooks, fresh kernel per lesson, separate empty working directory outside repo, no PYTHONPATH, no automatic directory change; CPU with Agg plots",
-    "results": [
-      {
-        "lesson": "00-setup",
-        "passed": true,
-        "seconds": 2.23
-      },
-      {
-        "lesson": "01-ml-workflow",
-        "passed": true,
-        "seconds": 1.62
-      },
-      {
-        "lesson": "02-data-and-plots",
-        "passed": true,
-        "seconds": 2.09
-      },
-      {
-        "lesson": "03-first-classifier",
-        "passed": true,
-        "seconds": 1.6
-      },
-      {
-        "lesson": "04-validation-and-metrics",
-        "passed": true,
-        "seconds": 1.72
-      },
-      {
-        "lesson": "05-linear-regression",
-        "passed": true,
-        "seconds": 1.93
-      },
-      {
-        "lesson": "06-feature-engineering",
-        "passed": true,
-        "seconds": 1.42
-      },
-      {
-        "lesson": "07-naive-bayes-text",
-        "passed": true,
-        "seconds": 1.32
-      },
-      {
-        "lesson": "08-support-vector-machines",
-        "passed": true,
-        "seconds": 1.81
-      },
-      {
-        "lesson": "09-trees-and-forests",
-        "passed": true,
-        "seconds": 2.81
-      },
-      {
-        "lesson": "10-tuning-and-learning-curves",
-        "passed": true,
-        "seconds": 2.05
-      },
-      {
-        "lesson": "11-principal-components",
-        "passed": true,
-        "seconds": 1.88
-      },
-      {
-        "lesson": "12-manifold-learning",
-        "passed": true,
-        "seconds": 3.56
-      },
-      {
-        "lesson": "13-kmeans-clustering",
-        "passed": true,
-        "seconds": 1.87
-      },
-      {
-        "lesson": "14-mixtures-and-density",
-        "passed": true,
-        "seconds": 2.21
-      },
-      {
-        "lesson": "15-gradient-descent",
-        "passed": true,
-        "seconds": 1.9
-      },
-      {
-        "lesson": "16-digits-project",
-        "passed": true,
-        "seconds": 2.49
-      },
-      {
-        "lesson": "17-time-and-groups",
-        "passed": true,
-        "seconds": 1.57
-      }
-    ],
-    "passed": 18,
-    "total": 18,
-    "colab_tested": false,
-    "base_commit": "d61f24773b129c4b176588e6c2d214c7877e95be",
-    "install_cell": {
-      "method": "Fresh temporary environment preloaded with NumPy/pandas/Matplotlib/IPython; execute literal one-line %pip cell; run README lesson00 via IPython; pip check",
-      "steps": [
-        {
-          "check": "create-temp-env",
-          "returncode": 0
-        },
-        {
-          "check": "prepare-prerequisites",
-          "returncode": 0
-        },
-        {
-          "check": "add-sklearn-in-cell",
-          "returncode": 0
-        },
-        {
-          "check": "run-lesson00-block",
-          "returncode": 0
-        },
-        {
-          "check": "pip-check",
-          "returncode": 0
-        }
-      ],
-      "main_environment_modified": false
-    },
-    "lesson_sources_changed": [
-      "lessons/00-setup/lesson.py"
-    ],
-    "lesson_01_to_17_sources_unchanged": true,
-    "markdown_files_checked": 33,
-    "generator_sha256": "c1cf5e4ae4f588851ce5e99a392fe0881f78d5e3b215307d0913843058a934ee",
-    "reference_workflow": "https://github.com/KOPE-SOLUTION/visualization-with-matplotlib"
+  "configuration_sha256": {
+    "requirements.txt": "00583b3793fd3df752e5cd997fc55fda4385bd08becfc882dcedfc95de17de1b",
+    "mojo/requirements.txt": "f80af8dff7a94407d0080bd8e782a80079c67767768b211136fa5da8e1fd91e6",
+    ".github/workflows/course.yml": "8c6dd8ecc136312dfdb793b04d9e3e6ed11c9d4fb42ac033577641d4b460219b",
+    "scripts/verify_mojo.py": "34d4188d9b6b3fa0a654f89a80fe44a017049d2ca1f4bfd98318f0ea173207cb"
   }
 }

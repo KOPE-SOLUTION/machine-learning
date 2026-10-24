@@ -1,31 +1,25 @@
 # การตรวจซ้ำและผลที่วัดได้
 
-[กลับหน้าแรก](../README.md) · [สร้าง notebook แล้วรันตามบทเรียน](start-here.md)
+[กลับหน้าแรก](../README.md) · [เริ่มเรียนจาก notebook](start-here.md)
 
-ฉบับนี้ปรับทางเริ่มเรียนให้ต่อเนื่องจากหลักสูตร Matplotlib: สร้าง `.ipynb` แล้วคัดลอกโค้ดมารัน บท 00 อ่านข้อมูล X/y โดยไม่มีการตรวจ environment และ notebook ที่แจกไม่มี cell เปลี่ยนโฟลเดอร์อัตโนมัติ ตรวจเมื่อ **24 ตุลาคม 2026 (Asia/Bangkok)** บน **Ubuntu 24.04 ผ่าน WSL, CPython 3.12.11**
+ตรวจเมื่อ **24 ตุลาคม 2026 (Asia/Bangkok)** โดยสร้าง environment ชั่วคราวใหม่ด้วย Python แล้วติดตั้ง `requirements.txt` ด้วย **pip** บน Windows, CPython 3.13.7 การแยก environment ในรอบตรวจมีไว้ยืนยันว่าติดตั้งจากรายการแพ็กเกจได้ครบ ไม่ใช่ขั้นตอนบังคับสำหรับผู้เรียนที่ใช้ notebook ได้อยู่แล้ว
 
 ## ผลตรวจของฉบับนี้
 
 | รายการ | ผล |
 |---|---|
-| Notebook บท 00–17 | 18/18 ผ่าน: kernel ใหม่และโฟลเดอร์ว่างนอก repo แยกกันทุกบท |
-| Cell ติดตั้ง scikit-learn ในคู่มือเริ่มเรียน | ผ่านใน environment ชั่วคราวที่มี NumPy/pandas/Matplotlib/IPython อยู่ก่อน |
-| Python block บท 00 จาก README | ผ่านใน IPython หลังติดตั้งด้วย cell ข้างต้น; `pip check` ผ่าน |
-| README/notebook synchronization, local links, notebook schema | ผ่าน: 33 Markdown files |
-| โค้ด ML บท 01–17 | ไม่เปลี่ยนจาก commit `d61f247`; ตัดเฉพาะ cell ช่วยตั้ง working directory ออกจาก notebook |
-| Environment ที่ใช้เรียนอยู่ | ไม่มีการติดตั้งเพิ่มระหว่างทดสอบคำสั่งติดตั้ง; ใช้ environment ชั่วคราว |
+| ติดตั้ง requirements.txt ด้วย pip | ผ่านใน environment Windows ใหม่ และ `pip check` ผ่าน |
+| ไฟล์ Python ของบทเรียน | 18/18 ผ่าน |
+| Python block ที่คัดลอกจาก Markdown | 21/21 ผ่าน: 18 บทหลัก, 2 Python references ของ Mojo และ math primer |
+| Notebook จาก kernel ใหม่ | 18/18 ผ่าน |
+| Behavioral tests | 6/6 ผ่าน |
+| README/notebook synchronization, local links และ notebook schema | ผ่าน: 33 Markdown files |
+| ติดตั้ง Mojo ด้วย pip | ผ่านใน environment Linux ใหม่, CPython 3.12.3 และ `pip check` ผ่าน |
+| Mojo compiler และ Python references | 2/2 บทผ่านด้วย Mojo 1.2.0 (2016d0cd) บน Ubuntu 24.04 ผ่าน WSL |
 
-แต่ละ notebook เริ่มจากโฟลเดอร์ว่างนอก checkout ไม่มีไฟล์ข้อมูลหรือผลจากบทก่อน และไม่มี `PYTHONPATH` ชี้กลับมาที่ repo จึงตรวจว่ารันได้โดยไม่อาศัยโครงสร้างโฟลเดอร์ของหลักสูตร ใช้ CPU และ backend กราฟ Agg ในการตรวจอัตโนมัติ ส่วนภาพในหน้า notebook ของผู้เรียนขึ้นกับ backend ของโปรแกรมที่ใช้
+โค้ดบทเรียน ML ไม่เปลี่ยนจากฉบับก่อน การตรวจนี้ยืนยันการติดตั้งและรันด้วยรายการแพ็กเกจของ repo โดยไม่ติดตั้งแพ็กเกจทับ Python/Jupyter ที่ใช้เรียนอยู่ ผลแต่ละบท รุ่นแพ็กเกจ และ SHA-256 ของไฟล์อยู่ใน [verification-results.json](verification-results.json) ส่วนรายงานฉบับก่อนเก็บในประวัติ Git
 
-หลักฐานและวิธีตรวจอยู่ใน [verification-results.json](verification-results.json) ที่ `simple_notebook_revision` ส่วน `material_sha256`, `lesson_source_sha256` และ `documentation_sha256` ระบุไฟล์ฉบับปัจจุบัน Hash ของ notebook ใช้ไฟล์แจกที่ยังไม่มี output หรือการตั้งค่า kernel ส่วนตัว
-
-## หลักฐานก่อนการปรับครั้งนี้
-
-`readme_learning_revision` เป็นผลรอบก่อน: Python block จาก README 18 บทรันผ่านใน process ใหม่และโฟลเดอร์ว่างแยกกัน ไม่ใช่การรัน notebook ฉบับปัจจุบัน
-
-`native_wsl_readiness` เป็นผลเต็มหลักสูตรที่ commit `74058ee`: script 18 บท, Python block 21 ชุด, notebook 18 บท, behavioral tests 6 ข้อ และ Mojo 2 บท ผ่านบน CPython 3.12.11 รวมทั้ง Jupyter API และหน้า login ผ่าน localhost จาก Windows ตอบ HTTP 200
-
-ผลบน CPython 3.12.3 อยู่ที่ `previous_setup_wsl_run` และ `setup_verification` ส่วน `mojo_compiler` เก็บผล compile/run และเทียบ Python ของรอบก่อน โค้ด Mojo ไม่เปลี่ยนและไม่ได้รัน compiler ซ้ำในรอบนี้
+`requirements.txt` ระบุรุ่น dependency หลัก ส่วน dependency ทางอ้อมเลือกตามความเข้ากันได้ของ Python และระบบปฏิบัติการ จึงบันทึกรุ่นที่ทดสอบจริงแยกไว้ในรายงาน
 
 ## ตัวอย่างผลที่ใช้ตรวจความเข้าใจ
 
@@ -43,29 +37,27 @@
 
 ## ขอบเขตผลตรวจ
 
-ยังไม่ได้รันฉบับนี้ในบริการ Colab หรือ macOS จึงไม่รับรองความเร็ว รุ่น Python หรือแพ็กเกจที่บริการจะจัดให้แต่ละครั้ง ส่วนผล Windows/Linux และ Python รุ่นอื่นบน GitHub ให้ดู [Actions](https://github.com/KOPE-SOLUTION/machine-learning/actions) ของ commit ที่ต้องการตรวจ มี job สำหรับ Python 3.11/3.13 และ Mojo 1.2.0 แยกกัน
+ผล Python รอบนี้มาจาก Windows และผล Mojo มาจาก Linux ผ่าน WSL ยังไม่ได้ตรวจบริการ Colab หรือ macOS ในรอบนี้ ผล Python 3.11/3.13 บน Windows/Linux และงาน Mojo บน GitHub ให้ดู [Actions](https://github.com/KOPE-SOLUTION/machine-learning/actions) ของ commit ที่ต้องการตรวจ
 
-การตรวจนี้ไม่ได้ติดตั้ง WSL ใหม่ เปลี่ยนไดรเวอร์ หรือทดสอบ CUDA workload หลักสูตร Python ใช้ CPU ได้ทั้งหมด ส่วน Mojo มีคู่มือติดตั้งแยก
-
-ผล HTTP ของลิงก์ภายนอกใน `new_external_link_check` และ `previous_external_link_check` เป็นประวัติรอบก่อน ไม่ใช่การตรวจทุก URL ซ้ำรอบนี้ ลิงก์วิดีโอพื้นฐานใช้ตามช่องที่ระบุใน [prerequisites](prerequisites.md)
+การตรวจอัตโนมัติใช้ CPU และ backend กราฟ Agg เพื่อบันทึกภาพ ไม่มีการเปลี่ยนไดรเวอร์หรือทดสอบ CUDA ผลนี้ไม่ใช่ benchmark เปรียบเทียบระบบปฏิบัติการ
 
 ## รันตรวจเอง
 
-จากโฟลเดอร์หลักใน WSL หลังติดตั้ง uv:
+จาก terminal ที่โฟลเดอร์หลักของ repo หลังติดตั้ง Python:
 
 ```bash
-uv sync --frozen --python 3.12
-uv run --frozen python scripts/sync_materials.py --check
-uv run --frozen python scripts/check_materials.py
-uv run --frozen python -m unittest discover -s tests -v
-uv run --frozen python scripts/verify_course.py --mode all
-uv run --frozen python lessons/16-digits-project/predict.py outputs/16-digits-project/example-input.csv
+python -m pip install -r requirements.txt
+python -m pip check
+python scripts/sync_materials.py --check
+python scripts/check_materials.py
+python -m unittest discover -s tests -v
+python scripts/verify_course.py --mode all
 ```
 
-หากใช้ venv โดยตรง ให้แทน `uv run --frozen python` ด้วย `.venv/bin/python` ส่วน Mojo ติดตั้ง environment ตาม [คู่มือเสริม](../mojo/README.md) แล้วรัน:
+คำสั่งสุดท้ายรันไฟล์ Python, Python block ใน Markdown และ notebook ครบชุด บันทึก log และผลที่รันแล้วใน `outputs/verification/` โดยไม่แก้ output ของ notebook ต้นฉบับใน `lessons/`
+
+หากใช้ environment แยก ให้เรียก Python ของ environment นั้นแทน `python` ส่วน Mojo ติดตั้งตาม [คู่มือเสริม](../mojo/README.md) แล้วใช้:
 
 ```bash
 .venv-mojo/bin/python scripts/verify_mojo.py
 ```
-
-verify_course ใช้ backend กราฟ Agg และจำกัด thread แต่ละ script/README block มี timeout 180 วินาที ส่วน notebook มี timeout ต่อ cell 180 วินาที หาก log มีคำเตือนว่า Agg ไม่แสดงหน้าต่างกราฟ ให้เปิด PNG ที่บันทึกใน outputs/ แทน Notebook ที่รันแล้วและ log อยู่ใน outputs/verification/ ส่วน notebook ใน lessons/ ว่าง output เพื่อให้ทดลองใหม่ได้

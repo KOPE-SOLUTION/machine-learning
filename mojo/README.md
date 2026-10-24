@@ -16,21 +16,21 @@
 - M01: w≈3, b≈2 และ MSE ใกล้ศูนย์ ตรงกับ Python ภายใน tolerance ที่กำหนด
 - M02: accuracy 0.933333 และคำทำนายห้าตัวแรก `[0, 2, 1, 1, 0]` ตรงกับ Python
 
-ไฟล์ `requirements.lock` ล็อก dependency ของเส้นทาง Mojo แยกจากหลักสูตร Python ผลตรวจนี้เป็นของ Linux x86_64 ผ่าน WSL; ยังไม่ได้ตรวจบน macOS หรือ CPU สถาปัตยกรรมอื่น
+ไฟล์ `requirements.txt` ระบุรุ่น dependency ของเส้นทาง Mojo แยกจากหลักสูตร Python ผลตรวจนี้เป็นของ Linux x86_64 ผ่าน WSL; ยังไม่ได้ตรวจบน macOS หรือ CPU สถาปัตยกรรมอื่น
 
 ## เตรียม environment แยก
 
-ใช้ terminal ภายใน WSL บน Windows ตาม [system requirements](https://mojolang.org/docs/requirements/) และ [คู่มือติดตั้งทางการ](https://mojolang.org/install/) เริ่มจากโฟลเดอร์หลักของ repo หลังติดตั้ง uv แล้ว:
+ใช้ terminal ภายใน WSL บน Windows ตาม [system requirements](https://mojolang.org/docs/requirements/) และ [คู่มือติดตั้งทางการ](https://mojolang.org/install/) เริ่มจากโฟลเดอร์หลักของ repo โดยใช้ Python 3.12 ที่ติดตั้งแล้ว:
 
 ```bash
-uv venv .venv-mojo --python 3.12
-uv pip sync --python .venv-mojo/bin/python mojo/requirements.lock
+python3.12 -m venv .venv-mojo
+.venv-mojo/bin/python -m pip install -r mojo/requirements.txt
 source .venv-mojo/bin/activate
 mojo --version
 python --version
 ```
 
-ถ้าไม่มี Python 3.12 ให้ใช้ `uv python install 3.12` แล้วรันคำสั่งสร้าง environment อีกครั้ง การ activate นี้เลือก Mojo และ Python จาก `.venv-mojo` สำหรับ terminal ปัจจุบัน ไม่ติดตั้ง compiler ทับ environment ของหลักสูตรหลัก
+บน Ubuntu 24.04 หากยังไม่มีเครื่องมือสร้าง environment ให้ติดตั้ง `python3.12-venv` ตาม [คู่มือ WSL](../docs/wsl.md) ก่อน การ activate นี้เลือก Mojo และ Python จาก `.venv-mojo` สำหรับ terminal ปัจจุบัน ไม่ติดตั้ง compiler ทับ environment ของหลักสูตรหลัก
 
 ## รันตามลำดับ
 

@@ -32,7 +32,7 @@
 
 ## อ่านเพิ่มเติม: Python Data Science Handbook
 
-[Jake VanderPlas — บท Machine Learning](https://jakevdp.github.io/PythonDataScienceHandbook/05.00-machine-learning.html) เหมาะสำหรับเชื่อมภาพรวมกับตัวอย่างหลาย algorithm หนังสือออนไลน์มี API จากช่วงเวลาที่เผยแพร่ ให้ใช้โค้ดใน repo และเอกสาร scikit-learn 1.7 เมื่อลองรันใน environment ที่ล็อกไว้
+[Jake VanderPlas — บท Machine Learning](https://jakevdp.github.io/PythonDataScienceHandbook/05.00-machine-learning.html) เหมาะสำหรับเชื่อมภาพรวมกับตัวอย่างหลาย algorithm หนังสือออนไลน์มี API จากช่วงเวลาที่เผยแพร่ ให้ใช้โค้ดใน repo และเอกสาร scikit-learn 1.7 เมื่อลองรันใน รุ่นไลบรารีที่ระบุใน requirements.txt
 
 | หัวข้ออ่านคู่จาก Handbook | บทในหลักสูตรนี้ |
 |---|---|
@@ -55,7 +55,7 @@
 
 ## Environment และ Ubuntu WSL
 
-- [Python venv](https://docs.python.org/3.12/library/venv.html) และ [uv projects](https://docs.astral.sh/uv/guides/projects/) — เข้าใจ environment, interpreter และ lockfile
+- [pip User Guide](https://pip.pypa.io/en/stable/user_guide/) และ [Python venv](https://docs.python.org/3.13/library/venv.html) — ติดตั้งแพ็กเกจและแยก environment เมื่อจำเป็น
 - [Microsoft WSL filesystems](https://learn.microsoft.com/en-us/windows/wsl/filesystems) — เลือกตำแหน่งเก็บ repo ให้ตรงเครื่องมือ
 - [NVIDIA CUDA on WSL](https://docs.nvidia.com/cuda/wsl-user-guide/index.html) — อ่านเมื่อต่อยอดงาน GPU; หลักสูตรนี้ใช้ CPU
 

@@ -14,7 +14,7 @@ OUT = ROOT / "outputs/verification/mojo"
 OUT.mkdir(parents=True, exist_ok=True)
 MOJO = Path(sys.executable).parent / "mojo"
 if not MOJO.is_file():
-    raise SystemExit("Run with .venv-mojo/bin/python after installing mojo/requirements.lock")
+    raise SystemExit("Run with .venv-mojo/bin/python after installing mojo/requirements.txt")
 env = os.environ.copy()
 env.update(OMP_NUM_THREADS="1", OPENBLAS_NUM_THREADS="1", MKL_NUM_THREADS="1")
 env["PATH"] = str(MOJO.parent) + os.pathsep + env.get("PATH", "")

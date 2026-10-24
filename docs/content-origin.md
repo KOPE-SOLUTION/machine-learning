@@ -14,7 +14,7 @@
 | [Python Data Science Handbook โดย Jake VanderPlas](https://jakevdp.github.io/PythonDataScienceHandbook/05.00-machine-learning.html) | แหล่งอ่านเสริมสำหรับภาพรวมและ algorithm ที่ผู้เรียนเลือกศึกษาเพิ่ม |
 | [NumPy](https://numpy.org/doc/stable/), [pandas](https://pandas.pydata.org/docs/), [Matplotlib](https://matplotlib.org/stable/) | ตรวจการจัดการ array/ตารางและการสร้างกราฟ |
 | [Mojo manual](https://mojolang.org/docs/manual/) | ตรวจภาษาและ Python interoperability ของบทเสริม |
-| [Python venv](https://docs.python.org/3.12/library/venv.html), [uv](https://docs.astral.sh/uv/), [Microsoft WSL](https://learn.microsoft.com/en-us/windows/wsl/) | ตรวจขั้นตอนสร้าง environment และทำงานบน Ubuntu WSL |
+| [Python venv](https://docs.python.org/3.12/library/venv.html), [pip](https://pip.pypa.io/en/stable/user_guide/), [Microsoft WSL](https://learn.microsoft.com/en-us/windows/wsl/) | ตรวจขั้นตอนสร้าง environment และทำงานบน Ubuntu WSL |
 
 ใช้เอกสารเพื่อทำความเข้าใจแนวคิดและข้อสัญญาของเครื่องมือ แล้วเขียนคำอธิบาย โจทย์ และโปรแกรมของหลักสูตร พร้อมรันตรวจผลของโปรแกรมนั้น เอกสารอ้างอิงเป็นทางให้ตรวจสอบและอ่านลึกขึ้น การตรวจว่าโค้ดรันผ่านช่วยยืนยันพฤติกรรม แต่ไม่ใช่การตรวจลิขสิทธิ์
 
@@ -24,7 +24,7 @@
 
 | บท | ตัวอย่างและการอธิบายใน repo | แหล่งตรวจแนวคิด/API |
 |---|---|---|
-| [00](../lessons/00-setup/README.md) | ตรวจ interpreter และอ่าน shape/index ของ Iris ก่อนเริ่มโมเดล | [Python venv](https://docs.python.org/3.12/library/venv.html), [uv](https://docs.astral.sh/uv/guides/projects/) |
+| [00](../lessons/00-setup/README.md) | สร้าง notebook และอ่าน shape/index ของ Iris ก่อนเริ่มโมเดล | [scikit-learn: load_iris](https://scikit-learn.org/1.7/modules/generated/sklearn.datasets.load_iris.html) |
 | [01](../lessons/01-ml-workflow/README.md) | เปรียบเทียบคำทำนายคลาสส่วนใหญ่กับจำนวนดอกไม้ในชุดทดสอบ | [scikit-learn: DummyClassifier](https://scikit-learn.org/1.7/modules/generated/sklearn.dummy.DummyClassifier.html) |
 | [02](../lessons/02-data-and-plots/README.md) | เพิ่ม sample_id และคอลัมน์ที่รั่วจาก target เพื่อฝึกตรวจ schema | [scikit-learn: Common pitfalls และ leakage](https://scikit-learn.org/1.7/common_pitfalls.html) |
 | [03](../lessons/03-first-classifier/README.md) | ประกอบ scaler + KNN แล้วทำนายดอกไม้ใหม่ด้วยลำดับ feature เดิม | [scikit-learn: Nearest Neighbors](https://scikit-learn.org/1.7/modules/neighbors.html), [Common pitfalls](https://scikit-learn.org/1.7/common_pitfalls.html) |
