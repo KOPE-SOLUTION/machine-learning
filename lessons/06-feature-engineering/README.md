@@ -45,7 +45,12 @@ Median imputation เรียนค่าทดแทนจาก train แล�
 
 MAE ของ baseline มัธยฐานและ Ridge ใช้หน่วยค่าบริการจำลองเดียวกัน ส่วนตัวอย่าง same_day ใช้สาธิตการรับ input ที่ไม่รู้จัก การรันสำเร็จยังไม่บอกว่าค่าทำนายบริการใหม่เชื่อถือได้
 
-## ลงมือรัน
+## คัดลอกโค้ดไปรัน
+
+คัดลอกบล็อก `python` ด้านล่างทั้งชุดไป Code cell ใน Jupyter หรือ Colab แล้วกด Shift+Enter หากเปิด `lesson.ipynb` ของบทนี้อยู่แล้ว ให้รัน cell ที่มีตามลำดับ ไม่ต้องคัดลอกซ้ำ ดู [วิธีเริ่มเรียน](../../docs/start-here.md) หากยังไม่ได้เตรียมแพ็กเกจ
+
+<details>
+<summary>ทางเลือก: รันไฟล์ Python จาก repo ในเครื่อง</summary>
 
 จากโฟลเดอร์หลักของ repo:
 
@@ -54,6 +59,8 @@ uv run --frozen python lessons/06-feature-engineering/lesson.py
 ```
 
 หากใช้ venv ให้ใช้ `python` แทน `uv run --frozen python` คัดลอกบล็อกต่อไปนี้ได้ทั้งชุด แต่ละส่วน `# %%` คือช่วงการทดลองเดียวกันกับ notebook
+
+</details>
 
 <!-- CODE:START -->
 ```python

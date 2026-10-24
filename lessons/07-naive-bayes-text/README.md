@@ -37,7 +37,12 @@ Smoothing ด้วย alpha เพิ่มน้ำหนักให้คำ
 
 `named_steps` ใช้หยิบตัวนับคำที่ fit แล้วออกมาตรวจ ไม่ได้สร้าง vocabulary ใหม่ ผลรวมแต่ละแถวคือ known-token count ซึ่งนับจำนวนคำที่รู้จักรวมคำซ้ำ ไม่ใช่จำนวนคำไม่ซ้ำ Probability ที่สูงก็อาจผิดได้เมื่อข้อความอยู่นอกขอบเขต เช่นเรื่องอาหาร
 
-## ลงมือรัน
+## คัดลอกโค้ดไปรัน
+
+คัดลอกบล็อก `python` ด้านล่างทั้งชุดไป Code cell ใน Jupyter หรือ Colab แล้วกด Shift+Enter หากเปิด `lesson.ipynb` ของบทนี้อยู่แล้ว ให้รัน cell ที่มีตามลำดับ ไม่ต้องคัดลอกซ้ำ ดู [วิธีเริ่มเรียน](../../docs/start-here.md) หากยังไม่ได้เตรียมแพ็กเกจ
+
+<details>
+<summary>ทางเลือก: รันไฟล์ Python จาก repo ในเครื่อง</summary>
 
 จากโฟลเดอร์หลักของ repo:
 
@@ -46,6 +51,8 @@ uv run --frozen python lessons/07-naive-bayes-text/lesson.py
 ```
 
 หากใช้ venv ให้ใช้ `python` แทน `uv run --frozen python` คัดลอกบล็อกต่อไปนี้ได้ทั้งชุด แต่ละส่วน `# %%` คือช่วงการทดลองเดียวกันกับ notebook
+
+</details>
 
 <!-- CODE:START -->
 ```python

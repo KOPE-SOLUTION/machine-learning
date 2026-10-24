@@ -43,7 +43,12 @@ C ควบคุมการลงโทษความผิดพลาดบ
 
 รอบนี้กำหนด C=1 และ gamma เริ่มต้นไว้ก่อน เปรียบเทียบเฉพาะ kernel การเลือกค่าหลายชุดเป็นเนื้อหาบท 10
 
-## ลงมือรัน
+## คัดลอกโค้ดไปรัน
+
+คัดลอกบล็อก `python` ด้านล่างทั้งชุดไป Code cell ใน Jupyter หรือ Colab แล้วกด Shift+Enter หากเปิด `lesson.ipynb` ของบทนี้อยู่แล้ว ให้รัน cell ที่มีตามลำดับ ไม่ต้องคัดลอกซ้ำ ดู [วิธีเริ่มเรียน](../../docs/start-here.md) หากยังไม่ได้เตรียมแพ็กเกจ
+
+<details>
+<summary>ทางเลือก: รันไฟล์ Python จาก repo ในเครื่อง</summary>
 
 จากโฟลเดอร์หลักของ repo:
 
@@ -52,6 +57,8 @@ uv run --frozen python lessons/08-support-vector-machines/lesson.py
 ```
 
 หากใช้ venv ให้ใช้ `python` แทน `uv run --frozen python` คัดลอกบล็อกต่อไปนี้ได้ทั้งชุด แต่ละส่วน `# %%` คือช่วงการทดลองเดียวกันกับ notebook
+
+</details>
 
 <!-- CODE:START -->
 ```python

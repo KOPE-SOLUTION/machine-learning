@@ -1,66 +1,20 @@
-# 00 · ตั้ง environment และตรวจข้อมูลก่อนเริ่ม ML
+# 00 · เปิด notebook และตรวจข้อมูลก่อนเริ่ม ML
 
 [กลับสารบัญ](../../README.md) · [Notebook](lesson.ipynb) · [Python](lesson.py)
 
-เวลา: 30–45 นาทีสำหรับตั้งเครื่องครั้งแรก บวกเวลาดาวน์โหลด · 10–15 นาทีถ้าติดตั้งพร้อมแล้ว
+เวลา: 10–15 นาทีเมื่อติดตั้งแพ็กเกจพร้อมแล้ว
 
 พื้นฐาน: ใช้ Python, notebook, NumPy, pandas และ Matplotlib ได้แล้ว ดู [ทักษะพื้นฐานและวิดีโอทบทวน](../../docs/prerequisites.md)
 
 ## ก่อนเริ่มบทนี้
 
-บทนี้เริ่มจากแยก environment ของโปรเจกต์ ตรวจว่า terminal และ notebook ใช้ Python ตัวเดียวกัน แล้วนำทักษะ DataFrame เดิมมาอ่านข้อมูลของ scikit-learn ยังไม่มีการฝึกโมเดล เมื่อจบจะพร้อมเริ่มบท 01
+เปิด notebook ที่ใช้เรียน NumPy, pandas และ Matplotlib ได้อยู่แล้ว ขั้นตอนหลักใช้ Jupyter แต่เลือก Colab ได้เช่นกัน หากเปิดไฟล์ notebook ของบทนี้จาก repo อยู่แล้ว ให้รัน cell ที่มีตามลำดับ
 
-## ทำไมต้องแยก environment
-
-หากติดตั้งทุกอย่างลง Python ตัวเดียว การเปลี่ยนรุ่นแพ็กเกจเพื่องานหนึ่งอาจทำให้อีกงานรันไม่ได้ เราจึงสร้างโฟลเดอร์ `.venv` ให้โปรเจกต์นี้มี Python และแพ็กเกจของตัวเอง โฟลเดอร์นี้ไม่ส่งขึ้น Git; ส่งรายการแพ็กเกจและ lockfile เพื่อให้สร้างใหม่ได้
-
-`venv` สร้าง environment, `pip` ติดตั้งแพ็กเกจ ส่วน `uv` จัดการทั้ง Python, environment และแพ็กเกจจากไฟล์โปรเจกต์ได้ เลือกหนึ่งวิธีด้านล่าง ไม่ต้องทำทั้งสองวิธี บน Windows ใช้ Ubuntu WSL 2 ตาม [คู่มือ WSL](../../docs/wsl.md) แล้ว clone ลง `~/projects/machine-learning` ก่อนเริ่ม
-
-### ทางเลือก A: uv
-
-ติดตั้ง uv ตาม [คู่มือทีละขั้น](../../docs/setup.md) แล้วเปิด Ubuntu terminal:
-
-```bash
-cd ~/projects/machine-learning
-uv python install 3.12
-uv sync --frozen --python 3.12
-uv run --frozen python -c "import sys; print(sys.executable)"
-uv run --frozen jupyter lab
-```
-
-`uv sync` อ่าน `uv.lock` แล้วสร้าง `.venv` พร้อมติดตั้งแพ็กเกจ `--frozen` ใช้ lockfile ที่มีอยู่ ส่วน `uv run` เรียกโปรแกรมใน environment นี้ให้ จึงไม่ต้อง activate เปิด URL ที่ Jupyter แสดงใน browser แล้วเปิด notebook บท 00
-
-### ทางเลือก B: ฝึกสร้าง venv ด้วยตัวเอง
-
-บน Ubuntu 24.04 ซึ่งมี Python 3.12 ให้ใช้คำสั่งต่อไปนี้จาก terminal (ไม่วางใน cell Python):
-
-```bash
-sudo apt update
-sudo apt install -y python3-venv
-cd ~/projects/machine-learning
-python3 --version
-python3 -m venv .venv
-source .venv/bin/activate
-python -m pip install -r requirements.txt
-python -c "import sys; print(sys.executable)"
-python -m jupyterlab
-```
-
-1. ตรวจ Python ว่าเป็นรุ่น 3.11–3.13 ที่หลักสูตรรองรับ ก่อนใช้สร้าง environment
-2. `python3 -m venv .venv` สร้างโฟลเดอร์ environment ใน repo
-3. `source .venv/bin/activate` ทำให้คำสั่ง `python` ใน terminal นี้เลือก Python ของโปรเจกต์
-4. `python -m pip install ...` ติดตั้งแพ็กเกจลง Python ตัวเดียวกัน
-5. `sys.executable` ควรชี้เข้า `.venv/bin/` เช่น `python` หรือ `python3` ก่อนเปิด Jupyter
-
-หลังปิด Jupyter ด้วย Ctrl+C ใช้ `deactivate` เพื่อออกจาก environment ครั้งหน้าเข้า repo และ activate ใหม่ การ activate เปลี่ยน PATH เฉพาะ terminal ปัจจุบัน ไม่ได้ย้ายหรือลบแพ็กเกจ สำหรับ Windows Python และ macOS ดู [คู่มือติดตั้ง](../../docs/setup.md)
-
-### Interpreter กับ notebook kernel ต้องตรงกัน
-
-Interpreter คือ Python ที่รันโปรแกรม ส่วน kernel คือ process ที่รัน cell ใน notebook หากเปิด notebook ด้วย Python อีกตัว อาจ import ไม่ผ่านแม้เคยติดตั้งแล้ว โค้ดตรวจด้านล่างพิมพ์ `sys.executable` ให้เทียบกับ terminal ได้ เลือก kernel ของ `.venv` แล้ว Restart Kernel → Run All เมื่อต้องการทดสอบใหม่
+บทนี้ตรวจเครื่องมือและอ่านข้อมูลตารางก่อนเริ่ม ML คำใหม่คือ sample, feature และ target แล้วจะไปทดลองโมเดลที่บท 01–03 ผู้ที่ยังไม่มีแพ็กเกจให้ดู [วิธีเริ่มเรียนและ cell ติดตั้ง](../../docs/start-here.md) ส่วนการสร้าง environment ใหม่ด้วย uv/venv อยู่ใน [คู่มือตั้งเครื่อง](../../docs/setup.md)
 
 ## ตรวจสิ่งที่หลักสูตรต้องใช้
 
-เมื่อตั้ง environment เสร็จแล้ว รันโปรแกรมด้านล่างจาก kernel ใหม่ บทนี้ตรวจ interpreter และข้อมูลที่ scikit-learn คืนมา โดยไม่ทบทวนวิธีใช้ notebook หรือ indexing ตั้งแต่ต้น
+รันโปรแกรมด้านล่างจาก notebook ที่เริ่มใหม่ บทนี้ตรวจ interpreter และข้อมูลที่ scikit-learn คืนมา โดยไม่ทบทวนวิธีใช้ notebook หรือ indexing ตั้งแต่ต้น
 
 สัญญา input ของ estimator ส่วนใหญ่คือ X มี shape (n_samples, n_features) และ y มีคำตอบหนึ่งค่าต่อแถว NumPy shape ถูกต้องอย่างเดียวยังไม่พอ: ลำดับตัวอย่างใน X/y ต้องตรงกัน และคอลัมน์ตอน predict ต้องมีลำดับ/หน่วยเหมือนตอน fit
 
@@ -80,13 +34,20 @@ Interpreter คือ Python ที่รันโปรแกรม ส่ว�
 
 `assert` ตรวจเงื่อนไข: ถ้าถูกโปรแกรมทำต่อ ถ้าผิดจะเกิด `AssertionError` จึงไม่ต้องรอให้โมเดลทำนายผิดก่อนรู้ว่า shape ไม่ตรง อ่านชื่อคอลัมน์จาก `X.head()` จะพบ sepal (กลีบเลี้ยง) และ petal (กลีบดอก) อย่างละความยาว/ความกว้าง หน่วยเซนติเมตร
 
-## รันจาก root ของ repo
+## คัดลอกโค้ดไปรัน
+
+คัดลอกบล็อก `python` ด้านล่างทั้งชุดไป Code cell ใน Jupyter หรือ Colab แล้วกด Shift+Enter หากเปิด `lesson.ipynb` ของบทนี้อยู่แล้ว ให้รัน cell ที่มีตามลำดับ ไม่ต้องคัดลอกซ้ำ ดู [วิธีเริ่มเรียน](../../docs/start-here.md) หากยังไม่ได้เตรียมแพ็กเกจ
+
+<details>
+<summary>ทางเลือก: รันไฟล์ Python จาก repo ในเครื่อง</summary>
 
 ```bash
 uv run --frozen python lessons/00-setup/lesson.py
 ```
 
 หากใช้ venv ให้ใช้ Python ของ environment นั้นแทน `uv run --frozen python`
+
+</details>
 
 <!-- CODE:START -->
 ```python
@@ -118,14 +79,10 @@ print(X.head(3).to_string(index=False))
 
 เห็น X shape (150,4), y shape (150,), ชื่อสามสายพันธุ์และรุ่นแพ็กเกจที่ตรงกับ requirements.txt เมื่อผ่านแล้วให้เริ่ม [บท 01](../01-ml-workflow/README.md)
 
-## ตรวจความเข้าใจเรื่อง environment
-
-ติดตั้ง scikit-learn ผ่าน terminal สำเร็จ แต่ notebook แจ้งว่าไม่มี `sklearn` ควรตรวจอะไรเป็นอันดับแรก? และเหตุใด clone repo ใหม่จึงต้องติดตั้งแพ็กเกจอีกครั้ง?
-
 <details>
-<summary>แนวคำตอบ</summary>
+<summary>เมื่อ import ไม่ผ่าน: ตรวจ Python ของ notebook</summary>
 
-เทียบ `sys.executable` ของ terminal กับ notebook เพื่อดูว่าใช้ environment เดียวกันหรือไม่ แล้วเลือก kernel ให้ถูก `.venv` ไม่อยู่ใน Git และมี path/ไฟล์เฉพาะเครื่อง จึงสร้างใหม่จาก `uv.lock` หรือ `requirements.txt` หลัง clone ไม่จำเป็นต้องติดตั้งแพ็กเกจทับ Python ของระบบ
+บรรทัด `Interpreter:` แสดง Python ที่รัน cell นี้ หากติดตั้งแพ็กเกจแล้วแต่ notebook ยังหาไม่พบ อาจเลือก kernel คนละ environment กับที่ติดตั้งไว้ ดู [วิธีแก้ปัญหา](../../docs/start-here.md) และ [คำอธิบาย interpreter/kernel](../../docs/setup.md) เมื่อต้องการตรวจต่อ
 
 </details>
 

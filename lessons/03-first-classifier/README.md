@@ -37,7 +37,12 @@ K-nearest neighbors หรือ KNN มองตัวอย่างใกล�
 
 รายงาน `classification_report` มีหนึ่งแถวต่อสายพันธุ์: precision วัดความถูกต้องของสิ่งที่ทายว่าเป็นคลาสนั้น, recall วัดว่าจับคลาสนั้นได้ครบเพียงใด, F1 รวมสองมุมนี้ และ support คือจำนวนตัวอย่างจริง รายละเอียดและการคำนวณอยู่ในบท 04 รอบแรกให้ดู accuracy และคำทำนายดอกใหม่ก่อน
 
-## ลงมือรัน
+## คัดลอกโค้ดไปรัน
+
+คัดลอกบล็อก `python` ด้านล่างทั้งชุดไป Code cell ใน Jupyter หรือ Colab แล้วกด Shift+Enter หากเปิด `lesson.ipynb` ของบทนี้อยู่แล้ว ให้รัน cell ที่มีตามลำดับ ไม่ต้องคัดลอกซ้ำ ดู [วิธีเริ่มเรียน](../../docs/start-here.md) หากยังไม่ได้เตรียมแพ็กเกจ
+
+<details>
+<summary>ทางเลือก: รันไฟล์ Python จาก repo ในเครื่อง</summary>
 
 จากโฟลเดอร์หลักของ repo:
 
@@ -46,6 +51,8 @@ uv run --frozen python lessons/03-first-classifier/lesson.py
 ```
 
 หากใช้ venv ให้ใช้ `python` แทน `uv run --frozen python` คัดลอกบล็อกต่อไปนี้ได้ทั้งชุด แต่ละส่วน `# %%` คือช่วงการทดลองเดียวกันกับ notebook
+
+</details>
 
 <!-- CODE:START -->
 ```python

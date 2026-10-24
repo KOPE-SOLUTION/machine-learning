@@ -39,7 +39,12 @@ Density มีหน่วยกลับกับ x และอาจสูง
 
 `score_samples` คืน log density ของแต่ละแถว และ `np.exp` แปลงกลับเป็นความสูงกราฟ การเลือก bandwidth ใช้ KFold เพราะไม่มี label ให้ stratify; คะแนนเริ่มต้นของ KernelDensity เป็นผลรวม log density บน validation แต่ละ fold ในตัวอย่างมีจำนวนแถวเท่ากัน ส่วนรายงาน test ใช้ค่าเฉลี่ยเพื่ออ่านต่อหนึ่งตัวอย่าง
 
-## ลงมือรัน
+## คัดลอกโค้ดไปรัน
+
+คัดลอกบล็อก `python` ด้านล่างทั้งชุดไป Code cell ใน Jupyter หรือ Colab แล้วกด Shift+Enter หากเปิด `lesson.ipynb` ของบทนี้อยู่แล้ว ให้รัน cell ที่มีตามลำดับ ไม่ต้องคัดลอกซ้ำ ดู [วิธีเริ่มเรียน](../../docs/start-here.md) หากยังไม่ได้เตรียมแพ็กเกจ
+
+<details>
+<summary>ทางเลือก: รันไฟล์ Python จาก repo ในเครื่อง</summary>
 
 จากโฟลเดอร์หลักของ repo:
 
@@ -48,6 +53,8 @@ uv run --frozen python lessons/14-mixtures-and-density/lesson.py
 ```
 
 หากใช้ venv ให้ใช้ `python` แทน `uv run --frozen python` บล็อกนี้รันได้ทั้งชุดโดยไม่ต้องรันบทก่อนหน้า
+
+</details>
 
 <!-- CODE:START -->
 ```python

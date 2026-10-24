@@ -1,6 +1,8 @@
 # สร้าง environment ตั้งแต่ต้น
 
-[กลับหน้าแรก](../README.md) · [บท 00](../lessons/00-setup/README.md) · [Ubuntu WSL, การย้ายโฟลเดอร์ และ GPU](wsl.md)
+[กลับหน้าแรก](../README.md) · [เริ่มเรียนแบบก๊อปวาง](start-here.md) · [บท 00](../lessons/00-setup/README.md) · [Ubuntu WSL, การย้ายโฟลเดอร์ และ GPU](wsl.md)
+
+หน้านี้สำหรับติดตั้งเครื่องใหม่ แยก environment หรือแก้ปัญหา หากเปิด notebook และใช้ NumPy/pandas/Matplotlib ได้แล้ว ให้เริ่มที่ [วิธีเรียนจาก README](start-here.md) และบท 00 ได้เลย ไม่ต้องทำตามวิธีติดตั้งทุกแบบ
 
 หลักสูตรใช้ Python 3.11–3.13 แบบ 64-bit และ CPU สำหรับผู้เริ่มต้นบน Windows แนะนำ **Ubuntu 24.04 บน WSL 2 → เก็บ repo ใน `~/projects` → Python 3.12 → uv** ใช้เส้นทางเดียวตลอดหลักสูตร ส่วน Mojo มี environment เสริมของตัวเอง
 

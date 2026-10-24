@@ -44,7 +44,12 @@ confusion matrix มีเลข 0–9 บนทั้งสองแกน ช�
 
 CSV ใช้ลำดับ pixel ไล่ซ้ายไปขวาทีละแถวจากบนลงล่าง (row-major) ค่า 0 เป็นพื้นหลังและค่าที่สูงกว่าบอกส่วนของเส้นตัวเลข โค้ดใช้ colormap `gray_r` ให้เส้นแสดงเป็นสีเข้ม ภาพที่กลับสีหรือมีช่วง 0–255 ต้องเตรียมให้ตรงความหมายเดิม ไม่ใช่เพียงทำให้ผ่าน shape
 
-## ลงมือรัน
+## คัดลอกโค้ดไปรัน
+
+คัดลอกบล็อก `python` ด้านล่างทั้งชุดไป Code cell ใน Jupyter หรือ Colab แล้วกด Shift+Enter หากเปิด `lesson.ipynb` ของบทนี้อยู่แล้ว ให้รัน cell ที่มีตามลำดับ ไม่ต้องคัดลอกซ้ำ ดู [วิธีเริ่มเรียน](../../docs/start-here.md) หากยังไม่ได้เตรียมแพ็กเกจ
+
+<details>
+<summary>ทางเลือก: รันไฟล์ Python จาก repo ในเครื่อง</summary>
 
 จากโฟลเดอร์หลักของ repo:
 
@@ -53,6 +58,8 @@ uv run --frozen python lessons/16-digits-project/lesson.py
 ```
 
 หากใช้ venv ให้ใช้ `python` แทน `uv run --frozen python` บล็อกนี้รันได้ทั้งชุดโดยไม่ต้องรันบทก่อนหน้า
+
+</details>
 
 <!-- CODE:START -->
 ```python
@@ -163,13 +170,20 @@ if __name__ == "__main__":
 
 ## ทำนายหลังฝึกเสร็จ
 
-จากโฟลเดอร์หลัก รันหลัง lesson.py:
+Python block ด้านบนสาธิตการบันทึก โหลดโมเดล และทำนายจาก CSV ครบแล้ว ถ้าใช้ Colab ให้ดาวน์โหลดไฟล์ใน `outputs/16-digits-project/` ที่ต้องการเก็บก่อนจบ session
+
+<details>
+<summary>ทางเลือก: ทำนายผ่าน CLI เมื่อมีไฟล์ repo ในเครื่อง</summary>
+
+จากโฟลเดอร์หลักของ repo รันหลัง lesson.py:
 
 ```bash
 uv run --frozen python lessons/16-digits-project/predict.py outputs/16-digits-project/example-input.csv
 ```
 
 CSV ต้องไม่มี header และเรียง pixel แบบ row-major ตามภาพ 8×8 ตัวอย่างนี้มาจาก holdout เพื่อแสดงการโหลดโมเดล ไม่ใช่การประเมินกับข้อมูลภายนอก
+
+</details>
 
 ## ภาพตัวอย่างจากการรัน
 

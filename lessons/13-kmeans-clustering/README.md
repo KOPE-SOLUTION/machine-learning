@@ -40,7 +40,12 @@ truth จากข้อมูลจำลองไม่ถูกใช้ต�
 
 `model.predict` สำหรับ K-means หมายถึงเลือก centroid ที่ใกล้ที่สุดของจุดใหม่ ใช้ scaler เดิมก่อนเสมอ ผลเช่น cluster 2 ไม่มีความหมายว่าเป็นกลุ่มดีกว่าหรือใหญ่กว่ากลุ่ม 1 กากบาทดำในกราฟคือ centroid ในพิกัดที่ scale แล้ว
 
-## ลงมือรัน
+## คัดลอกโค้ดไปรัน
+
+คัดลอกบล็อก `python` ด้านล่างทั้งชุดไป Code cell ใน Jupyter หรือ Colab แล้วกด Shift+Enter หากเปิด `lesson.ipynb` ของบทนี้อยู่แล้ว ให้รัน cell ที่มีตามลำดับ ไม่ต้องคัดลอกซ้ำ ดู [วิธีเริ่มเรียน](../../docs/start-here.md) หากยังไม่ได้เตรียมแพ็กเกจ
+
+<details>
+<summary>ทางเลือก: รันไฟล์ Python จาก repo ในเครื่อง</summary>
 
 จากโฟลเดอร์หลักของ repo:
 
@@ -49,6 +54,8 @@ uv run --frozen python lessons/13-kmeans-clustering/lesson.py
 ```
 
 หากใช้ venv ให้ใช้ `python` แทน `uv run --frozen python` บล็อกนี้รันได้ทั้งชุดโดยไม่ต้องรันบทก่อนหน้า
+
+</details>
 
 <!-- CODE:START -->
 ```python

@@ -51,7 +51,12 @@ Average precision สรุปประสิทธิภาพจากกา�
 
 สำหรับหลายคลาส เช่น Iris: **macro average** เฉลี่ย metric ของทุกคลาสเท่ากัน ส่วน **weighted average** ให้น้ำหนักตามจำนวนตัวอย่าง (`support`) จึงอาจมองไม่เห็นปัญหาของคลาสเล็กได้ง่ายกว่า
 
-## ลงมือรัน
+## คัดลอกโค้ดไปรัน
+
+คัดลอกบล็อก `python` ด้านล่างทั้งชุดไป Code cell ใน Jupyter หรือ Colab แล้วกด Shift+Enter หากเปิด `lesson.ipynb` ของบทนี้อยู่แล้ว ให้รัน cell ที่มีตามลำดับ ไม่ต้องคัดลอกซ้ำ ดู [วิธีเริ่มเรียน](../../docs/start-here.md) หากยังไม่ได้เตรียมแพ็กเกจ
+
+<details>
+<summary>ทางเลือก: รันไฟล์ Python จาก repo ในเครื่อง</summary>
 
 จากโฟลเดอร์หลักของ repo:
 
@@ -60,6 +65,8 @@ uv run --frozen python lessons/04-validation-and-metrics/lesson.py
 ```
 
 หากใช้ venv ให้ใช้ `python` แทน `uv run --frozen python` คัดลอกบล็อกต่อไปนี้ได้ทั้งชุด แต่ละส่วน `# %%` คือช่วงการทดลองเดียวกันกับ notebook
+
+</details>
 
 <!-- CODE:START -->
 ```python

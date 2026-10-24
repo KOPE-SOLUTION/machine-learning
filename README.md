@@ -2,7 +2,7 @@
 
 หลักสูตร Machine Learning ภาษาไทยสำหรับผู้ที่เขียน Python และใช้ Jupyter notebook, NumPy, pandas และ Matplotlib ได้แล้ว โดยเริ่มเรียน ML ได้จากพื้นฐาน เนื้อหาเริ่มจากการตั้งโจทย์และสร้างโมเดลแรก ไปจนถึงการประเมินผล เตรียม feature ลดมิติ จัดกลุ่ม และทำโครงงานที่บันทึกโมเดลกลับมาใช้ได้
 
-**17 บท ML + 1 บทเตรียม environment + 2 บทเสริม Mojo** · ใช้ CPU · ไม่มีบริการเสียเงินหรือ API key · ใช้ข้อมูลใน scikit-learn และข้อมูลจำลอง
+**17 บท ML + 1 บทตรวจความพร้อม + 2 บทเสริม Mojo** · ใช้ CPU · ไม่มีบริการเสียเงินหรือ API key · ใช้ข้อมูลใน scikit-learn และข้อมูลจำลอง
 
 ทุกบทเริ่มด้วยพื้นฐานที่ใช้ต่อ อธิบายคำศัพท์ ML ใหม่และไล่ขั้นตอนก่อนรัน มีคำอธิบายสำหรับผู้เรียน โค้ดที่คัดลอกได้ครบชุด ไฟล์ Python, Jupyter notebook, แบบฝึกหัดพร้อมแนวคำตอบ และลิงก์อ่านต่อ เนื้อหาภาษาไทยและตัวอย่างใน repo นี้เขียนขึ้นใหม่
 
@@ -18,37 +18,32 @@
 
 ควรรัน notebook จากต้นจนจบ อ่าน traceback และค้น help ได้ด้วย ส่วน scikit-learn, train/test split, metrics และ gradient descent จะเริ่มเรียนในหลักสูตรนี้ อ่าน [ทักษะพื้นฐานและแบบตรวจความพร้อม](docs/prerequisites.md) เพื่อเช็กว่าพร้อมเริ่มบทแรกหรือยัง
 
-## เตรียม environment ของหลักสูตร
+## เริ่มเรียน: อ่าน README → ก๊อปโค้ด → ทดลอง
 
-บน Windows แนะนำ **Ubuntu 24.04 / WSL 2** และเก็บ repo ในระบบไฟล์ Linux ตาม [คู่มือ WSL ตั้งแต่ติดตั้งจนถึง clone](docs/wsl.md) หากมี Ubuntu และ Git แล้ว เปิด Ubuntu terminal:
+ใช้ **Jupyter เป็นตัวอย่างหลัก** ของขั้นตอน หรือเลือก **Google Colab** ตามความสะดวกได้ เปิด GitHub เพื่ออ่านคำอธิบาย แล้วคัดลอกโค้ดไปทดลองใน notebook ของตัวเอง
 
-```bash
-mkdir -p ~/projects
-cd ~/projects
-git clone https://github.com/KOPE-SOLUTION/machine-learning.git
-cd machine-learning
-```
+1. เปิด notebook เปล่าในโปรแกรมที่ใช้เรียน NumPy/pandas อยู่แล้ว หรือสร้าง notebook ใน [Colab](https://colab.research.google.com/)
+2. เปิด [บท 00](lessons/00-setup/README.md) คัดลอก Python block ทั้งชุด แล้วรันเพื่อตรวจเครื่องมือ หากต้องติดตั้งแพ็กเกจให้ทำตาม [คู่มือเริ่มเรียนแบบก๊อปวาง](docs/start-here.md)
+3. เริ่ม [บท 01](lessons/01-ml-workflow/README.md) อ่านแนวคิด รันโค้ด เทียบผล และทำแบบฝึกหัด
 
-`uv` คือเครื่องมือจัดการ Python, environment และแพ็กเกจของแต่ละโปรเจกต์ อ่าน [คู่มือตั้ง environment ตั้งแต่ต้น](docs/setup.md) เพื่อติดตั้ง uv แล้วรัน:
+โค้ด Python แต่ละบทเตรียมข้อมูลครบในตัว รันโดยไม่ต้อง clone repo ได้ บล็อกคำสั่ง terminal พับไว้เป็นทางเลือกสำหรับผู้ใช้ไฟล์ใน repo ทุกบทหลักใช้ CPU; เริ่มเรียนได้โดยไม่ต้องตั้ง GPU/CUDA
 
-```bash
-uv python install 3.12
-uv sync --frozen --python 3.12
-uv run --frozen python lessons/00-setup/lesson.py
-uv run --frozen jupyter lab
-```
+ไฟล์ `lesson.ipynb` และ `lesson.py` มีให้เลือกใช้เพิ่มเติม หากเปิด notebook จาก repo แล้ว ให้รัน cell ที่มีอยู่ได้เลย ไม่ต้องก๊อปโค้ดซ้ำ
 
-`uv sync` สร้าง `.venv` และติดตั้งแพ็กเกจตาม `uv.lock`; `uv run` เลือก environment ให้โดยไม่ต้อง activate เอง [บท 00](lessons/00-setup/README.md) อธิบาย environment, interpreter และ kernel พร้อมวิธีสร้าง **venv + pip ด้วยตัวเอง** หากไม่ใช้ uv เตรียมครั้งแรกประมาณ 30–45 นาทีบวกเวลาดาวน์โหลด; ถ้าติดตั้งแล้วใช้ 10–15 นาทีตรวจความพร้อม
+<details>
+<summary>ติดตั้งใหม่หรือใช้ repo ในเครื่อง: environment, uv และ WSL</summary>
 
-ใน JupyterLab รันบท 00 แล้วเริ่ม `lessons/01-ml-workflow/lesson.ipynb` ทางเลือก Windows Python, macOS และ Colab อยู่ใน [คู่มือติดตั้ง](docs/setup.md) ทุกบทหลักและตัวอย่าง Mojo ใช้ CPU ได้ ไม่ต้องติดตั้ง CUDA
+อ่าน [คู่มือตั้งเครื่องทีละขั้น](docs/setup.md) สำหรับการสร้าง environment ด้วย uv หรือ venv + pip และ [คู่มือ Ubuntu WSL](docs/wsl.md) หากต้องการทำงานใน Linux บน Windows ผู้ที่ตั้งเครื่องพร้อมแล้วใช้ environment เดิมต่อได้
 
-แพ็กเกจหลักล็อกรุ่นเพื่อทำซ้ำ: NumPy 2.2.6, pandas 2.3.2, scikit-learn 1.7.1 และ Matplotlib 3.10.3 รองรับ Python 3.11–3.13 โดยใช้ 3.12 เป็นเส้นทางเริ่มต้น `uv.lock` ล็อก dependency ทางอ้อมด้วย เอกสารออนไลน์รุ่น stable อาจใหม่กว่าหลักสูตร; ใช้ลิงก์ scikit-learn 1.7 ในแต่ละบทเมื่อเทียบ API
+หลักสูตรรองรับ Python 3.11–3.13 และล็อกแพ็กเกจหลัก เช่น NumPy 2.2.6, pandas 2.3.2, scikit-learn 1.7.1 และ Matplotlib 3.10.3 ไฟล์ `uv.lock` ล็อก dependency ทางอ้อมของเส้นทาง uv เอกสาร scikit-learn ในแต่ละบทอ้างอิงรุ่น 1.7 ให้ตรงกับโค้ด
+
+</details>
 
 ## เส้นทางการเรียน
 
 ```mermaid
 flowchart LR
-  P["พื้นฐาน: Python, NumPy, pandas, Matplotlib"] --> R["00: ตั้ง environment"]
+  P["พื้นฐาน: Python, NumPy, pandas, Matplotlib"] --> R["00: เปิด notebook และตรวจความพร้อม"]
   R --> A["01–03: โจทย์ ML ตรวจข้อมูล และโมเดลแรก"]
   A --> B["04–10: วัดผลและเลือกโมเดล"]
   B --> C["11–14: ลดมิติและเรียนรู้โครงสร้าง"]
@@ -64,7 +59,7 @@ flowchart LR
 
 | บท | เนื้อหา | ชิ้นงานที่ได้ |
 |---|---|---|
-| 00 | [ตั้ง environment และตรวจข้อมูลก่อนเริ่ม ML](lessons/00-setup/README.md) | ใช้ uv หรือสร้าง venv เอง แล้วตรวจ interpreter/kernel |
+| 00 | [เปิด notebook และตรวจข้อมูลก่อนเริ่ม ML](lessons/00-setup/README.md) | ตรวจเครื่องมือและอ่าน X/y จากตารางเดิม |
 | 01 | [Machine Learning คืออะไร และทำไมต้องมี baseline](lessons/01-ml-workflow/README.md) | โจทย์ ML กับ baseline |
 | 02 | [ตรวจข้อมูลสำหรับ ML: leakage, schema และ EDA](lessons/02-data-and-plots/README.md) | รายงาน audit และ feature ที่อนุญาตให้ใช้ |
 | 03 | [โมเดลแรกด้วย scikit-learn และ KNN](lessons/03-first-classifier/README.md) | Pipeline จำแนกดอกไม้ |
@@ -90,7 +85,7 @@ Mojo เป็นเส้นทางเสริม แยก environment จ�
 ## วิธีใช้แต่ละบท
 
 1. อ่านโจทย์และแนวคิด แล้วลองคาดการณ์ผลก่อนรัน
-2. รัน `lesson.py` หรือเปิด `lesson.ipynb` จากต้นจนจบ เลือกอย่างใดอย่างหนึ่ง
+2. คัดลอก Python block ทั้งชุดไป notebook แล้วรัน หรือใช้ `lesson.ipynb`/`lesson.py` ที่เตรียมไว้ เลือกอย่างใดอย่างหนึ่ง
 3. เปลี่ยนตัวแปรหนึ่งอย่าง บันทึกผลและอธิบายว่าทำไมจึงเปลี่ยน
 4. ทำแบบฝึกหัดก่อนเปิดแนวคำตอบ และเทียบกับแหล่งอ่านต่อ
 
@@ -109,6 +104,7 @@ Mojo เป็นเส้นทางเสริม แยก environment จ�
 
 ## เอกสารเสริม
 
+- [เริ่มเรียนจาก README แล้วก๊อปโค้ดไป Jupyter/Colab](docs/start-here.md)
 - [เริ่มต้น Ubuntu WSL, ย้ายโฟลเดอร์ และข้อควรรู้เรื่อง GPU](docs/wsl.md)
 - [ตั้ง environment ด้วย uv หรือ venv + pip](docs/setup.md)
 - [ทักษะพื้นฐานและแบบตรวจความพร้อม](docs/prerequisites.md)
@@ -119,6 +115,9 @@ Mojo เป็นเส้นทางเสริม แยก environment จ�
 - [เอกสารอ้างอิงและแหล่งอ่านเพิ่มเติม](docs/references.md)
 - [ที่มาของเนื้อหา ตัวอย่าง และภาพในแต่ละบท](docs/content-origin.md)
 - [วิธีตรวจซ้ำและสถานะการทดสอบ](docs/verification.md)
+
+<details>
+<summary>ตรวจหลักสูตรทั้งชุดจาก repo ในเครื่อง</summary>
 
 ## ตรวจการทำงานในเครื่องตัวเอง
 
@@ -131,6 +130,8 @@ uv run --frozen python scripts/verify_course.py --mode notebooks
 ```
 
 โหมด `readmes` ดึงบล็อก Python จากหน้าแต่ละบทมารันใน process ใหม่ จึงตรวจเส้นทางที่คัดลอกไปวางโดยตรง ผลตรวจอยู่ใน `outputs/verification/` มี GitHub Actions สำหรับตรวจ Python 3.11/3.13 บน Windows/Linux เมื่อ repo ถูกเผยแพร่ สถานะในเครื่องนี้บันทึกแยกจากสถานะ CI เพื่อไม่สับสนว่าทดสอบแพลตฟอร์มใดแล้ว
+
+</details>
 
 ## การใช้เนื้อหาและการอ้างอิง
 

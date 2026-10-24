@@ -1,38 +1,31 @@
 # การตรวจซ้ำและผลที่วัดได้
 
-[กลับหน้าแรก](../README.md)
+[กลับหน้าแรก](../README.md) · [เริ่มเรียนจาก README](start-here.md)
 
-ฉบับเพิ่มการตั้ง environment ตั้งแต่ต้น, คู่มือ Ubuntu WSL และรายละเอียดที่มาของเนื้อหา สำหรับผู้ที่ใช้ NumPy, pandas และ Matplotlib ได้แล้วและเริ่มเรียน ML ตรวจเมื่อ **24 ตุลาคม 2026 (Asia/Bangkok)** บน **Ubuntu 24.04 ผ่าน WSL, CPython 3.12.3** ใช้แพ็กเกจหลักตาม uv.lock และ Mojo ใน environment แยก
+ฉบับนี้ปรับทางเริ่มเรียนเป็นอ่าน README แล้วคัดลอกโค้ดไป notebook โดยใช้ Jupyter เป็นตัวอย่างและให้ Colab เป็นทางเลือก ตรวจเมื่อ **24 ตุลาคม 2026 (Asia/Bangkok)** บน **Ubuntu 24.04 ผ่าน WSL, CPython 3.12.11** ในระบบไฟล์ Linux ใช้แพ็กเกจหลักตาม uv.lock
 
-## ผลการตรวจและหลักฐานที่ใช้กับฉบับนี้
+## ผลตรวจของการปรับทางเริ่มเรียนครั้งนี้
 
 | รายการ | ผล |
 |---|---|
-| Python lesson.py | 18/18 ผ่าน: 17 บท ML และ 1 บทตรวจความพร้อม |
-| บล็อก Python ที่คัดลอกจาก Markdown | 21/21 ผ่าน: 18 บทหลัก + 2 Python references ของ Mojo + ตัวอย่าง math primer |
-| Jupyter notebook | 18/18 ผ่านจาก kernel ใหม่ของแต่ละบท |
-| Behavioral tests | 6/6 ผ่าน: gradient, invalid settings, overflow, pixel schema, train-only scaling และ serialization |
-| Mojo compiler | 2/2 บท compile/run ผ่านด้วย Mojo 1.2.0 (2016d0cd) |
-| Mojo เทียบ Python reference | พารามิเตอร์/MSE และผลจำแนกตรงกันภายใน tolerance ที่กำหนด |
-| CLI predict.py | ผ่าน: อ่าน CSV สามแถวและทาย [5, 2, 8] |
-| README/notebook synchronization, local links, notebook schema | ผ่าน: 32 Markdown files |
-| Environment เปล่า: uv และ venv + pip | ผ่านทั้งสองวิธี: ติดตั้งแพ็กเกจ, รันบท 00, เรียก JupyterLab 4.4.6; pip check ผ่าน |
-| คำสั่ง Bash ในคู่มือเริ่มต้น | 17 blocks ผ่านการตรวจ syntax ด้วย bash -n |
-| ลิงก์ภายนอกที่เพิ่มในรอบนี้ | 19/19 ตอบ HTTP 200 |
+| Python block จาก README บท 00–17 | 18/18 ผ่าน แต่ละบทเริ่มจากโฟลเดอร์ว่างแยกกันนอก repo และ process ใหม่ |
+| ความครบของโค้ดที่ก๊อปวาง | รันได้โดยไม่มีไฟล์ repo หรือตัวแปรของบทก่อนอยู่ใน working directory; มีแพ็กเกจหลักติดตั้งแล้ว |
+| Cell `%pip` ในคู่มือเริ่มเรียน | ผ่านใน IPython ของ environment ชั่วคราว จากนั้นรันบท 00 ใน process ใหม่และ `pip check` ผ่าน |
+| โค้ดบทเรียนและ code cell ใน notebook | ทั้ง 18 บทไม่เปลี่ยนจาก commit `74058ee`; แก้เฉพาะคำอธิบายและวิธีเริ่มเรียน |
+| README/notebook synchronization, local links, notebook schema | ผ่าน: 33 Markdown files |
+| Environment ที่ใช้เรียนอยู่ | ไม่ติดตั้งแพ็กเกจทับระหว่างตรวจ cell `%pip`; ใช้ environment ชั่วคราวแยกต่างหาก |
 
-โหมด `readmes` ดึงบล็อก Python จาก Markdown จริงแล้วรันใน process ใหม่แต่ละบล็อก จึงไม่อาศัยตัวแปรจากบทก่อน สำหรับ Mojo ตรวจให้โค้ดใน README ตรงกับไฟล์ .mojo ก่อน compile และรันเทียบ reference
+การตรวจบล็อก README รอบนี้ดึงข้อความระหว่าง code fence `python` จากเอกสารจริง รันด้วย CPU และ backend กราฟ Agg ในโฟลเดอร์ชั่วคราวคนละแห่งต่อบท ลบ `PYTHONPATH` จาก environment เพื่อไม่อาศัยโมดูลใน checkout ผลนี้ตรวจความครบของโค้ดและการสร้างไฟล์ ไม่ได้วัดความเร็วใน browser หรือรับรองทุก runtime ของ Colab
 
-หลักฐานรุ่นแพ็กเกจ ผลแต่ละบท และ SHA-256 ของโค้ด/เอกสารอยู่ใน [verification-results.json](verification-results.json) ที่ `current_wsl_run` และ `mojo_compiler` หลักฐานฉบับก่อนอยู่ใน `previous_wsl_revision` กับ `previous_windows_revision`; ไม่ถือเป็นการรันฉบับปัจจุบันบนทุกแพลตฟอร์ม
+หลักฐานแต่ละบทและวิธีตรวจอยู่ใน [verification-results.json](verification-results.json) ที่ `readme_learning_revision` ส่วน `material_sha256` และ `documentation_sha256` ระบุไฟล์ฉบับที่แก้แล้ว โดย hash ของ notebook ใช้ไฟล์แจกที่ยังไม่มี output หรือการตั้งค่า kernel ของผู้ใช้
 
-## ขอบเขตการทดสอบเริ่มต้นครั้งนี้
+## ผลตรวจเต็มหลักสูตรก่อนแก้คำอธิบาย
 
-สร้าง environment เปล่าผ่าน Ubuntu WSL โดยใช้ CPython 3.12.3 ที่มีอยู่แล้ว วิธี uv ใช้ uv 0.8.18 กับ `uv sync --frozen --python 3.12` ในโฟลเดอร์ทดลองบน `/mnt/c`; วิธี venv ใช้ `python3 -m venv` แล้วติดตั้งด้วย pip ตาม requirements.txt ในโฟลเดอร์ชั่วคราวของ Linux (`/tmp`) ทั้งสองวิธีรันบท 00 และเรียก CLI ของ JupyterLab ได้ ตรวจ activation/deactivation และ `pip check` ของวิธี venv ด้วย
+ก่อนการแก้ครั้งนี้ checkout บน Linux ที่ commit `74058ee` ใช้ CPython 3.12.11 และผ่าน script 18 บท, Python block ใน Markdown 21 ชุด, notebook 18 บท, behavioral tests 6 ข้อ และ Mojo 2 บท Jupyter API บน WSL และหน้า login ผ่าน localhost จาก Windows ตอบ HTTP 200 หลักฐานสรุปอยู่ที่ `native_wsl_readiness`
 
-การติดตั้ง pip ครั้งแรกบน `/mnt/c` ถูกหยุดระหว่างเขียนไฟล์ที่ใช้เวลานาน แล้วเริ่มทดสอบจาก environment เปล่าบน Linux จนผ่าน ผลนี้ไม่ใช่ benchmark เปรียบเทียบความเร็วอย่างเป็นระบบ ลบ environment ทดลองเมื่อจบแล้วและเก็บรายงานไว้ใน outputs/verification/setup/
+รอบปัจจุบันไม่ได้รัน notebook ทั้งหมดหรือ compiler Mojo ซ้ำ เพราะตรวจเทียบแล้ว code cell, ไฟล์ Python และ Mojo ไม่เปลี่ยน ผลทดสอบฉบับก่อนบน CPython 3.12.3 เก็บที่ `previous_setup_wsl_run`, `setup_verification` และ `mojo_compiler` รวมถึงผล venv + pip, CLI predict และการเทียบ Mojo กับ Python จึงแยกจากการตรวจ README รอบนี้อย่างชัดเจน
 
-การตรวจนี้ไม่ได้ติดตั้ง WSL ใหม่ ไม่ได้ย้าย checkout ไป `/home` ไม่ได้เปลี่ยนไดรเวอร์หรือทดสอบ CUDA workload และไม่ได้เปิด browser ของผู้เรียนเพื่อตรวจ localhost forwarding คำสั่งติดตั้งระบบและย้ายไฟล์อ้างอิงเอกสารทางการ พร้อมตรวจ syntax; installer uv รุ่นที่ระบุดาวน์โหลดด้วย curl ได้ แต่ไม่ได้รัน installer ทับเครื่อง การเลือก interpreter/kernel ในเครื่องผู้เรียนยังต้องตรวจตามบท 00
-
-โค้ด Mojo ไม่เปลี่ยนในรอบเอกสารนี้ ผล compile/run และเทียบ Python ในตารางเป็นผลรอบก่อนหน้าวันเดียวกัน โดย SHA-256 ของไฟล์ Mojo และ reference ยังตรงกัน
+ผลตั้ง environment รอบก่อนครอบคลุม uv บนโฟลเดอร์ทดลอง `/mnt/c` และ venv + pip บน Linux `/tmp` โดยรันบท 00, JupyterLab และ pip check ตามวิธีที่ใช้ การติดตั้ง pip บน `/mnt/c` ครั้งแรกถูกหยุดแล้วเริ่มใหม่บน Linux จนผ่าน; ไม่ใช่ benchmark เปรียบเทียบความเร็วอย่างเป็นระบบ
 
 ## ตัวอย่างผลที่ใช้ตรวจความเข้าใจ
 
@@ -50,9 +43,11 @@
 
 ## ขอบเขตผลตรวจ
 
-ผลในหน้านี้เป็นการรันบน WSL ของฉบับนี้ ยังไม่ได้รันฉบับนี้ใน Colab หรือ macOS ส่วนผล Windows/Linux และ Python รุ่นอื่นบน GitHub ให้ดู [Actions](https://github.com/KOPE-SOLUTION/machine-learning/actions) ของ commit ที่ต้องการตรวจ มี job สำหรับ Python 3.11/3.13 และ Mojo 1.2.0 แยกกัน
+ยังไม่ได้รันฉบับนี้ในบริการ Colab หรือ macOS จึงไม่รับรองความเร็ว รุ่น Python หรือแพ็กเกจที่บริการจะจัดให้แต่ละครั้ง ส่วนผล Windows/Linux และ Python รุ่นอื่นบน GitHub ให้ดู [Actions](https://github.com/KOPE-SOLUTION/machine-learning/actions) ของ commit ที่ต้องการตรวจ มี job สำหรับ Python 3.11/3.13 และ Mojo 1.2.0 แยกกัน
 
-ประวัติการเปิดลิงก์ภายนอก 66 URL เก็บไว้ใน `previous_external_link_check` ไม่ใช่การตรวจลิงก์ทั้งหมดซ้ำรอบนี้ ลิงก์วิดีโอพื้นฐานใช้ตามช่องที่ระบุใน [prerequisites](prerequisites.md)
+การตรวจนี้ไม่ได้ติดตั้ง WSL ใหม่ เปลี่ยนไดรเวอร์ หรือทดสอบ CUDA workload หลักสูตร Python ใช้ CPU ได้ทั้งหมด ส่วน Mojo มีคู่มือติดตั้งแยก
+
+ผล HTTP ของลิงก์ภายนอกใน `new_external_link_check` และ `previous_external_link_check` เป็นประวัติรอบก่อน ไม่ใช่การตรวจทุก URL ซ้ำรอบนี้ ลิงก์วิดีโอพื้นฐานใช้ตามช่องที่ระบุใน [prerequisites](prerequisites.md)
 
 ## รันตรวจเอง
 

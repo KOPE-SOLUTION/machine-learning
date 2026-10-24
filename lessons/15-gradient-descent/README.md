@@ -45,7 +45,12 @@ Learning rate เล็กเกินไปอาจต้องใช้หล
 
 ให้ดูทั้งความใกล้เคียง w/b กับ least squares และ MAE บน test ถ้า loss ไม่ finite หรือค่าล้น ฟังก์ชันจะหยุดพร้อมข้อความให้ลด learning rate กรณีนี้ไม่ควรเอาพารามิเตอร์สุดท้ายไปทำนายต่อ
 
-## ลงมือรัน
+## คัดลอกโค้ดไปรัน
+
+คัดลอกบล็อก `python` ด้านล่างทั้งชุดไป Code cell ใน Jupyter หรือ Colab แล้วกด Shift+Enter หากเปิด `lesson.ipynb` ของบทนี้อยู่แล้ว ให้รัน cell ที่มีตามลำดับ ไม่ต้องคัดลอกซ้ำ ดู [วิธีเริ่มเรียน](../../docs/start-here.md) หากยังไม่ได้เตรียมแพ็กเกจ
+
+<details>
+<summary>ทางเลือก: รันไฟล์ Python จาก repo ในเครื่อง</summary>
 
 จากโฟลเดอร์หลักของ repo:
 
@@ -54,6 +59,8 @@ uv run --frozen python lessons/15-gradient-descent/lesson.py
 ```
 
 หากใช้ venv ให้ใช้ `python` แทน `uv run --frozen python` บล็อกนี้รันได้ทั้งชุดโดยไม่ต้องรันบทก่อนหน้า
+
+</details>
 
 <!-- CODE:START -->
 ```python

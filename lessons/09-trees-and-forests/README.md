@@ -37,7 +37,12 @@ Permutation importance สลับค่าของ feature ทีละคอ
 
 Permutation importance ที่เท่ากับ 0.05 หมายถึง accuracy ลดลงเฉลี่ย 0.05 หรือ 5 จุดเปอร์เซ็นต์เมื่อสลับคอลัมน์นั้น ค่าใกล้ศูนย์ไม่ได้พิสูจน์ว่า feature ไม่มีประโยชน์ในทุกโมเดล และค่าติดลบเล็กน้อยอาจเกิดจากความแปรปรวนของชุดประเมิน
 
-## ลงมือรัน
+## คัดลอกโค้ดไปรัน
+
+คัดลอกบล็อก `python` ด้านล่างทั้งชุดไป Code cell ใน Jupyter หรือ Colab แล้วกด Shift+Enter หากเปิด `lesson.ipynb` ของบทนี้อยู่แล้ว ให้รัน cell ที่มีตามลำดับ ไม่ต้องคัดลอกซ้ำ ดู [วิธีเริ่มเรียน](../../docs/start-here.md) หากยังไม่ได้เตรียมแพ็กเกจ
+
+<details>
+<summary>ทางเลือก: รันไฟล์ Python จาก repo ในเครื่อง</summary>
 
 จากโฟลเดอร์หลักของ repo:
 
@@ -46,6 +51,8 @@ uv run --frozen python lessons/09-trees-and-forests/lesson.py
 ```
 
 หากใช้ venv ให้ใช้ `python` แทน `uv run --frozen python` บล็อกนี้รันได้ทั้งชุดโดยไม่ต้องรันบทก่อนหน้า
+
+</details>
 
 <!-- CODE:START -->
 ```python

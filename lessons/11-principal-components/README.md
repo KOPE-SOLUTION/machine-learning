@@ -38,7 +38,12 @@ Pipeline ทำ scale → PCA → logistic regression ค่า n_components=0.9
 
 ถ้า explained variance ratio สามแกนแรกเป็น 0.5, 0.3, 0.1 ผลสะสมคือ 0.5, 0.8, 0.9 แต่คำว่า 90% นี้วัดการกระจายของ feature ไม่ใช่เปอร์เซ็นต์ข้อมูลหรือ accuracy ผล test ในบทใช้ตรวจ Pipeline ที่กำหนดล่วงหน้า ถ้าจะเลือกสัดส่วน variance ให้ใช้ CV ตามบท 10
 
-## ลงมือรัน
+## คัดลอกโค้ดไปรัน
+
+คัดลอกบล็อก `python` ด้านล่างทั้งชุดไป Code cell ใน Jupyter หรือ Colab แล้วกด Shift+Enter หากเปิด `lesson.ipynb` ของบทนี้อยู่แล้ว ให้รัน cell ที่มีตามลำดับ ไม่ต้องคัดลอกซ้ำ ดู [วิธีเริ่มเรียน](../../docs/start-here.md) หากยังไม่ได้เตรียมแพ็กเกจ
+
+<details>
+<summary>ทางเลือก: รันไฟล์ Python จาก repo ในเครื่อง</summary>
 
 จากโฟลเดอร์หลักของ repo:
 
@@ -47,6 +52,8 @@ uv run --frozen python lessons/11-principal-components/lesson.py
 ```
 
 หากใช้ venv ให้ใช้ `python` แทน `uv run --frozen python` บล็อกนี้รันได้ทั้งชุดโดยไม่ต้องรันบทก่อนหน้า
+
+</details>
 
 <!-- CODE:START -->
 ```python

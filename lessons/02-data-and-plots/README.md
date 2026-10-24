@@ -52,7 +52,12 @@ ID ไม่ใช่สิ่งต้องห้ามในทุกโจ�
 4. `np.isfinite` ตรวจว่าไม่มี NaN หรือ infinity หากไม่ผ่าน อย่าลบ assertion ทิ้งเพื่อให้รันต่อ ให้ตรวจข้อมูลและเรียนการแทนค่าหายในบท 06
 5. กราฟใช้ petal length/width สองค่า แต่รายการ feature ที่อนุญาตยังมีสี่ค่า สีเป็นคำตอบสำหรับอ่านภาพ ไม่ใช่คอลัมน์เพิ่มให้โมเดล
 
-## ลงมือรัน
+## คัดลอกโค้ดไปรัน
+
+คัดลอกบล็อก `python` ด้านล่างทั้งชุดไป Code cell ใน Jupyter หรือ Colab แล้วกด Shift+Enter หากเปิด `lesson.ipynb` ของบทนี้อยู่แล้ว ให้รัน cell ที่มีตามลำดับ ไม่ต้องคัดลอกซ้ำ ดู [วิธีเริ่มเรียน](../../docs/start-here.md) หากยังไม่ได้เตรียมแพ็กเกจ
+
+<details>
+<summary>ทางเลือก: รันไฟล์ Python จาก repo ในเครื่อง</summary>
 
 จากโฟลเดอร์หลักของ repo:
 
@@ -61,6 +66,8 @@ uv run --frozen python lessons/02-data-and-plots/lesson.py
 ```
 
 หากใช้ venv ให้ใช้ Python ของ environment นั้นแทน `uv run --frozen python` โค้ดรันได้ทั้งชุดโดยไม่ต้องรันบทก่อนหน้า
+
+</details>
 
 <!-- CODE:START -->
 ```python

@@ -43,7 +43,12 @@ TimeSeriesSplit ขยายช่วง train ไปข้างหน้าแ
 
 **Persistence baseline** ทายว่าค่าถัดไปเท่ากับค่าล่าสุด เช่น 12→12 โมเดลซับซ้อนควรเทียบกับวิธีง่ายนี้ก่อน ค่า MAE ในแต่ละ fold ยิ่งต่ำยิ่งดี และเป็น validation score สำหรับรูปแบบการใช้งาน one-step-ahead ที่อธิบายไว้
 
-## ลงมือรัน
+## คัดลอกโค้ดไปรัน
+
+คัดลอกบล็อก `python` ด้านล่างทั้งชุดไป Code cell ใน Jupyter หรือ Colab แล้วกด Shift+Enter หากเปิด `lesson.ipynb` ของบทนี้อยู่แล้ว ให้รัน cell ที่มีตามลำดับ ไม่ต้องคัดลอกซ้ำ ดู [วิธีเริ่มเรียน](../../docs/start-here.md) หากยังไม่ได้เตรียมแพ็กเกจ
+
+<details>
+<summary>ทางเลือก: รันไฟล์ Python จาก repo ในเครื่อง</summary>
 
 จากโฟลเดอร์หลักของ repo:
 
@@ -52,6 +57,8 @@ uv run --frozen python lessons/17-time-and-groups/lesson.py
 ```
 
 หากใช้ venv ให้ใช้ `python` แทน `uv run --frozen python` บล็อกนี้รันได้ทั้งชุดโดยไม่ต้องรันบทก่อนหน้า
+
+</details>
 
 <!-- CODE:START -->
 ```python

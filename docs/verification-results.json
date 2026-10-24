@@ -1,8 +1,8 @@
 {
   "checked_date": "2026-10-24",
   "timezone": "Asia/Bangkok",
-  "revision": "Ubuntu WSL setup, uv and manual venv walkthrough, source attribution; full main-course rerun",
-  "current_wsl_run": {
+  "revision": "README copy-and-run learning path; Jupyter primary, Colab optional; documentation-only lesson revision",
+  "previous_setup_wsl_run": {
     "python": "3.12.3",
     "platform": "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.39",
     "packages": {
@@ -525,42 +525,42 @@
     "lessons/17-time-and-groups/lesson.py": "b72bd881de0cd241b3355ea3db7e1cd10a9a5651c368092b96f3367bb49ee2a6"
   },
   "material_sha256": {
-    "lessons/00-setup/README.md": "ea7f55a0836d890e205e7d97cff4f143746f30671e35ae4d4d5a64dff84b94c7",
-    "lessons/00-setup/lesson.ipynb": "8c113e5049d4f5eae7bdcfc36b5b47017e203565d601f0235fe81441d2f8b24e",
-    "lessons/01-ml-workflow/README.md": "d23480cda08e090b0994aab7f27098a01ab2e51b4a72757c83b36133372df0a8",
-    "lessons/01-ml-workflow/lesson.ipynb": "51872e396eacf06a29d9f3d55a36471a9486acfbf24d964a5252b90192fec237",
-    "lessons/02-data-and-plots/README.md": "f7e4849cfcf2dfc3b231e4d772c4b9395fb46c19ddd76be9a5cbc7d558294f59",
-    "lessons/02-data-and-plots/lesson.ipynb": "380b32fd1999fbf9f6b2b82c50cfe70383c3c24d93219d8896c8b794fa4daeff",
-    "lessons/03-first-classifier/README.md": "a0507698355c7e4d1694fda318dba5bad322d6c13b4082a2b16f5bb6c8cf5a0e",
-    "lessons/03-first-classifier/lesson.ipynb": "7e00eff0dd0b3596440322645e7f9dc07fbdc2dc0f3121b5470d78f186f81f39",
-    "lessons/04-validation-and-metrics/README.md": "8e50f8189e3b30c7ccd69aba0d85d739a85213d058214a13bb8b98c0636f61ab",
-    "lessons/04-validation-and-metrics/lesson.ipynb": "9798bc537874569b9d8b04b650b4921623d2aef1a69dbcb5812fc23aa74609b1",
-    "lessons/05-linear-regression/README.md": "06870baa95e1e8b07143140b3ec241136fa1bf51044e2fe6ce76db5c25b3f53c",
-    "lessons/05-linear-regression/lesson.ipynb": "cf79d6e3e88748ad7b75e10d3759b6e172299a7e5b8f4d628e21a3e340c3c039",
-    "lessons/06-feature-engineering/README.md": "3ee428ed7be947274307e3670a7d37ae0a09c01336e315325f4278e643211238",
-    "lessons/06-feature-engineering/lesson.ipynb": "c62e09eb8b864683a9bc12e4ed931e276e5eb43dd7c91b3db1218c1e43e5e822",
-    "lessons/07-naive-bayes-text/README.md": "f6ea148dee08976dd369bb4de49a1376f45d68a05557a4d15f287cad31c0c1b9",
-    "lessons/07-naive-bayes-text/lesson.ipynb": "7931e8ea4d1d229cc4899c73fbf806813ff5104aca713aff3390ec6f00dcd618",
-    "lessons/08-support-vector-machines/README.md": "be8109a208562b29b67f84ee70a4b10eec3be73d1079b3905e15b731212d22ef",
-    "lessons/08-support-vector-machines/lesson.ipynb": "ba74d12d925851458f1c066cf5316381adc58ecbdf57faac064a1691a45a0dfc",
-    "lessons/09-trees-and-forests/README.md": "9dbf2eb6c931111a10d037037604f298e1b99d0e4c07b7d132f2ce7ea4c6eecb",
-    "lessons/09-trees-and-forests/lesson.ipynb": "de3236f50a9cb534d18b37655823197b46cfab2c479f279171587547c678cbe6",
-    "lessons/10-tuning-and-learning-curves/README.md": "db513f87d0b0bd6ae660c17b296b97933804e5014be34b3969db384a0afe52e5",
-    "lessons/10-tuning-and-learning-curves/lesson.ipynb": "15811daf8f330e45cbc16f70e6d66d8a34adb4e0ad188219c807690c7cf0f8fb",
-    "lessons/11-principal-components/README.md": "7b1df13c4dc9a9b95460e9800e7dbb1708a0dd83fc90cbc6de8d40e80d04ff69",
-    "lessons/11-principal-components/lesson.ipynb": "301fdf274a5673fc7685488272c088800f98ac42702fb7fbbdb94c873a8feae7",
-    "lessons/12-manifold-learning/README.md": "5ed3704000bc3f0fbe9e6503496dcda059681b0f46805248c952b88ed1705400",
-    "lessons/12-manifold-learning/lesson.ipynb": "43edf803453f17cd7707f88f4e03b11a7ab3f345589efec9c8be27bef4e4cd8e",
-    "lessons/13-kmeans-clustering/README.md": "db770e9260a753124afc50f20343ee3ae93d2645af76664e9e41efbe22ceae2a",
-    "lessons/13-kmeans-clustering/lesson.ipynb": "8a7926d16fe2d287e68f6f31dfc72a2cfbbf5f784cafcd81ec5a7d90c6db5581",
-    "lessons/14-mixtures-and-density/README.md": "8652e96e9eb8e016a0bf8523201348f2852c31f59e443537f11058f1b16cf650",
-    "lessons/14-mixtures-and-density/lesson.ipynb": "93c8b2517fb2939c97f033e3e258c3829d667a9fdfb39df96f38886a40baa2c6",
-    "lessons/15-gradient-descent/README.md": "5ef4eb55564720bb3cc09f825c1bc054ac17b70a998c3156a3fa29f813415d72",
-    "lessons/15-gradient-descent/lesson.ipynb": "a92c333b74c1929987889b02e5855a9700a31a9fab7958aee9d9c8670f349505",
-    "lessons/16-digits-project/README.md": "4e3f80db2b877c699784431a446a8ab81172b334dd258a296a3faebf3f7ce3aa",
-    "lessons/16-digits-project/lesson.ipynb": "2288560075854d6ef69eb1dc235a20163c9e3f35292ed024c176b158ae8b9f20",
-    "lessons/17-time-and-groups/README.md": "8991f4cf9f2573dd721db028fb234bcf0b68870e5c0d28925044aaf1a3f25fc6",
-    "lessons/17-time-and-groups/lesson.ipynb": "9ab1625c3cd327b21ed90b71d661d9c4e41f2cd243207d6836c0236546bedc7d",
+    "lessons/00-setup/README.md": "d300a6db4ed0ddda21abf515e5fb5e17eeea8a1fe1b454c848fb409c07dcc772",
+    "lessons/00-setup/lesson.ipynb": "f9d0e78a6c7ca276160b380e9ef6df8c5f98691b65c584e67b467657c62c067b",
+    "lessons/01-ml-workflow/README.md": "a373e5f81be7cbea4efeeddb412db1e6164edff9ba53b011c821354ed1216ec3",
+    "lessons/01-ml-workflow/lesson.ipynb": "21d33652dbccbbe2fa72069371673d310d2fe921993f727b5b582b57a79ea997",
+    "lessons/02-data-and-plots/README.md": "7d145f541b703f72e87a40a31f759bf4ce1969c2e76e0c079f54766674f2e876",
+    "lessons/02-data-and-plots/lesson.ipynb": "84c00a544afcf5e8663a0289b04c38992891136876c86dd7f02200ffb856fbe8",
+    "lessons/03-first-classifier/README.md": "e38c0514825978fe9c7dcbb0419a113e044f3dbd1c8eb2da6d2aaa4358507c98",
+    "lessons/03-first-classifier/lesson.ipynb": "8c4244ffb1802c215704b6359173b77228771569d264c6fda3d545285ec7d6d2",
+    "lessons/04-validation-and-metrics/README.md": "6767d8a9b7e332cda8f55c33bc98904e3804f392ddde4c51e17d0ed5ca6600a4",
+    "lessons/04-validation-and-metrics/lesson.ipynb": "f5ecb0ed1711a189cc0fab74e970a539b60b67b56d03f8aba9cc368ddc791cc1",
+    "lessons/05-linear-regression/README.md": "0658628edd643e0e7b84e6a54f057a8dbfa4302591619b308ca068c63678d440",
+    "lessons/05-linear-regression/lesson.ipynb": "4f309f196fcedc3316b172b97288150656ef83b4b1ba11c76e74290ff52a943b",
+    "lessons/06-feature-engineering/README.md": "d32ad12d859dfc9d95204e0b3305a8794d58c0498fd31e68a42862e6e06b28e3",
+    "lessons/06-feature-engineering/lesson.ipynb": "57cdf80826aa39c86429972e865b5837d9cc7b6f2f393d2e245a04204f3607bf",
+    "lessons/07-naive-bayes-text/README.md": "15611bdf7ed7b0e26d1b4bf4729f2734136899d3083d1755d10015758f0b90ef",
+    "lessons/07-naive-bayes-text/lesson.ipynb": "0da6cb2722f901724fa7181d717077b307ae08e3c68ee6345567131c798c0180",
+    "lessons/08-support-vector-machines/README.md": "65d8f470076d6fa3bb8887b6d3fd5b7670b0ac53a5d2b0a6c68f23a016ba0b10",
+    "lessons/08-support-vector-machines/lesson.ipynb": "89a1b5fbe742fdce8dc349c87fa79808c9955db1ff17aa0e1d293a82875901c7",
+    "lessons/09-trees-and-forests/README.md": "76ac5cfb7f2527d9f60e131dd7e9490560198cd693cd339f294b107a69d62e32",
+    "lessons/09-trees-and-forests/lesson.ipynb": "ab401c71c93a3714582b532e3cbd886f6c1a9a14e6609c55175bf80a11520f49",
+    "lessons/10-tuning-and-learning-curves/README.md": "556268e3ada5cac65849defcc46f6c36142d4e5892893e87c47fd508abf48510",
+    "lessons/10-tuning-and-learning-curves/lesson.ipynb": "cb469485cf2ce6c2494d820fdf72faf2e59180c5708716edc0354b80e235a992",
+    "lessons/11-principal-components/README.md": "7677c1c0aef8008ac3788b4d87be98e4ecd7bfcbd0a8ae69379d0624b383fb8b",
+    "lessons/11-principal-components/lesson.ipynb": "75f74867016cd71e2bc189d1ea3284114dd99a45e8d12c2debecd8d6de7bbab8",
+    "lessons/12-manifold-learning/README.md": "c5b2cc9d5ca28f4eb1ed13778d37d2979499a98697830dda76b7d96bc4dbd8f7",
+    "lessons/12-manifold-learning/lesson.ipynb": "e9b3f5b234c2ee0af4b8661ebb043e769d524c7a1e7080be0d508dcf572d01a2",
+    "lessons/13-kmeans-clustering/README.md": "80e26a675ad09ca015f5bc6dd39fe3fabd2031d103fe131f004b56b9b4ea4a5c",
+    "lessons/13-kmeans-clustering/lesson.ipynb": "04a24fda33afc8ca9631c7dcd2b597fb91fcf3d422b2c99ed7d3edadc1d27bda",
+    "lessons/14-mixtures-and-density/README.md": "0511efe03c76bda845032991d5bac36e3771ca75c4663bc55f2ec656bb8b400c",
+    "lessons/14-mixtures-and-density/lesson.ipynb": "8b873bd7aaa8018204089bbc811bfe48cceb41641df74bceff4f233bcd6250ee",
+    "lessons/15-gradient-descent/README.md": "702189b6170d124de72167cdde162c68cdbe3f78dcaa278e6a1782901a5ae907",
+    "lessons/15-gradient-descent/lesson.ipynb": "cb420c9d3e5bbacb6b6b6982afbfaa5fe9f8d339d5d1bf5cb58ab7a1e9904f22",
+    "lessons/16-digits-project/README.md": "bb803ce1895803e5bd883a26789abe5670eee9615ee797534ed65b11977da47f",
+    "lessons/16-digits-project/lesson.ipynb": "e4fb9cf254581ea970cd2e5b0efae8024aee6536e39f626b178a8b668186f669",
+    "lessons/17-time-and-groups/README.md": "eba812af9ec04cc47e66521c564cc321f5640054552875e053145e3541e9f33e",
+    "lessons/17-time-and-groups/lesson.ipynb": "fa77bf44d842c063f416977162c0fa56825d4d3350aed8a98168fefa431c5b01",
     "mojo/01-gradient-descent/main.mojo": "01252bd2b454495bcd856dcff74dfed1b5b5b7a34d04e29a0a4111e6494dc3b2",
     "mojo/01-gradient-descent/reference.py": "710e7a1e72d1039d02bc2c839ff3480dc9618fe8f547c0aa81877df874afdb4b",
     "mojo/02-python-interop/main.mojo": "ea3137d849b4f35b3c4046329c38dc1ece2cae8a23cf44efc00cb5ee1dd2da76",
@@ -2046,12 +2046,294 @@
   ],
   "mojo_unchanged_since_prior_run": true,
   "documentation_sha256": {
-    "README.md": "38d23abc5a8263d0c67ef5f2abceb39d00efb0c945545ea3295747d5256e5ee4",
+    "README.md": "2162d244405e998b094b5999c4f930e8cd0b6db35c293570e984969205322267",
     "THIRD_PARTY_NOTICES.md": "ae38bf9b3141a8b945815d832d785b3deaa294bb6349dd8b5e34d9942ddcaf45",
-    "docs/setup.md": "4d74cca1a4cdad02c7759d90ef9fe2e923d6007dc1f6fd96ac8ad4f724405eb7",
-    "docs/wsl.md": "93872f9cc82e45de780f43b72860b4fcf57b4e3939bbc452cd3d499403dc8c56",
     "docs/content-origin.md": "68fd029e28389503caeab782f764a35bb4522bb27338fd0d8315d35f1f99e956",
-    "docs/references.md": "533fbf5c2cf175eb4095c0526ec9954f7227f7084ab8a57416cedbbb7348567b",
-    "docs/verification.md": "d000af0de13ab16ad116b1c44792c6629eecbc9a3f3c7a41ea1dbdfd054c4c74"
+    "docs/prerequisites.md": "66451783f06434adf56d9d81b9fb5967116196639076aac4c2dd530d6b0cf95e",
+    "docs/references.md": "ce8ad990bd170cbade5b193b6e5e8175399240262b0b5070e13cad10fe44da5d",
+    "docs/setup.md": "891c4a3a4d04bab15c2ce25a1523b2f342688463a996e85530e4b94b4ac87925",
+    "docs/start-here.md": "a2f23e1b45e07e7d218b5ba0945ee5cbd29e0fabc1f48a4733f58fe9a26a2a97",
+    "docs/verification.md": "3def8241909b6f1a0416dcb4355b66fdbbde22da02c25e7d6b4d1cedea6a0724",
+    "docs/wsl.md": "93872f9cc82e45de780f43b72860b4fcf57b4e3939bbc452cd3d499403dc8c56"
+  },
+  "previous_setup_hashes": {
+    "material_sha256": {
+      "lessons/00-setup/README.md": "ea7f55a0836d890e205e7d97cff4f143746f30671e35ae4d4d5a64dff84b94c7",
+      "lessons/00-setup/lesson.ipynb": "8c113e5049d4f5eae7bdcfc36b5b47017e203565d601f0235fe81441d2f8b24e",
+      "lessons/01-ml-workflow/README.md": "d23480cda08e090b0994aab7f27098a01ab2e51b4a72757c83b36133372df0a8",
+      "lessons/01-ml-workflow/lesson.ipynb": "51872e396eacf06a29d9f3d55a36471a9486acfbf24d964a5252b90192fec237",
+      "lessons/02-data-and-plots/README.md": "f7e4849cfcf2dfc3b231e4d772c4b9395fb46c19ddd76be9a5cbc7d558294f59",
+      "lessons/02-data-and-plots/lesson.ipynb": "380b32fd1999fbf9f6b2b82c50cfe70383c3c24d93219d8896c8b794fa4daeff",
+      "lessons/03-first-classifier/README.md": "a0507698355c7e4d1694fda318dba5bad322d6c13b4082a2b16f5bb6c8cf5a0e",
+      "lessons/03-first-classifier/lesson.ipynb": "7e00eff0dd0b3596440322645e7f9dc07fbdc2dc0f3121b5470d78f186f81f39",
+      "lessons/04-validation-and-metrics/README.md": "8e50f8189e3b30c7ccd69aba0d85d739a85213d058214a13bb8b98c0636f61ab",
+      "lessons/04-validation-and-metrics/lesson.ipynb": "9798bc537874569b9d8b04b650b4921623d2aef1a69dbcb5812fc23aa74609b1",
+      "lessons/05-linear-regression/README.md": "06870baa95e1e8b07143140b3ec241136fa1bf51044e2fe6ce76db5c25b3f53c",
+      "lessons/05-linear-regression/lesson.ipynb": "cf79d6e3e88748ad7b75e10d3759b6e172299a7e5b8f4d628e21a3e340c3c039",
+      "lessons/06-feature-engineering/README.md": "3ee428ed7be947274307e3670a7d37ae0a09c01336e315325f4278e643211238",
+      "lessons/06-feature-engineering/lesson.ipynb": "c62e09eb8b864683a9bc12e4ed931e276e5eb43dd7c91b3db1218c1e43e5e822",
+      "lessons/07-naive-bayes-text/README.md": "f6ea148dee08976dd369bb4de49a1376f45d68a05557a4d15f287cad31c0c1b9",
+      "lessons/07-naive-bayes-text/lesson.ipynb": "7931e8ea4d1d229cc4899c73fbf806813ff5104aca713aff3390ec6f00dcd618",
+      "lessons/08-support-vector-machines/README.md": "be8109a208562b29b67f84ee70a4b10eec3be73d1079b3905e15b731212d22ef",
+      "lessons/08-support-vector-machines/lesson.ipynb": "ba74d12d925851458f1c066cf5316381adc58ecbdf57faac064a1691a45a0dfc",
+      "lessons/09-trees-and-forests/README.md": "9dbf2eb6c931111a10d037037604f298e1b99d0e4c07b7d132f2ce7ea4c6eecb",
+      "lessons/09-trees-and-forests/lesson.ipynb": "de3236f50a9cb534d18b37655823197b46cfab2c479f279171587547c678cbe6",
+      "lessons/10-tuning-and-learning-curves/README.md": "db513f87d0b0bd6ae660c17b296b97933804e5014be34b3969db384a0afe52e5",
+      "lessons/10-tuning-and-learning-curves/lesson.ipynb": "15811daf8f330e45cbc16f70e6d66d8a34adb4e0ad188219c807690c7cf0f8fb",
+      "lessons/11-principal-components/README.md": "7b1df13c4dc9a9b95460e9800e7dbb1708a0dd83fc90cbc6de8d40e80d04ff69",
+      "lessons/11-principal-components/lesson.ipynb": "301fdf274a5673fc7685488272c088800f98ac42702fb7fbbdb94c873a8feae7",
+      "lessons/12-manifold-learning/README.md": "5ed3704000bc3f0fbe9e6503496dcda059681b0f46805248c952b88ed1705400",
+      "lessons/12-manifold-learning/lesson.ipynb": "43edf803453f17cd7707f88f4e03b11a7ab3f345589efec9c8be27bef4e4cd8e",
+      "lessons/13-kmeans-clustering/README.md": "db770e9260a753124afc50f20343ee3ae93d2645af76664e9e41efbe22ceae2a",
+      "lessons/13-kmeans-clustering/lesson.ipynb": "8a7926d16fe2d287e68f6f31dfc72a2cfbbf5f784cafcd81ec5a7d90c6db5581",
+      "lessons/14-mixtures-and-density/README.md": "8652e96e9eb8e016a0bf8523201348f2852c31f59e443537f11058f1b16cf650",
+      "lessons/14-mixtures-and-density/lesson.ipynb": "93c8b2517fb2939c97f033e3e258c3829d667a9fdfb39df96f38886a40baa2c6",
+      "lessons/15-gradient-descent/README.md": "5ef4eb55564720bb3cc09f825c1bc054ac17b70a998c3156a3fa29f813415d72",
+      "lessons/15-gradient-descent/lesson.ipynb": "a92c333b74c1929987889b02e5855a9700a31a9fab7958aee9d9c8670f349505",
+      "lessons/16-digits-project/README.md": "4e3f80db2b877c699784431a446a8ab81172b334dd258a296a3faebf3f7ce3aa",
+      "lessons/16-digits-project/lesson.ipynb": "2288560075854d6ef69eb1dc235a20163c9e3f35292ed024c176b158ae8b9f20",
+      "lessons/17-time-and-groups/README.md": "8991f4cf9f2573dd721db028fb234bcf0b68870e5c0d28925044aaf1a3f25fc6",
+      "lessons/17-time-and-groups/lesson.ipynb": "9ab1625c3cd327b21ed90b71d661d9c4e41f2cd243207d6836c0236546bedc7d",
+      "mojo/01-gradient-descent/main.mojo": "01252bd2b454495bcd856dcff74dfed1b5b5b7a34d04e29a0a4111e6494dc3b2",
+      "mojo/01-gradient-descent/reference.py": "710e7a1e72d1039d02bc2c839ff3480dc9618fe8f547c0aa81877df874afdb4b",
+      "mojo/02-python-interop/main.mojo": "ea3137d849b4f35b3c4046329c38dc1ece2cae8a23cf44efc00cb5ee1dd2da76",
+      "mojo/02-python-interop/reference.py": "10558e08b33b16fe4ebb333ad33dda79027024d10e7cecc8e991141fe2919e87"
+    },
+    "documentation_sha256": {
+      "README.md": "38d23abc5a8263d0c67ef5f2abceb39d00efb0c945545ea3295747d5256e5ee4",
+      "THIRD_PARTY_NOTICES.md": "ae38bf9b3141a8b945815d832d785b3deaa294bb6349dd8b5e34d9942ddcaf45",
+      "docs/setup.md": "4d74cca1a4cdad02c7759d90ef9fe2e923d6007dc1f6fd96ac8ad4f724405eb7",
+      "docs/wsl.md": "93872f9cc82e45de780f43b72860b4fcf57b4e3939bbc452cd3d499403dc8c56",
+      "docs/content-origin.md": "68fd029e28389503caeab782f764a35bb4522bb27338fd0d8315d35f1f99e956",
+      "docs/references.md": "533fbf5c2cf175eb4095c0526ec9954f7227f7084ab8a57416cedbbb7348567b",
+      "docs/verification.md": "d000af0de13ab16ad116b1c44792c6629eecbc9a3f3c7a41ea1dbdfd054c4c74"
+    }
+  },
+  "readme_learning_revision": {
+    "base_commit": "74058ee1c2af288f8649e230acf2772f8f0df273",
+    "python": "3.12.11",
+    "platform": "Ubuntu 24.04 WSL; Linux filesystem",
+    "method": "Literal README Python block per lesson, separate initially empty directory outside checkout, fresh process, no PYTHONPATH; CPU; MPLBACKEND=Agg",
+    "results": [
+      {
+        "lesson": "00-setup",
+        "returncode": 0,
+        "seconds": 1.929,
+        "readme_python_sha256": "4b84685c04887c5b5d7c5e8ba6fd359674f7657088097fef5c7c8a87b8a07a41",
+        "lesson_source_unchanged": true,
+        "notebook_code_unchanged": true,
+        "output_files": 0
+      },
+      {
+        "lesson": "01-ml-workflow",
+        "returncode": 0,
+        "seconds": 0.965,
+        "readme_python_sha256": "e65ee2c94a312eb27d4f91faafa313bf279b3fc9e2e1842b0857bf291fc38e43",
+        "lesson_source_unchanged": true,
+        "notebook_code_unchanged": true,
+        "output_files": 0
+      },
+      {
+        "lesson": "02-data-and-plots",
+        "returncode": 0,
+        "seconds": 1.552,
+        "readme_python_sha256": "e8b4975e32c91e8ce4d851db46b906c7f9b4937ce01616443247b1b3166c867b",
+        "lesson_source_unchanged": true,
+        "notebook_code_unchanged": true,
+        "output_files": 4
+      },
+      {
+        "lesson": "03-first-classifier",
+        "returncode": 0,
+        "seconds": 0.961,
+        "readme_python_sha256": "84f0a19aab08a4b32545d89e50412a68037e0c21324d303a654456185bfcc687",
+        "lesson_source_unchanged": true,
+        "notebook_code_unchanged": true,
+        "output_files": 0
+      },
+      {
+        "lesson": "04-validation-and-metrics",
+        "returncode": 0,
+        "seconds": 1.105,
+        "readme_python_sha256": "a57a412de39572d120b1cc2eb51b2640da7585c655cc71341adf24c209725210",
+        "lesson_source_unchanged": true,
+        "notebook_code_unchanged": true,
+        "output_files": 0
+      },
+      {
+        "lesson": "05-linear-regression",
+        "returncode": 0,
+        "seconds": 1.605,
+        "readme_python_sha256": "7b8145c3afde5de2935702a94fe66273c27a3256d7cf15caa8927e4862a85cca",
+        "lesson_source_unchanged": true,
+        "notebook_code_unchanged": true,
+        "output_files": 3
+      },
+      {
+        "lesson": "06-feature-engineering",
+        "returncode": 0,
+        "seconds": 1.018,
+        "readme_python_sha256": "d88c5000a759e8a711fba06d951e8b5241808cae2fc0795c712a80dd4c7ae6ea",
+        "lesson_source_unchanged": true,
+        "notebook_code_unchanged": true,
+        "output_files": 0
+      },
+      {
+        "lesson": "07-naive-bayes-text",
+        "returncode": 0,
+        "seconds": 0.851,
+        "readme_python_sha256": "a8746cd10fa8f81b0653cb518e32943e83d5c77f0bed20767ea3677290a69e7e",
+        "lesson_source_unchanged": true,
+        "notebook_code_unchanged": true,
+        "output_files": 0
+      },
+      {
+        "lesson": "08-support-vector-machines",
+        "returncode": 0,
+        "seconds": 1.563,
+        "readme_python_sha256": "7b9db2f6dd2f3bff62407fcd89c3b498fd1fc101fd7dc01bd63078b3b724e8b7",
+        "lesson_source_unchanged": true,
+        "notebook_code_unchanged": true,
+        "output_files": 3
+      },
+      {
+        "lesson": "09-trees-and-forests",
+        "returncode": 0,
+        "seconds": 2.499,
+        "readme_python_sha256": "7b46dd2698d82fb2a2f6db29064d9b3fd7843e1505fd467d05e9ca050703b187",
+        "lesson_source_unchanged": true,
+        "notebook_code_unchanged": true,
+        "output_files": 0
+      },
+      {
+        "lesson": "10-tuning-and-learning-curves",
+        "returncode": 0,
+        "seconds": 1.448,
+        "readme_python_sha256": "2a4813017e75e602e07438ca29be7c23e082b2689d3fa9548d16c53ca395f05e",
+        "lesson_source_unchanged": true,
+        "notebook_code_unchanged": true,
+        "output_files": 3
+      },
+      {
+        "lesson": "11-principal-components",
+        "returncode": 0,
+        "seconds": 1.442,
+        "readme_python_sha256": "609aa65ff5342c3b4f32a2726689ef5b92a97b7d4bc8ed0a5b82064af63fa3ba",
+        "lesson_source_unchanged": true,
+        "notebook_code_unchanged": true,
+        "output_files": 3
+      },
+      {
+        "lesson": "12-manifold-learning",
+        "returncode": 0,
+        "seconds": 2.777,
+        "readme_python_sha256": "20956d9647bc976674c05dfc9e1c89bd639f110a65e0b7b706018357fa3b5ce5",
+        "lesson_source_unchanged": true,
+        "notebook_code_unchanged": true,
+        "output_files": 3
+      },
+      {
+        "lesson": "13-kmeans-clustering",
+        "returncode": 0,
+        "seconds": 1.393,
+        "readme_python_sha256": "b5d7651f429aef66f8f777d14b36e6b2bb8693b2fbf471d1a3269a469fae644a",
+        "lesson_source_unchanged": true,
+        "notebook_code_unchanged": true,
+        "output_files": 3
+      },
+      {
+        "lesson": "14-mixtures-and-density",
+        "returncode": 0,
+        "seconds": 1.442,
+        "readme_python_sha256": "ef65d9c8ea1feceeba873bc5c07bffa26176136df1f2d6a218dc43eefbce491d",
+        "lesson_source_unchanged": true,
+        "notebook_code_unchanged": true,
+        "output_files": 3
+      },
+      {
+        "lesson": "15-gradient-descent",
+        "returncode": 0,
+        "seconds": 1.264,
+        "readme_python_sha256": "3008e6b04ab77e2857b9b49a7ae98fb12525d4db82d62d5e0b59b4153575385c",
+        "lesson_source_unchanged": true,
+        "notebook_code_unchanged": true,
+        "output_files": 3
+      },
+      {
+        "lesson": "16-digits-project",
+        "returncode": 0,
+        "seconds": 1.902,
+        "readme_python_sha256": "cb29db0fe86e37ec9435f97148ce00554c0b5a459b2433849d3b1a51191239b1",
+        "lesson_source_unchanged": true,
+        "notebook_code_unchanged": true,
+        "output_files": 8
+      },
+      {
+        "lesson": "17-time-and-groups",
+        "returncode": 0,
+        "seconds": 0.821,
+        "readme_python_sha256": "b72bd881de0cd241b3355ea3db7e1cd10a9a5651c368092b96f3367bb49ee2a6",
+        "lesson_source_unchanged": true,
+        "notebook_code_unchanged": true,
+        "output_files": 0
+      }
+    ],
+    "passed": 18,
+    "total": 18,
+    "colab_tested": false,
+    "install_cell": {
+      "method": "Fresh temporary uv-seeded venv, IPython shell executes literal %pip cell from docs/start-here.md, followed by lesson00 in fresh process and pip check",
+      "checks": [
+        {
+          "check": "create-venv",
+          "returncode": 0
+        },
+        {
+          "check": "prepare-notebook-shell",
+          "returncode": 0
+        },
+        {
+          "check": "literal-pip-cell",
+          "returncode": 0
+        },
+        {
+          "check": "fresh-interpreter-lesson00",
+          "returncode": 0
+        },
+        {
+          "check": "pip-check",
+          "returncode": 0
+        }
+      ],
+      "colab_tested": false,
+      "main_environment_modified": false
+    },
+    "lesson_sources_unchanged": true,
+    "mojo_unchanged": true,
+    "full_notebook_execution_repeated": false,
+    "markdown_files_checked": 33,
+    "canonical_notebook_hashes_exclude_local_user_metadata": true
+  },
+  "native_wsl_readiness": {
+    "checked_date": "2026-10-24",
+    "timezone": "Asia/Bangkok",
+    "git_commit": "74058ee1c2af288f8649e230acf2772f8f0df273",
+    "uv": "uv 0.8.18",
+    "python": "3.12.11",
+    "course_checks": {
+      "script": 18,
+      "readme": 21,
+      "notebook": 18
+    },
+    "behavioral_tests_passed": 6,
+    "mojo_checks_passed": 2,
+    "mojo": "Mojo 1.2.0 (2016d0cd)",
+    "jupyter": {
+      "wsl_api_status": 200,
+      "windows_login_http_status": 200,
+      "windows_jupyter_login_page": true,
+      "stopped": true
+    },
+    "scope": "Full course verification before the documentation-only README learning revision, Linux-native checkout"
   }
 }
