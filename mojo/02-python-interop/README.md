@@ -6,24 +6,15 @@
 
 **ทดสอบแล้วด้วย Mojo 1.2.0 บน Ubuntu 24.04 / WSL และ CPython 3.12.3** ใช้ environment ตาม [คู่มือติดตั้ง](../README.md) เพื่อให้รุ่นตรงกัน
 
-## แนวคิด
+## สิ่งที่เพิ่มจากบท 03 และ M01
 
-`Python.import_module` นำ Python module มาใช้ผ่าน PythonObject เช่น sklearn.datasets และ sklearn.pipeline ตัวแปร `split` มีผลลัพธ์สี่รายการในลำดับ X_train, X_test, y_train, y_test จึงต้องจับ index ให้ถูก
+ใช้ KNN/Pipeline เดิม จึงไม่ทวนการ scale, fit และ predict รอบนี้ให้ Mojo เรียก Python ผ่าน `Python.import_module`
 
-`def main() raises` ระบุว่าการเรียก Python อาจโยนข้อผิดพลาดได้ ตัวอย่างสร้าง Pipeline เดียวกับบท 03 และ split ด้วย seed เดียวกัน จึงใช้ Python reference เป็นตัวตรวจเส้นทางการเรียก ไม่ใช่การแข่งขันของสอง algorithm
+- `PythonObject` คือ object ฝั่ง Python ที่เข้าถึงจาก Mojo ได้ ไม่ได้แปลงอัลกอริทึม scikit-learn เป็น Mojo
+- `def main() raises` ยอมให้ข้อผิดพลาดจากการเรียก Python ส่งกลับมา
+- ผล `split` มีลำดับ `X_train, X_test, y_train, y_test` จึงใช้ index `0, 2` ตอน fit และ `1, 3` ตอนตรวจ accuracy
 
-## ใครเป็นผู้คำนวณในแต่ละขั้น
-
-Mojo เป็นตัวเรียกคำสั่ง ส่วน `sklearn` และ NumPy ยังทำงานผ่าน Python interpreter ที่โหลดอยู่ `PythonObject` คือ object ฝั่ง Python ที่เข้าถึงจาก Mojo ได้ ไม่ได้แปลงโค้ด KNN ทั้งหมดเป็น Mojo
-
-| ตำแหน่งใน `split` | ความหมาย | ใช้เมื่อ |
-|---|---|---|
-| 0 | X_train | `fit` |
-| 1 | X_test | `score` และ `predict` |
-| 2 | y_train | `fit` |
-| 3 | y_test | ตรวจคะแนนใน `score` |
-
-`model.score` ของ classifier นี้คืน accuracy ส่วน `[:5]` แสดงคำทำนายห้าแถวแรก `raises` ยอมให้ error จาก Python ส่งกลับมาหาก import หรือเรียก API ไม่สำเร็จ ถ้าเจอ `ModuleNotFoundError` ให้ตรวจ environment ตามหน้าติดตั้งก่อนเปลี่ยนโค้ดโมเดล
+หากพบ `ModuleNotFoundError` ให้ตรวจ environment ตามคู่มือติดตั้ง การคำนวณของ scikit-learn/NumPy ยังทำผ่าน Python interpreter ที่โหลดอยู่
 
 ## รันจาก root ของ repo
 
@@ -64,7 +55,7 @@ def main() raises:
 
 ## Python สำหรับเทียบผล
 
-คัดลอกบล็อกนี้ไปรันด้วย Python ใน environment เดียวกันได้ครบชุด เปรียบเทียบคำตอบก่อนทดลองเปลี่ยนค่าหรือจับเวลา
+รัน Python ใน environment เดียวกันเพื่อเทียบคำตอบ
 
 <!-- PYTHON:START -->
 ```python
@@ -86,15 +77,16 @@ print("first five predictions:", model.predict(X_test)[:5])
 ```
 <!-- PYTHON:END -->
 
-## อ่านผลและฝึกต่อ
+## อ่านผล
 
-เปรียบเทียบ test accuracy และ prediction ห้าตัวแรกกับ Python reference ใน environment เดียวกัน ค่าเหมือนกันสนับสนุนว่าเรียก pipeline และข้อมูลถูกต้อง รอบตรวจด้วย environment ข้างต้นได้ accuracy 0.933333 และคำทำนายห้าตัวแรก [0, 2, 1, 1, 0] ตรงกัน
+เทียบ accuracy และคำทำนายห้าตัวแรกกับ Python reference ใน environment เดียวกัน รอบตรวจเดิมได้ **0.933333** และ `[0, 2, 1, 1, 0]` ตรงกัน
 
-ลองเปลี่ยน n_neighbors เป็น 3 ในทั้งสองไฟล์ แล้วตรวจว่าข้อมูล split และ output ตรงกัน หากจะเลือก k เพื่อทำโมเดลสุดท้าย ให้ใช้ CV ตามบท 10
+<details>
+<summary>ฝึกต่อพร้อมแนวคำตอบ</summary>
 
-<details><summary>แนวคำตอบ</summary>
+**ลองทำ:** เปลี่ยน `n_neighbors=3` ทั้งสองไฟล์แล้วเทียบผล
 
-การเรียก library จาก Mojo ไม่ได้ทำให้การเลือก k จาก test ถูกต้องขึ้น วิธีประเมิน ML เหมือนเดิม และเวลาที่วัดรวม startup/interpreter อาจบอกต้นทุนการเรียกมากกว่าความเร็วของ training kernel
+**แนวคำตอบ:** split และ Pipeline ต้องตรงกัน การทดลองนี้ตรวจการเรียกข้ามภาษา; หากจะเลือก k ใช้งานจริงให้ใช้ CV ตามบท 10 การเรียกจาก Mojo ไม่รับประกันว่าจะเร็วกว่า เพราะยังมีต้นทุน startup/interpreter
 
 </details>
 
@@ -103,4 +95,3 @@ print("first five predictions:", model.predict(X_test)[:5])
 - [Python interoperability](https://mojolang.org/docs/manual/python/)
 - [Calling Python from Mojo](https://mojolang.org/docs/manual/python/python-from-mojo/)
 - [scikit-learn Pipeline](https://scikit-learn.org/1.7/modules/compose.html)
-

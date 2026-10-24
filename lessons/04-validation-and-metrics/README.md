@@ -2,58 +2,39 @@
 
 [กลับสารบัญ](../../README.md) · [Notebook](lesson.ipynb) · [Python](lesson.py)
 
-เวลาเรียนและทดลองโดยประมาณ: 50–70 นาที  
-สิ่งที่จะทำได้: แบ่ง train/validation/test และอ่าน confusion matrix ของปัญหาคลาสไม่สมดุลได้
+บทนี้เลือกคะแนนที่สะท้อนความผิดพลาด และใช้ **validation** เลือกโมเดลก่อนประเมิน test
 
-## ก่อนเริ่มบทนี้
+**ใช้สิ่งที่เรียนแล้ว:** fit/predict, baseline และ Pipeline จากบท 01–03
 
-ต่อจากบท 03 ที่เรียก fit/predict ได้แล้ว บทนี้ฝึกเลือกเกณฑ์วัดผล อย่าเพิ่งปรับโมเดลเพื่อไล่คะแนนสูงโดยยังไม่รู้ว่าความผิดพลาดชนิดใดสำคัญ
+## อ่านคะแนนเมื่อคลาสไม่สมดุล
 
-## คะแนนสูงอาจตอบโจทย์ผิด
+ถ้า 90% เป็นคลาส 0 ทาย 0 ทุกครั้งก็ได้ accuracy 90% แต่พลาดคลาส 1 ทั้งหมด บทนี้เรียกคลาส 1 ว่า **positive**
 
-ถ้าตัวอย่าง 90% เป็นคลาส 0 การทาย 0 ทุกครั้งจะมี accuracy สูง แต่ตรวจคลาส 1 ไม่พบเลย ในบทนี้กำหนดคลาส 1 เป็น positive และสร้างข้อมูลจำลองเพื่อแยกผลของความไม่สมดุลออกจากบริบทจริง
-
-| Metric | ความหมาย | สูตร |
+| ค่าจริง / คำทำนาย | ทาย 0 | ทาย 1 |
 |---|---|---|
-| Accuracy | สัดส่วนที่ทายถูกทั้งหมด | (TP + TN) / N |
-| Precision | ในสิ่งที่แจ้งว่า positive ถูกกี่ส่วน | TP / (TP + FP) |
-| Recall | ใน positive จริง ตรวจพบกี่ส่วน | TP / (TP + FN) |
-| F1 | ค่าเฉลี่ยฮาร์มอนิกของ precision กับ recall | 2PR / (P + R) |
+| จริง 0 | TN: ทาย 0 ถูก | FP: แจ้ง 1 ผิด |
+| จริง 1 | FN: พลาดคลาส 1 | TP: ทาย 1 ถูก |
 
-TP คือทาย positive ถูก, FP คือแจ้ง positive ผิด, FN คือพลาด positive, TN คือทาย negative ถูก เมื่อ denominator เป็นศูนย์ ตัวอย่างกำหนด `zero_division=0` เพื่อรายงานกรณีที่โมเดลไม่เคยทาย positive อย่างชัดเจน
-
-## สามชุดมีหน้าที่ต่างกัน
-
-Train ใช้เรียนพารามิเตอร์; validation ใช้เลือกโมเดลหรือ threshold; test ใช้ประเมินหลังตัดสินใจเสร็จ โค้ดกัน test 20% แล้วกัน 25% ของส่วนที่เหลือเป็น validation จึงได้ 60/20/20
-
-Logistic regression ใช้คะแนนเชิงเส้นแปลงเป็นความน่าจะเป็น สำหรับสองคลาส p = 1 / (1 + exp(−z)) แม้ชื่อมี regression แต่มักใช้จำแนกประเภท ในตัวอย่างยังใช้ threshold เริ่มต้น 0.5
-
-Average precision สรุปประสิทธิภาพจากการเรียงคะแนน positive หลาย threshold; ใช้ probability/score ไม่ใช้ hard label และไม่ใช่ accuracy หรือพื้นที่ใต้โค้งที่คำนวณด้วย trapezoid โดยตรง การเลือก metric ในงานจริงต้องสัมพันธ์กับต้นทุน FP/FN
-
-## อ่าน confusion matrix ด้วยตัวเลขเล็ก
-
-สำหรับ `labels=[0, 1]` แถวเป็นค่าจริงและคอลัมน์เป็นคำทำนาย:
-
-| ค่าจริง / ค่าทำนาย | ทาย 0 | ทาย 1 |
+| Metric | ใช้ดูอะไร | สูตร |
 |---|---|---|
-| จริง 0 | TN | FP |
-| จริง 1 | FN | TP |
+| Accuracy | ทายถูกทั้งหมดเท่าไร | (TP + TN) / N |
+| Precision | ที่ทายว่าเป็น 1 ถูกกี่ส่วน | TP / (TP + FP) |
+| Recall | คลาส 1 จริง ตรวจพบกี่ส่วน | TP / (TP + FN) |
+| F1 | รวม precision และ recall | 2PR / (P + R) |
 
-สมมติมี TN=80, FP=10, FN=5, TP=5 จาก 100 รายการ จะได้ accuracy=0.85 แต่ precision=5/15≈0.333 และ recall=5/10=0.5 จึงเห็นว่าคะแนนรวมสูงยังซ่อนการพลาด positive ได้ คำว่า positive คือคลาสที่เราสนใจ ไม่ได้แปลว่าเป็นผลดีเสมอ
+เช่น TN=80, FP=10, FN=5, TP=5 จะได้ accuracy=0.85 แต่ precision≈0.333 และ recall=0.5 โค้ดใช้ `zero_division=0` ให้รายงาน 0 เมื่อสูตรนั้นหารด้วยศูนย์
 
-**Threshold** คือจุดตัด เช่น p≥0.5 ให้ทาย 1 ส่วน p<0.5 ให้ทาย 0 Logistic regression เรียนน้ำหนักของ feature แล้วคืนคะแนนความน่าจะเป็น ตัวอย่างนี้ใช้เพื่อฝึกอ่าน metric ยังไม่ต้องคำนวณวิธีหาน้ำหนักด้วยมือ
+## เลือกด้วย validation
 
-## ตามรอยโค้ดและการเลือกโมเดล
+ข้อมูล 1,500 แถวแบ่งเป็น train 900 / validation 300 / test 300: ฝึกบน train → เลือกจาก F1 บน validation → ฝึกตัวเลือกนั้นใหม่บน `X_dev` (train รวม validation 1,200 แถว) → ประเมิน test
 
-ข้อมูลจำลอง 1,500 แถวถูกแบ่งเป็น train 900, validation 300, test 300 แถว `X_dev/y_dev` หมายถึง train รวม validation ก่อนแยกย่อย เราใช้ F1 บน validation เลือกระหว่าง baseline กับ logistic จากนั้น `fit(X_dev, y_dev)` ฝึกวิธีที่เลือกใหม่ด้วยข้อมูล 1,200 แถว แล้วจึงประเมิน test
+ตัวเลือกใหม่คือ **Logistic Regression** ซึ่งแปลงคะแนนเชิงเส้นเป็นความน่าจะเป็น ใช้ threshold เริ่มต้น 0.5 แบ่งสองคลาส หากจะปรับ threshold ให้เลือกบน validation ตามต้นทุน FP/FN
 
-`classes_` บอกว่าคอลัมน์ใดใน `predict_proba` เป็นคลาส 1 ส่วน average precision (AP) มองการเรียงคะแนนหลายจุดตัดและเป็นหัวข้อต่อยอด รอบแรกอ่าน confusion matrix และ F1 ให้ได้ก่อน ค่า AP ไม่ต้องเท่ากับ F1 เพราะวัดคนละมุม
+ผลยังมี **average precision (AP)** ซึ่งสรุป precision/recall จากการเรียงคะแนนหลาย threshold ต้องส่งคะแนนของคลาส 1 จาก `predict_proba` ไม่ใช้ label ที่ทายแล้ว และ AP ไม่ใช่ accuracy
 
-สำหรับหลายคลาส เช่น Iris: **macro average** เฉลี่ย metric ของทุกคลาสเท่ากัน ส่วน **weighted average** ให้น้ำหนักตามจำนวนตัวอย่าง (`support`) จึงอาจมองไม่เห็นปัญหาของคลาสเล็กได้ง่ายกว่า
+## ลงมือทำ
 
-## คัดลอกโค้ดไปรัน
-
-สร้างไฟล์ `.ipynb` ใหม่ คัดลอกโค้ดด้านล่างทั้งชุดลง Code cell แล้วกด **Shift+Enter** ใช้โปรแกรมเดิมที่เรียน Matplotlib ได้เลย ดู [วิธีเริ่มเรียน](../../docs/start-here.md) หากต้องการทำตามทีละขั้น
+สร้าง Notebook ใหม่แล้วรันโค้ดด้านล่างทั้งชุด หรือเปิด [Notebook ของบทนี้](lesson.ipynb) แล้วรันจากบนลงล่าง ใช้ kernel เดิมได้เลย
 
 <!-- CODE:START -->
 ```python
@@ -112,24 +93,23 @@ print(f"Test average precision: {average_precision_score(y_test, test_probabilit
 ```
 <!-- CODE:END -->
 
-## อ่านผลที่ได้
+## อ่านผล
 
-baseline มี accuracy สูงแต่ F1 ต่ำหรือเป็นศูนย์ ได้ confusion matrix ที่แถวเป็นค่าจริง คอลัมน์เป็นค่าทำนาย พร้อม F1/AP บน test ของโมเดลที่เลือก ค่าทศนิยมอาจต่างเล็กน้อยตามแพลตฟอร์ม
+baseline มี accuracy สูงแต่ F1 เป็นศูนย์ เปรียบเทียบกับ logistic บน validation ก่อนอ่าน test confusion matrix: **แถวเป็นค่าจริง คอลัมน์เป็นคำทำนาย**
 
-## แบบฝึกหัด
-
-หากโจทย์ต้องการลด FN จะสนใจ metric ใด และควรใช้ข้อมูลชุดใดเลือก threshold? ลองวางแผนเทียบ threshold 0.3, 0.5, 0.7 โดยยังไม่แตะ test
+สำหรับรายงานหลายคลาสจากบท 03: macro average เฉลี่ยทุกคลาสเท่ากัน ส่วน weighted average ถ่วงตามจำนวนตัวอย่าง (`support`)
 
 <details>
-<summary>แนวคำตอบ — ลองทำก่อนเปิดอ่าน</summary>
+<summary>ฝึกต่อพร้อมแนวคำตอบ</summary>
 
-เริ่มดู recall และติดตาม precision ควบคู่ ใช้ validation เลือก threshold ตามข้อจำกัด ตรึงทางเลือกแล้วจึงประเมิน test ครั้งสุดท้าย การลด threshold มักเพิ่มจำนวน positive ที่ทาย แต่ผลแลกเปลี่ยนต้องวัดจริง
+**ลองคิด:** ถ้าต้องลด FN ควรดูอะไรและเลือก threshold จากชุดใด?
+
+**เฉลย:** ดู recall พร้อมติดตาม precision และใช้ validation เลือก threshold เช่น 0.3, 0.5, 0.7 ตรึงทางเลือกก่อนประเมิน test
 
 </details>
 
-## อ่านต่อ
+## อ้างอิง
 
 - [Metrics and scoring](https://scikit-learn.org/1.7/modules/model_evaluation.html)
 - [Cross-validation](https://scikit-learn.org/1.7/modules/cross_validation.html)
 - [Google MLCC: Classification](https://developers.google.com/machine-learning/crash-course/classification)
-
