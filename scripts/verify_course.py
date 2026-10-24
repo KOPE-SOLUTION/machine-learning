@@ -32,12 +32,15 @@ def main():
                          "seconds": round(time.perf_counter() - start, 2)})
             print(f"{'PASS' if result.returncode == 0 else 'FAIL'} script {path.parent.name}", flush=True)
     if args.mode in ("readmes", "all"):
-        # Execute the literal code a learner copies, with no previous cell state.
+        # Each lesson starts fresh; explicitly sequential README cells share state.
         readmes = [*sorted(ROOT.glob("lessons/*/README.md")),
                    *sorted(ROOT.glob("mojo/*/README.md")), ROOT / "docs/math-primer.md"]
         for path in readmes:
-            blocks = re.findall(r"^```python\n(.*?)^```", path.read_text(encoding="utf-8"),
+            readme_text = path.read_text(encoding="utf-8")
+            blocks = re.findall(r"^```python\n(.*?)^```", readme_text,
                                 flags=re.MULTILINE | re.DOTALL)
+            if "<!-- CODE:CELLS -->" in readme_text and blocks:
+                blocks = ["\n\n".join(blocks)]
             if not blocks:
                 raise SystemExit(f"No Python block found in {path.relative_to(ROOT)}")
             for index, code in enumerate(blocks, start=1):

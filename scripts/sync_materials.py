@@ -31,14 +31,29 @@ def main():
         before, rest = text.split(START, 1)
         _, after = rest.split(END, 1)
         code = source.read_text(encoding="utf-8").rstrip() + "\n"
-        rendered = before + START + "\n```python\n" + code + "```\n" + END + after
         cells = [cell("markdown", before, "intro")]
         chunks = re.split(r"^# %% ?(.*)\n", code, flags=re.MULTILINE)
         if chunks[0].strip():
             cells.append(cell("code", chunks[0], "preamble"))
         for i in range(1, len(chunks), 2):
-            cells.append(cell("markdown", "### " + chunks[i] + "\n", f"heading-{i}"))
-            cells.append(cell("code", chunks[i + 1], f"code-{i}"))
+            if chunks[i].strip() == "[markdown]":
+                # Comment-only Markdown stays runnable as an ordinary Python script.
+                if any(line.strip() and not line.startswith("#") for line in chunks[i + 1].splitlines()):
+                    raise ValueError(f"Uncommented Markdown in {source}")
+                prose = re.sub(r"^# ?", "", chunks[i + 1], flags=re.MULTILINE)
+                cells.append(cell("markdown", prose, f"markdown-{i}"))
+            else:
+                cells.append(cell("markdown", "### " + chunks[i] + "\n", f"heading-{i}"))
+                cells.append(cell("code", chunks[i + 1], f"code-{i}"))
+        if "<!-- CODE:CELLS -->" in before:
+            # The README and notebook share both the code and explanations.
+            body = []
+            for item in cells[1:]:
+                content = "".join(item["source"]).rstrip()
+                body.append(f"```python\n{content}\n```" if item["cell_type"] == "code" else content)
+            rendered = before + START + "\n" + "\n\n".join(body) + "\n" + END + after
+        else:
+            rendered = before + START + "\n```python\n" + code + "```\n" + END + after
         cells.append(cell("markdown", after, "outro"))
         nb = {
             "cells": cells,
