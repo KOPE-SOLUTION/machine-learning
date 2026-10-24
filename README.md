@@ -85,7 +85,7 @@ Mojo เป็นบทเสริมหลังเรียน Python ML แ�
 
 เริ่มจาก README และ notebook ที่สร้างเองได้เลย เมื่อลองใหม่ ให้รันจาก cell แรกเพื่อให้ตัวแปรครบ โค้ดแต่ละบทไม่อาศัยตัวแปรจากบทก่อน
 
-โดยทั่วไปบทที่สร้างกราฟหรือโมเดลจะบันทึกลง `outputs/` ใต้โฟลเดอร์ที่ notebook ทำงาน สำหรับ [บท 02 บน Windows](lessons/02-data-and-plots/README.md) จะบันทึกใน `Projects/machine-learning/practics/outputs/02-data-and-plots/` ใต้โฟลเดอร์ผู้ใช้ เพื่อเลี่ยง Documents ที่บางเครื่องป้องกันการเขียน
+โดยทั่วไปบทที่สร้างกราฟหรือโมเดลจะบันทึกลง `outputs/` ใต้โฟลเดอร์ที่ notebook ทำงาน สำหรับ [บท 02 บน Windows](lessons/02-data-and-plots/README.md) จะบันทึกใน `practics/outputs/02-data-and-plots/` ของโปรเจกต์ `Documents/L/L04_CoreData/machine-learning` ใต้โฟลเดอร์ผู้ใช้ หากเก็บโปรเจกต์ไว้ที่อื่น ให้ปรับตำแหน่งใน Cell 10 ตามคำอธิบายของบท
 
 ## สิ่งที่ควรจำตลอดหลักสูตร
 

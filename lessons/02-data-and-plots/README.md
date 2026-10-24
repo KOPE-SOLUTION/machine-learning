@@ -172,8 +172,12 @@ plt.show()
 import os
 
 out = Path("outputs/02-data-and-plots")
-if os.name == "nt":  # Windows: เลี่ยง Documents ที่บางเครื่องป้องกันการเขียน
-    out = Path.home() / "Projects/machine-learning/practics/outputs/02-data-and-plots"
+if os.name == "nt":
+    out = (
+        Path.home()
+        / "Documents/L/L04_CoreData/machine-learning"
+        / "practics/outputs/02-data-and-plots"
+    )
 
 out.mkdir(parents=True, exist_ok=True)
 
@@ -185,7 +189,7 @@ print("Saved CSV:", (out / "feature-audit.csv").resolve())
 print("Saved figure:", (out / "iris.png").resolve())
 ```
 
-Windows บันทึกที่ `Projects/machine-learning/practics/outputs/02-data-and-plots/` ใต้โฟลเดอร์ผู้ใช้ โดย `Path.home()` เลือกผู้ใช้ปัจจุบันให้ ส่วน WSL/Colab บันทึกใน `outputs/02-data-and-plots/` ใต้โฟลเดอร์ที่ Notebook ทำงาน
+Windows บันทึกใน `practics/outputs/02-data-and-plots/` ของโปรเจกต์ `Documents/L/L04_CoreData/machine-learning` ใต้โฟลเดอร์ผู้ใช้ โดย `Path.home()` เลือกผู้ใช้ปัจจุบันให้ หากเก็บโปรเจกต์ไว้ที่อื่น ให้แก้ส่วน `Documents/L/L04_CoreData/machine-learning` ให้ตรงกับตำแหน่งของตัวเอง ส่วน WSL/Colab บันทึกใน `outputs/02-data-and-plots/` ใต้โฟลเดอร์ที่ Notebook ทำงาน
 
 ผลสองบรรทัดแสดงตำแหน่งเต็มของ CSV และ PNG ที่บันทึกแล้ว ใช้เปิดไฟล์ได้ทันที
 <!-- CODE:END -->
