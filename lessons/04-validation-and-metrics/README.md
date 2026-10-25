@@ -37,7 +37,22 @@
 3. ฝึกตัวเลือกนั้นใหม่บน `X_dev` ซึ่งรวม train กับ validation เป็น 1,200 แถว
 4. ประเมินด้วย test
 
-**Logistic Regression:** โมเดลที่แปลงคะแนนเชิงเส้นเป็นความน่าจะเป็น แล้วใช้ threshold เริ่มต้น 0.5 ตัดสินระหว่างสองคลาส
+### Logistic Regression คืออะไร
+
+**Logistic Regression — การถดถอยโลจิสติก** เป็นโมเดล **Supervised Learning สำหรับ Classification** แม้ชื่อมีคำว่า Regression แต่เป้าหมายในบทนี้คือทายคลาส 0 หรือ 1
+
+**หลักการทำงานในกรณีสองคลาส:**
+
+1. รวม feature ด้วยค่าน้ำหนักที่เรียนจาก train เป็นคะแนนเชิงเส้น
+2. แปลงคะแนนผ่านฟังก์ชัน **sigmoid** ให้เป็นค่าความน่าจะเป็นของคลาส 1 ระหว่าง 0 กับ 1
+3. ใช้ **threshold** หรือเกณฑ์ตัดสิน เพื่อเปลี่ยนความน่าจะเป็นเป็นคลาส โดยค่าเริ่มต้นคือ 0.5
+
+**ตัวอย่าง:** ความน่าจะเป็นคลาส 1 เท่ากับ 0.8 จะทายเป็น 1 เมื่อใช้ threshold 0.5 แต่ถ้าเพิ่ม threshold เป็น 0.9 ตัวอย่างเดิมจะถูกทายเป็น 0
+
+- **จุดเด่น:** เป็นโมเดลเริ่มต้นที่ฝึกได้รวดเร็วในหลายงาน และให้ probability สำหรับพิจารณา threshold ตามต้นทุนความผิดพลาด
+- **ข้อจำกัด:** ขอบเขตการตัดสินใจเป็นเชิงเส้นใน feature ที่ป้อนเข้าไป หากรูปแบบซับซ้อนอาจต้องสร้าง feature เพิ่มหรือใช้โมเดลอื่น
+
+บทนี้ใช้โมเดลนี้เป็นตัวอย่างสำหรับฝึกอ่านคะแนนและเลือกด้วย validation
 
 หากจะปรับ threshold ให้เลือกบน validation โดยพิจารณาต้นทุนของ FP และ FN
 
@@ -161,6 +176,7 @@ baseline มี accuracy สูง แต่ F1 เป็นศูนย์ ใ�
 
 ## อ้างอิง
 
+- [Logistic Regression](https://scikit-learn.org/1.7/modules/linear_model.html#logistic-regression)
 - [Metrics and scoring](https://scikit-learn.org/1.7/modules/model_evaluation.html)
 - [Cross-validation](https://scikit-learn.org/1.7/modules/cross_validation.html)
 - [Google MLCC: Classification](https://developers.google.com/machine-learning/crash-course/classification)

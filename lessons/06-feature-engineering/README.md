@@ -6,7 +6,15 @@
 
 **ใช้สิ่งที่เรียนแล้ว:** pandas, Pipeline/StandardScaler จากบท 03 และ regression/MAE จากบท 05
 
-## ใจความใหม่
+## Feature Engineering และการเตรียมข้อมูล
+
+**Feature Engineering — การสร้างหรือปรับรูปแบบ feature** คือการทำให้ข้อมูลแทนสิ่งที่ต้องการทำนายได้เหมาะสม เช่น สร้างระยะทางจากพิกัด หรือเปลี่ยนประเภทบริการเป็นตัวเลข บทนี้เน้นการเตรียมคอลัมน์ที่มีอยู่ให้โมเดลรับได้
+
+**ColumnTransformer** เป็นเครื่องมือจัดการคอลัมน์ ไม่ใช่อัลกอริทึมทำนาย: ส่งแต่ละกลุ่มคอลัมน์ไปยังขั้นตอนที่เหมาะ แล้วต่อผลกลับเป็นตาราง feature ชุดเดียว
+
+**จุดเด่น:** ตัวเลขและหมวดหมู่ใช้วิธีเตรียมต่างกันได้ภายใน Pipeline เดียว **ข้อจำกัด:** ต้องกำหนดชนิดและความหมายของคอลัมน์ให้ถูก เครื่องมือไม่ได้เลือก feature ที่เหมาะให้โดยอัตโนมัติ
+
+### เติมค่าหายและแทนหมวดหมู่
 
 **SimpleImputer:** เติมค่าหายโดยเรียนค่าทดแทนจาก train แล้วใช้ค่าเดิมกับข้อมูลใหม่ จึงต้องอยู่ใน Pipeline แทนการเติมทั้งตารางก่อนแบ่งข้อมูล
 
@@ -20,9 +28,16 @@
 | service | เติมค่าที่พบบ่อย → one-hot |
 | ผลจากทั้งสองทาง | ต่อคอลัมน์ → ส่งเข้า Ridge |
 
-**Ridge:** Linear Regression ที่เพิ่มโทษกำลังสองของ coefficient เพื่อลดการใช้ค่าน้ำหนักใหญ่เกินไป
+### Ridge Regression คืออะไร
 
-ค่า `alpha` คุมความแรงของโทษ หากจะเลือกค่าให้ใช้ validation หรือ CV
+**Ridge Regression — การถดถอยแบบริดจ์** เป็นโมเดล Supervised Learning สำหรับทำนายตัวเลข โดยต่อยอด Linear Regression ด้วย **L2 regularization** หรือการเพิ่มโทษจากผลรวมกำลังสองของ coefficient
+
+**หลักการ:** ระหว่าง fit โมเดลต้องลดทั้งความผิดพลาดในการทำนายและขนาดค่าน้ำหนัก เช่น น้ำหนัก 10 มีโทษกำลังสอง 100 แต่น้ำหนัก 2 มีโทษ 4 ก่อนคูณด้วย `alpha`
+
+- **จุดเด่น:** ช่วยให้ค่าน้ำหนักมีเสถียรภาพขึ้นเมื่อ feature บางคอลัมน์ให้ข้อมูลซ้ำกัน และอาจลด overfitting
+- **ข้อจำกัด:** ถ้าลงโทษแรงเกินไปอาจเรียนรูปแบบได้น้อยลง ยังใช้ความสัมพันธ์เชิงเส้นใน feature ที่ป้อนเข้าไป
+
+ค่า `alpha` คุมความแรงของโทษ หากจะเลือกค่าให้ใช้ validation หรือ CV บทนี้ใช้ Ridge ทำนายค่าจัดส่งหลังเตรียมตัวเลขและประเภทบริการแล้ว
 
 **หมวดหมู่ใหม่:** `handle_unknown="ignore"` แปลง service ที่ไม่เคยเห็นเป็นศูนย์ทุกคอลัมน์ของ field นั้น โปรแกรมจึงรันได้ แต่โมเดลยังไม่เคยเรียนบริการใหม่นี้
 
@@ -138,3 +153,4 @@ print("Unseen-category prediction:", model.predict(new_order).round(2))
 - [Handbook: Feature Engineering](https://jakevdp.github.io/PythonDataScienceHandbook/05.04-feature-engineering.html)
 - [Pipelines and composite estimators](https://scikit-learn.org/1.7/modules/compose.html)
 - [Imputation](https://scikit-learn.org/1.7/modules/impute.html)
+- [Ridge Regression](https://scikit-learn.org/1.7/modules/linear_model.html#ridge-regression-and-classification)
