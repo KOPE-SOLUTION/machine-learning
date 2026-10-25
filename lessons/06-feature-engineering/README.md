@@ -43,20 +43,22 @@
 
 ## Ridge Regression เพิ่มอะไรจากบท 05
 
-**Ridge Regression — การถดถอยแบบริดจ์** เป็นโมเดล Supervised Learning สำหรับทำนายตัวเลข โดยต่อยอด Linear Regression ด้วย **L2 regularization** หรือโทษจากผลรวมกำลังสองของ coefficient (ค่าน้ำหนักของ feature)
+**Ridge Regression — การถดถอยแบบริดจ์** เป็นโมเดล Supervised Learning สำหรับทำนายตัวเลข โดยต่อยอด Linear Regression ด้วย **L2 regularization** เพื่อควบคุมขนาดสัมประสิทธิ์ (coefficient) หรือน้ำหนักที่โมเดลเรียนให้แต่ละ feature
 
-![Ridge ลดผลรวมความผิดพลาดกำลังสองบน train บวก alpha คูณผลรวมกำลังสองของน้ำหนัก พร้อมตัวอย่างน้ำหนัก 2 และลบ 1 ได้โทษ 5 เมื่อ alpha เท่ากับ 1](../../assets/figures/06-feature-engineering-ridge.png)
+**พจน์ลงโทษ (penalty term)** คือส่วนที่บวกเพิ่มในค่าที่โมเดลพยายามทำให้ต่ำที่สุดระหว่างฝึก สำหรับ Ridge ส่วนนี้คือ `alpha × ผลรวมกำลังสองของน้ำหนัก` จึงช่วยให้โมเดลหาสมดุลระหว่างการทำนายให้ผิดพลาดน้อยกับการควบคุมขนาดน้ำหนัก
+
+![Ridge ลดผลรวมความผิดพลาดกำลังสองบน train บวกพจน์ลงโทษสำหรับควบคุมขนาดน้ำหนัก ตัวอย่างน้ำหนัก 2 และลบ 1 เมื่อ alpha เท่ากับ 1 ได้ penalty term เท่ากับ 5](../../assets/figures/06-feature-engineering-ridge.png)
 
 *ภาพอธิบายสิ่งที่ Ridge ลดระหว่าง fit; ตัวเลขในตัวอย่างไม่ใช่น้ำหนักที่ได้จาก Cell 2* · [เปิดภาพ SVG](../../assets/figures/06-feature-engineering-ridge.svg)
 
-อ่านสูตรเป็นสองส่วน: **ผลรวม residual² บน train + alpha × ผลรวม weight²** โดย `y` คือค่าจริง, `ŷ` คือค่าทำนาย, `w` คือน้ำหนัก, `n` คือจำนวนแถว และ `p` คือจำนวน feature หลังแปลง ส่วน intercept ไม่รวมในโทษนี้
+อ่านสูตรเป็นสองส่วน: **ผลรวม residual² บน train + พจน์ลงโทษ** โดย `y` คือค่าจริง, `ŷ` คือค่าทำนาย, `w` คือน้ำหนัก, `n` คือจำนวนแถว และ `p` คือจำนวน feature หลังแปลง ส่วน intercept ไม่รวมในพจน์ลงโทษของ Ridge
 
-เช่น น้ำหนัก `[2, -1]` และ `alpha=1` ให้โทษ `1 × (2² + (-1)²) = 5` ซึ่งนำไปบวกกับความผิดพลาดบน train ไม่ใช่ค่า MAE
+เช่น น้ำหนัก `[2, -1]` และ `alpha=1` ให้พจน์ลงโทษ `1 × (2² + (-1)²) = 5` ถ้าผลรวม residual² เท่ากับ 100 ค่ารวมที่ใช้ฝึกจะเป็น `100 + 5 = 105` ซึ่งเป็นคนละค่ากับ MAE ที่ใช้ประเมินผล
 
 - **จุดเด่น:** ช่วยควบคุมน้ำหนักเมื่อ feature ให้ข้อมูลซ้ำกัน และอาจลด overfitting หรือการเรียนรายละเอียดของ train มากจนใช้กับข้อมูลใหม่ได้ไม่ดี
-- **ข้อจำกัด:** โทษแรงเกินไปอาจทำให้เรียนรูปแบบได้น้อยลง และโมเดลยังใช้ความสัมพันธ์เชิงเส้นใน feature ที่ป้อนเข้าไป
+- **ข้อจำกัด:** การควบคุมน้ำหนักเข้มเกินไปอาจทำให้เรียนรูปแบบได้น้อยลง น้ำหนักยิ่งเล็กจึงไม่ได้แปลว่าโมเดลยิ่งดีเสมอ และโมเดลยังใช้ความสัมพันธ์เชิงเส้นใน feature ที่ป้อนเข้าไป
 
-`alpha` ยิ่งมาก ยิ่งให้น้ำหนักกับโทษมากขึ้น เราปรับสเกลคอลัมน์ตัวเลขก่อนใช้ Ridge เพราะขนาด coefficient ขึ้นกับหน่วยของ feature
+`alpha` กำหนดความสำคัญของพจน์ลงโทษเมื่อเทียบกับส่วนความผิดพลาด ยิ่งมาก ยิ่งเน้นควบคุมขนาดน้ำหนัก เราปรับสเกลคอลัมน์ตัวเลขก่อนใช้ Ridge เพราะขนาด coefficient ขึ้นกับหน่วยของ feature
 
 บทนี้กำหนด `alpha=1.0` ล่วงหน้าเพื่อเน้นการเตรียมข้อมูล หากจะเลือกค่า alpha ให้ใช้ validation หรือ Cross-validation (CV) ตามแนวทาง[บท 04](../04-validation-and-metrics/README.md) แล้วเก็บ test ไว้ประเมินครั้งสุดท้าย
 
@@ -204,3 +206,5 @@ MAE ของ Ridge ต่ำกว่า baseline บน test ชุดนี�
 - [OneHotEncoder](https://scikit-learn.org/1.7/modules/generated/sklearn.preprocessing.OneHotEncoder.html)
 - [ColumnTransformer](https://scikit-learn.org/1.7/modules/generated/sklearn.compose.ColumnTransformer.html)
 - [Ridge Regression](https://scikit-learn.org/1.7/modules/generated/sklearn.linear_model.Ridge.html)
+- [Ridge: penalty term และผลของ alpha](https://scikit-learn.org/1.7/auto_examples/linear_model/plot_ridge_coeffs.html)
+- [ตัวอย่างศัพท์ภาษาไทย: การถดถอยที่ปรับด้วยฟังก์ชันการลงโทษ — วารสารวิทยาศาสตร์และเทคโนโลยี](https://li01.tci-thaijo.org/index.php/tstj/article/download/181573/165385)

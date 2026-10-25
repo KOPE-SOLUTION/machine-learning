@@ -139,16 +139,17 @@ def ridge():
     label(ax, 0.075, 0.478, "รวม (ค่าจริง − ค่าทำนาย)² ทุกแถวใน train", size=19)
     label(ax, 0.075, 0.421, "คือผลรวม residual² ที่ต่อยอดจาก EP05", size=17, color=MUTED)
     card(ax, 0.52, 0.385, 0.43, 0.20, "#FFF5EA")
-    label(ax, 0.545, 0.544, "ส่วนที่ 2 · โทษจากน้ำหนัก", size=22, color=ORANGE, weight="bold")
-    label(ax, 0.545, 0.478, "รวม weight² แล้วคูณ alpha", size=19)
-    label(ax, 0.545, 0.421, "alpha มาก → ให้น้ำหนักกับโทษมากขึ้น", size=17, color=MUTED)
+    label(ax, 0.545, 0.544, "ส่วนที่ 2 · พจน์ลงโทษ", size=22, color=ORANGE, weight="bold")
+    label(ax, 0.545, 0.492, "penalty term = alpha × ผลรวม weight²", size=17)
+    label(ax, 0.545, 0.445, "เพิ่มในสูตร เพื่อควบคุมขนาดน้ำหนัก", size=17)
+    label(ax, 0.545, 0.400, "alpha มาก → ควบคุมเข้มขึ้น", size=15, color=MUTED)
 
     card(ax, 0.05, 0.15, 0.90, 0.17)
     label(ax, 0.075, 0.272, "ตัวอย่างสมมติ: น้ำหนัก [2, −1] และ alpha = 1", size=21, weight="bold")
-    label(ax, 0.075, 0.197, r"โทษ $=1\times(2^2+(-1)^2)=5$", size=26, color=ORANGE)
-    label(ax, 0.56, 0.197, "บวก 5 กับส่วนความผิดพลาด", size=21)
+    label(ax, 0.075, 0.197, r"penalty $=1\times(2^2+(-1)^2)=5$", size=26, color=ORANGE)
+    label(ax, 0.56, 0.197, "ถ้า residual² รวม 100 → ค่ารวม 105", size=18)
     label(ax, 0.05, 0.097,
-          "n = จำนวนแถว train  •  p = จำนวน features หลังแปลง  •  w = น้ำหนัก  •  intercept ไม่รวมในโทษ",
+          "n = จำนวนแถว train  •  p = จำนวน features หลังแปลง  •  w = น้ำหนัก  •  intercept ไม่รวมในพจน์ลงโทษ",
           size=15, color=MUTED)
     label(ax, 0.05, 0.044,
           "EP06 · สูตรสำหรับ fit ไม่ใช่ MAE ที่ใช้ประเมิน  •  ตัวอย่างนี้ไม่ใช่ค่าน้ำหนักที่ได้จาก Cell 2",
