@@ -2,52 +2,60 @@
 
 [กลับสารบัญ](../../README.md) · [Notebook](lesson.ipynb) · [Python](lesson.py)
 
-บทนี้เปลี่ยนข้อความเป็นจำนวนคำ แล้วจำแนก **sport / tech** ด้วย Multinomial Naive Bayes
+เปลี่ยนข้อความเป็นจำนวนคำ แล้วจำแนกว่าเป็น **กีฬา (sport)** หรือ **เทคโนโลยี (tech)** ด้วย Multinomial Naive Bayes
 
-**ใช้สิ่งที่เรียนแล้ว:** Pipeline, train/test และ classification report จากบท 03–06
+**ใช้สิ่งที่เรียนแล้ว:** Pipeline, train/test และ classification report จากบท 03–06 บทนี้เพิ่มวิธีแปลงข้อความและหลักการของ Naive Bayes
 
-## ใจความใหม่
+## จากข้อความเป็นตัวเลข
 
-**Vocabulary:** รายการคำที่ `CountVectorizer` เรียนจาก train
+**CountVectorizer** เป็นเครื่องมือเตรียมข้อมูล: เรียนรายการคำจาก train เรียกว่า **vocabulary** แล้วแทนแต่ละข้อความด้วยจำนวนครั้งที่พบแต่ละคำ วิธีนี้เรียกว่า **Bag-of-words** เพราะนับคำโดยไม่เก็บลำดับคำ
 
-**Bag-of-words:** แทนข้อความด้วยจำนวนครั้งที่พบแต่ละคำ โดยไม่เก็บลำดับคำ
+ตัวอย่างเล็ก: ถ้ามีคอลัมน์ `goal, team, wins` ข้อความ `team team goal` จะได้ `[1, 2, 0]` คือ goal 1 ครั้ง, team 2 ครั้ง และไม่พบ wins ส่วน `goal team team` ก็ได้ค่าเดียวกัน
 
-ตัวอย่าง: vocabulary `goal, team, wins` ทำให้ “team team goal” เป็น `[1, 2, 0]`
+![ข้อความใหม่ 3 ข้อความผ่าน vocabulary เดิม 49 คำ ตารางแสดงเฉพาะ 5 คำที่พบ โดย team มีจำนวน 2 และข้อความอาหารเป็นศูนย์ทุกคอลัมน์](../../assets/figures/07-naive-bayes-text-counts.png)
 
-### Naive Bayes คืออะไร
+*ผลจากข้อมูลและค่าตั้งต้นของ Cell 1–3; ตารางย่อเพื่อแสดงผล โมเดลยังใช้ 49 features* · [เปิดภาพ SVG](../../assets/figures/07-naive-bayes-text-counts.svg)
 
-**Naive Bayes** เป็นกลุ่มอัลกอริทึม **Supervised Learning สำหรับ Classification** ใช้กฎของ Bayes รวมข้อมูลเกี่ยวกับคลาสกับหลักฐานจาก feature เพื่อคำนวณความน่าจะเป็นของคลาสหลังเห็นข้อมูล
+ค่าเริ่มต้นของ `CountVectorizer` เปลี่ยนตัวอักษรเป็นตัวเล็ก และเลือก token หรือหน่วยคำที่ยาวอย่างน้อย 2 อักขระ เช่น `Team` กลายเป็น `team` ส่วน `a` ไม่ถูกนับ สำหรับภาษาไทยที่ไม่ได้เว้นวรรคทุกคำ ต้องเลือกวิธีตัดคำหรือใช้ส่วนย่อยของตัวอักษรเพิ่มเติม
 
-คำว่า **naive** หมายถึงสมมติฐานว่า feature เป็นอิสระต่อกันเมื่อทราบคลาส ซึ่งไม่ตรงกับภาษาจริงทั้งหมด ส่วน **Multinomial Naive Bayes** เป็นรุ่นที่เหมาะกับข้อมูลนับ เช่น จำนวนครั้งที่พบคำในบทนี้
+## Naive Bayes จำแนกข้อความอย่างไร
 
-**หลักการทำงานกับข้อความ:**
+**Naive Bayes** เป็นกลุ่มอัลกอริทึม **Supervised Learning สำหรับ Classification (การจำแนกประเภท)** ใช้กฎของ Bayes ปรับความน่าจะเป็นของคลาสเมื่อเห็นข้อมูลใหม่ บทนี้ใช้รุ่น **Multinomial Naive Bayes** ผ่าน `MultinomialNB` ซึ่งเหมาะกับ feature แบบจำนวนครั้งที่ไม่ติดลบ
 
-1. เรียนสัดส่วนคลาสใน train เรียกว่า **prior** และความถี่ของแต่ละคำภายในคลาส
-2. แปลงข้อความที่ต้องการทำนายเป็นจำนวนคำด้วย vocabulary เดิม
-3. รวม prior กับหลักฐานจากคำ แล้วเลือกคลาสที่ได้ความน่าจะเป็นสูงสุดตามโมเดล
+**ขั้นตอนสำคัญ:**
 
-**ตัวอย่าง:** ถ้าคำว่า `goal` พบในข้อความ sport บ่อยกว่า tech คำนี้จะเป็นหลักฐานสนับสนุน sport แต่คำตอบยังขึ้นกับคำอื่นและ prior ด้วย
+1. เรียนสัดส่วนข้อความแต่ละคลาสใน train เรียกว่า **prior** หรือความน่าจะเป็นก่อนอ่านข้อความใหม่ บทนี้ sport และ tech มีคลาสละ 9 จาก 18 ข้อความ จึงเริ่มที่ 0.5 เท่ากัน
+2. เรียนความถี่ของแต่ละคำภายในคลาส เช่น `goal` พบใน sport แต่ไม่พบใน tech ของ train ชุดนี้
+3. เมื่อรับข้อความใหม่ ให้รวม prior กับหลักฐานจากคำที่รู้จัก แล้วเลือกคลาสที่มีความน่าจะเป็นสูงสุดตามโมเดล
 
-- **จุดเด่น:** ฝึกและทำนายได้เร็ว เหมาะเป็นโมเดลเริ่มต้นสำหรับข้อความที่มี feature คำจำนวนมาก
-- **ข้อจำกัด:** วิธีนับคำนี้ไม่เก็บลำดับหรือบริบท และ probability จากโมเดลอาจไม่ตรงกับความถี่ที่เกิดขึ้นจริง แม้จำแนกประเภทได้ดี
+คำว่า **naive** หมายถึงสมมติฐานว่าหลักฐานจากแต่ละ feature เป็นอิสระต่อกันเมื่อกำหนดคลาสไว้ จึงคำนวณโดยแยกหลักฐานจากคำ ไม่ได้เรียนบริบทของประโยคแบบภาษาจริงทั้งหมด
 
-### สิ่งที่ต้องรู้เมื่อใช้ MultinomialNB
+- **จุดเด่น:** ฝึกและทำนายได้เร็ว เหมาะเป็นโมเดลเริ่มต้นสำหรับงานจำแนกข้อความ
+- **ข้อจำกัด:** การนับคำแบบนี้ไม่เก็บลำดับคำ และความน่าจะเป็นจากโมเดลอาจไม่ตรงกับอัตราที่ทายถูกจริง
 
-**MultinomialNB:** ใช้ feature แบบนับที่ไม่ติดลบ โดยมีรายละเอียดสำคัญดังนี้:
+## Smoothing: ทำไมต้องมี alpha
 
-- **Smoothing:** ค่า `alpha` ช่วยให้คำใน vocabulary ที่ไม่เคยพบในคลาสหนึ่งยังมีน้ำหนัก จึงไม่ทำให้คะแนนคลาสนั้นเป็นศูนย์ทันที
-- **คำที่ไม่รู้จัก:** คำที่ไม่มีใน vocabulary เลยจะถูกข้าม
-- **Known-token count:** จำนวนคำที่รู้จักในข้อความ โดยนับคำซ้ำด้วย
+หากคำหนึ่งอยู่ใน vocabulary แต่ไม่เคยพบในคลาส tech เลย การใช้ความถี่ตรง ๆ จะให้โอกาสของคำนั้นใน tech เป็นศูนย์ และทำให้คะแนน tech เป็นศูนย์เมื่อข้อความมีคำนั้น
 
-ตัวนับคำคืน sparse matrix เพื่อประหยัดพื้นที่ โค้ดใช้ `toarray()` แสดงเฉพาะตัวอย่างเล็ก ๆ
+**Additive smoothing** แก้โดยเพิ่ม **จำนวนสมมติ `alpha` ให้ทุกคำในแต่ละคลาส** ก่อนคำนวณความน่าจะเป็น เมื่อ `alpha=1` เรียกว่า **Laplace smoothing** ไม่ได้เพิ่มแถวข้อมูลหรือแก้ข้อความต้นฉบับ
 
-ข้อมูลแต่งขึ้น 24 ประโยค แบ่งเป็น train 18 และ test 6 ประโยค ใช้เรียนวิธีทำ ไม่ใช่ผลประเมินระบบจริง
+![สูตร smoothing เพิ่ม alpha ให้จำนวนคำทุกคำ ตัวอย่าง goal ใน tech มี 0 ครั้ง จากคำทั้งหมด 38 ครั้งและ vocabulary 49 คำ เมื่อ alpha เท่ากับ 1 จึงได้ 1 ส่วน 87 พร้อมการเปรียบเทียบคะแนน sport และ tech ของข้อความ team team goal](../../assets/figures/07-naive-bayes-text-smoothing.png)
 
-สำหรับภาษาไทย ต้องพิจารณาการตัดคำหรือ character n-grams เพิ่ม
+*จำนวนคำและผลทำนายตรงกับ train และ Cell 3 ของบทนี้; คะแนนก่อนปรับให้รวมเป็น 1 ยังไม่ใช่ความน่าจะเป็นของคลาส* · [เปิดภาพ SVG](../../assets/figures/07-naive-bayes-text-smoothing.svg)
+
+อ่านสูตร: **(จำนวนครั้งของคำนั้นในคลาส + alpha) ÷ (จำนวนคำทั้งหมดในคลาส + alpha × ขนาด vocabulary)** โดยจำนวนคำทั้งหมดนับคำซ้ำด้วย
+
+ตัวอย่าง `goal` ใน tech: พบ 0 ครั้ง, จำนวนคำรวมใน tech เท่ากับ 38, vocabulary มี 49 คำ จึงได้ `(0 + 1) / (38 + 49) = 1/87 ≈ 0.0115` เป็นความน่าจะเป็นของคำภายในคลาส ไม่ใช่ความน่าจะเป็นที่ข้อความเป็น tech
+
+**แยกสองกรณีให้ชัด:** smoothing ช่วยคำที่มีอยู่ใน vocabulary แต่ไม่พบในคลาสหนึ่ง ส่วนคำที่ไม่มีใน vocabulary เลย เช่น `vegetables` ในบทนี้ จะถูกตัวนับคำข้าม
+
+`alpha` ของบทนี้ควบคุม smoothing **คนละความหมายกับ alpha ของ Ridge ในบท 06** เมื่อเพิ่มมากขึ้น ความน่าจะเป็นของคำภายในแต่ละคลาสจะใกล้กันขึ้น บทนี้กำหนด 1.0 ไว้เรียนหลักการ หากจะเลือกค่าให้ใช้ validation/CV โดยเก็บ test ไว้ประเมินท้ายสุด
 
 ## ลงมือทำ
 
-สร้าง Notebook ใหม่แล้วรัน **Cell 1–2 ตามลำดับ** หรือเปิด [Notebook ของบทนี้](lesson.ipynb) ใช้ kernel เดิมได้เลย อ่านคำอธิบายใต้โค้ดแต่ละช่วงประกอบผลที่ได้
+สร้าง Notebook ใหม่แล้วรัน **Cell 1–3 ตามลำดับ** หรือเปิด [Notebook ของบทนี้](lesson.ipynb) ใช้ kernel เดิมที่ติดตั้ง scikit-learn แล้ว ไม่ต้องติดตั้งเพิ่ม
+
+ข้อความภาษาอังกฤษทั้ง 24 ข้อความแต่งขึ้นสำหรับฝึก: train 18 และ test 6 ข้อความ ใช้ดูขั้นตอนและอ่านผล ไม่ใช่ชุดประเมินระบบจริง
 
 <!-- CODE:CELLS -->
 
@@ -56,6 +64,8 @@
 
 ```python
 import numpy as np
+import pandas as pd
+from IPython.display import display
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics import classification_report
 from sklearn.model_selection import train_test_split
@@ -76,65 +86,114 @@ y = np.array(["sport"] * 12 + ["tech"] * 12)
 X_train, X_test, y_train, y_test = train_test_split(
     texts, y, test_size=0.25, stratify=y, random_state=42
 )
+print("Train:", len(X_train), "| Test:", len(X_test))
 ```
 
 **อ่านโค้ด**
 
-- `texts` เก็บข้อความดิบหนึ่งข้อความต่อสมาชิก โดย 12 ข้อความแรกเป็นกีฬา และ 12 ข้อความหลังเป็นเทคโนโลยี
-- `np.array(["sport"] * 12 + ["tech"] * 12)` สร้าง label ให้เรียงตรงกับข้อความ จึงต้องรักษาลำดับให้สัมพันธ์กัน
-- `train_test_split(..., test_size=0.25, stratify=y)` แบ่งข้อความพร้อมคำตอบเป็น train 18 และ test 6 โดยรักษาสัดส่วนคลาส
-- ยังไม่ต้องแปลงข้อความเป็นตัวเลขเอง เพราะจะให้ Pipeline ทำใน Cell ถัดไป
+- `texts` เก็บข้อความดิบ 24 ข้อความ: 12 ข้อความแรกเป็นกีฬา และ 12 ข้อความหลังเป็นเทคโนโลยี ส่วน `y` สร้างคำตอบให้ตรงกับลำดับนั้น
+- `train_test_split` แบ่งข้อความพร้อมคำตอบก่อนเรียน vocabulary: train 18 ข้อความ (คลาสละ 9) และ test 6 ข้อความ (คลาสละ 3) โดย `stratify=y` รักษาสัดส่วนคลาส
+- `random_state=42` ทำให้รันซ้ำแล้วได้ชุดแบ่งเดิม ส่วน `display` ใช้แสดงตารางใน Jupyter แม้มีคำสั่งอื่นตามท้าย cell
 
-### Cell 2 — ฝึกตัวนับคำและตรวจคำทำนาย
+**ผลที่ได้:** `Train: 18 | Test: 6`
+
+### Cell 2 — ฝึก Pipeline และประเมินกับ test
 
 ```python
 model = make_pipeline(CountVectorizer(), MultinomialNB(alpha=1.0))
 model.fit(X_train, y_train)
-print(classification_report(y_test, model.predict(X_test), zero_division=0))
-examples = ["team scores a goal", "developer fixes software", "recipe with vegetables"]
+
+y_pred = model.predict(X_test)
+print(classification_report(y_test, y_pred, zero_division=0))
+
 vectorizer = model.named_steps["countvectorizer"]
-vectors = vectorizer.transform(examples)
-print("Vocabulary size:", len(vectorizer.get_feature_names_out()))
-used_columns = np.asarray(vectors.sum(axis=0)).ravel() > 0
-print("Words present in examples:", vectorizer.get_feature_names_out()[used_columns])
-print("Counts for these words:\n", vectors[:, used_columns].toarray())
-for text, label, token_count in zip(examples, model.predict(examples), vectors.sum(axis=1).A1):
-    print(f"{text!r} -> {label}; known-token count={token_count}")
-print("Class order:", model.classes_)
-print("Probabilities (not guaranteed calibrated):\n", model.predict_proba(examples).round(3))
+words = vectorizer.get_feature_names_out()
+print("Vocabulary size:", len(words))
 ```
 
 **อ่านโค้ด**
 
-- `make_pipeline(CountVectorizer(), MultinomialNB(alpha=1.0))` ต่อการนับคำกับโมเดล โดย `fit` เรียน vocabulary และโมเดลจาก train เท่านั้น
-- `model.named_steps["countvectorizer"]` หยิบตัวนับคำที่ fit แล้วออกมาตรวจ ส่วน `transform(examples)` นับคำในข้อความใหม่โดยใช้ vocabulary เดิม
-- `vectors.sum(axis=0)` รวมจำนวนคำตามคอลัมน์ แล้ว `np.asarray(...).ravel() > 0` ทำ mask เลือกเฉพาะคำที่พบในตัวอย่าง
-- `vectors[:, used_columns].toarray()` เลือกคอลัมน์เหล่านั้นและแปลง sparse matrix เป็น array เพื่อแสดงตารางเล็ก ๆ
-- `vectors.sum(axis=1).A1` รวมจำนวนคำที่รู้จักต่อข้อความ แล้วจัดผลเป็น array หนึ่งมิติ เพื่อใช้ `zip` จับคู่กับข้อความและคำทำนาย
-- `model.classes_` บอกลำดับคอลัมน์ของ `predict_proba` ส่วนข้อความอาหารที่ไม่มีคำรู้จักยังได้คำทำนาย จึงต้องอ่าน known-token count ประกอบด้วย
+- `make_pipeline(CountVectorizer(), MultinomialNB(alpha=1.0))` ต่อ **ตัวนับคำ → โมเดลจำแนกประเภท** โดย `alpha=1.0` เพิ่มจำนวนสมมติ 1 ให้ทุกคำในแต่ละคลาสตอนคำนวณความน่าจะเป็น
+- `fit(X_train, y_train)` เรียน vocabulary จากข้อความ train แล้วใช้จำนวนคำกับคำตอบฝึก Naive Bayes ส่วน `predict(X_test)` ใช้ vocabulary และโมเดลที่เรียนไว้ โดยไม่ fit ใหม่
+- `classification_report` อ่านเหมือนบท 04; `zero_division=0` ให้ค่า 0 แทนกรณีที่ตัวหารของ metric เป็นศูนย์ ไม่ได้เปลี่ยนคำทำนาย
+- `model.named_steps["countvectorizer"]` หยิบตัวนับคำที่ฝึกแล้วออกมาตรวจ และ `get_feature_names_out()` คืนชื่อคำตามลำดับคอลัมน์
+
+**ผลที่ได้:** vocabulary มี 49 คำ และทาย test ถูกทั้ง 6 ข้อความ จึงได้ accuracy 1.00 ผลนี้เป็นเพียงชุดตัวอย่างเล็กที่แต่งขึ้น ไม่ใช่หลักฐานว่าระบบจริงจะถูก 100%
+
+### Cell 3 — ดูจำนวนคำและทำนายข้อความใหม่
+
+```python
+examples = ["team team goal", "developer fixes software", "recipe with vegetables"]
+vectors = vectorizer.transform(examples)
+print("Feature matrix shape:", vectors.shape)
+
+used_columns = np.asarray(vectors.sum(axis=0)).ravel() > 0
+counts = pd.DataFrame(
+    vectors[:, used_columns].toarray(),
+    index=examples,
+    columns=words[used_columns],
+)
+display(counts)
+
+results = pd.DataFrame({
+    "text": examples,
+    "prediction": model.predict(examples),
+    "known_tokens": np.asarray(vectors.sum(axis=1)).ravel(),
+})
+probabilities = pd.DataFrame(
+    model.predict_proba(examples),
+    columns=model.classes_,
+)
+display(pd.concat([results, probabilities], axis=1).round(3))
+```
+
+**อ่านโค้ด**
+
+- `vectorizer.transform(examples)` นับคำด้วย vocabulary เดิม ได้ sparse matrix ขนาด `(3, 49)`: 3 ข้อความ × 49 คำ โดย sparse matrix เก็บข้อมูลแบบประหยัดพื้นที่เมื่อส่วนใหญ่เป็นศูนย์
+- `vectors.sum(axis=0)` รวมตามคอลัมน์; `np.asarray(...).ravel() > 0` จัดเป็น array หนึ่งมิติแล้วเลือกคำที่ปรากฏอย่างน้อยหนึ่งครั้งใน 3 ตัวอย่าง ได้ 5 คอลัมน์สำหรับแสดงผล
+- `vectors[:, used_columns].toarray()` แปลงเฉพาะตารางเล็กเป็น array แล้วใช้ชื่อข้อความและคำกำกับแถว/คอลัมน์ การเลือกนี้ใช้เพื่อแสดงผลเท่านั้น โมเดลยังรับ 49 features
+- `vectors.sum(axis=1)` รวมตามแถว ได้ `known_tokens` หรือจำนวนคำที่รู้จักต่อข้อความ **นับคำซ้ำด้วย**: `[3, 3, 0]`
+- `predict` คืนชื่อคลาส ส่วน `predict_proba` คืนความน่าจะเป็นตามโมเดล ใช้ `model.classes_` ตั้งชื่อคอลัมน์ให้ถูกลำดับ: `sport, tech`
+- `pd.concat(..., axis=1)` ต่อผลสองตารางตามแนวนอน และ `round(3)` ปัดเลขเพื่อแสดงผล ไม่ได้เปลี่ยนโมเดล
 <!-- CODE:END -->
 
 ## อ่านผล
 
-ดูรายการคำที่ใช้เป็น feature และจำนวนครั้งที่พบแต่ละคำ
+ตารางจำนวนคำแสดง 5 คอลัมน์ที่พบในตัวอย่าง ส่วนคอลัมน์อื่นอีก 44 คำเป็นศูนย์:
 
-**ข้อความอาหาร:** มี known-token count=0 แต่โมเดลยังทาย sport หรือ tech เพราะมีเพียงสองทางเลือกและยังใช้ prior ได้
+| ข้อความ | developer | fixes | goal | software | team |
+|---|---:|---:|---:|---:|---:|
+| team team goal | 0 | 0 | 1 | 0 | 2 |
+| developer fixes software | 1 | 1 | 0 | 1 | 0 |
+| recipe with vegetables | 0 | 0 | 0 | 0 | 0 |
 
-โมเดลจึงไม่ได้ตรวจข้อความนอกเรื่องให้เอง และความน่าจะเป็นที่รายงานสูงก็ยังทายผิดได้
+ผลด้วยข้อมูลและค่าตั้งต้นของบทนี้ (ปัดทศนิยม 3 ตำแหน่ง):
+
+| ข้อความ | คำทำนาย | known_tokens | sport | tech |
+|---|---|---:|---:|---:|
+| team team goal | sport | 3 | 0.986 | 0.014 |
+| developer fixes software | tech | 3 | 0.055 | 0.945 |
+| recipe with vegetables | sport | 0 | 0.500 | 0.500 |
+
+**แถวอาหารสำคัญที่สุด:** ไม่มีคำที่รู้จักเลย โมเดลจึงใช้เพียง prior ในบทนี้ทั้งสองคลาสเท่ากัน และ `predict` เลือก sport ซึ่งเป็นคลาสแรกใน `model.classes_` เมื่อคะแนนเสมอ ไม่ได้หมายความว่าโมเดลเข้าใจว่าข้อความอาหารเป็นกีฬา
+
+โมเดลมีให้เลือกเพียง sport/tech และไม่ได้ปฏิเสธข้อความนอกเรื่องให้อัตโนมัติ ส่วนค่า tech 0.945 ในแถวที่สองเป็นความน่าจะเป็นตามโมเดล **ไม่ได้รับประกันว่าจะทายถูกจริง 94.5%**
 
 <details>
 <summary>ฝึกต่อพร้อมแนวคำตอบ</summary>
 
-**ลองทำ:** ใช้ `CountVectorizer(analyzer="char", ngram_range=(2, 4))` กับข้อความภาษาไทยที่เตรียมเพิ่ม
+**ลองทำ:** เปลี่ยนข้อความแรกใน `examples` จาก `team team goal` เป็น `goal team team` แล้วรัน Cell 3 ใหม่ โดยไม่ฝึกโมเดลซ้ำ
 
-**แนวคำตอบ:** character n-grams ใช้ส่วนย่อยของตัวอักษร จึงไม่พึ่งช่องว่างแบ่งคำ
+**แนวคำตอบ:** จำนวนคำและผลทำนายเหมือนเดิม เพราะ Bag-of-words ในบทนี้ไม่เก็บลำดับคำ
 
-ต้องวัดผลกับข้อความที่แยกจาก train และกันข้อความใกล้ซ้ำไม่ให้ข้ามชุด
+หากทดลองกับภาษาไทย ให้เตรียมข้อมูลที่มี label แล้วลอง `CountVectorizer(analyzer="char", ngram_range=(2, 4))` ซึ่งนับชุดตัวอักษรที่ติดกันยาว 2–4 ตัว ต้องฝึก Pipeline ใหม่และประเมินกับข้อความที่แยกจาก train รวมถึงกันข้อความใกล้ซ้ำไม่ให้ข้ามชุด
 
 </details>
 
 ## อ้างอิง
 
-- [Handbook: Naive Bayes](https://jakevdp.github.io/PythonDataScienceHandbook/05.05-naive-bayes.html)
-- [scikit-learn: Naive Bayes](https://scikit-learn.org/1.7/modules/naive_bayes.html)
-- [Text feature extraction](https://scikit-learn.org/1.7/modules/feature_extraction.html#text-feature-extraction)
+- [scikit-learn: Naive Bayes — สมมติฐานและข้อจำกัดของความน่าจะเป็น](https://scikit-learn.org/1.7/modules/naive_bayes.html)
+- [scikit-learn: MultinomialNB — alpha และ smoothing](https://scikit-learn.org/1.7/modules/generated/sklearn.naive_bayes.MultinomialNB.html)
+- [scikit-learn: CountVectorizer — vocabulary และการนับคำ](https://scikit-learn.org/1.7/modules/generated/sklearn.feature_extraction.text.CountVectorizer.html)
+- [scikit-learn: Text feature extraction — Bag-of-words](https://scikit-learn.org/1.7/modules/feature_extraction.html#text-feature-extraction)
+- [Handbook: Naive Bayes — อ่านเพิ่มเติม](https://jakevdp.github.io/PythonDataScienceHandbook/05.05-naive-bayes.html)
