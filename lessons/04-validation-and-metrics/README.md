@@ -8,7 +8,9 @@
 
 ## อ่านคะแนนเมื่อคลาสไม่สมดุล
 
-ถ้า 90% เป็นคลาส 0 ทาย 0 ทุกครั้งก็ได้ accuracy 90% แต่พลาดคลาส 1 ทั้งหมด บทนี้เรียกคลาส 1 ว่า **positive**
+ถ้าข้อมูล 90% เป็นคลาส 0 การทาย 0 ทุกครั้งจะได้ accuracy 90% แต่พลาดคลาส 1 ทั้งหมด
+
+บทนี้เรียกคลาส 1 ว่า **positive** และอ่านความผิดพลาดจากตารางนี้:
 
 | ค่าจริง / คำทำนาย | ทาย 0 | ทาย 1 |
 |---|---|---|
@@ -22,15 +24,26 @@
 | Recall | คลาส 1 จริง ตรวจพบกี่ส่วน | TP / (TP + FN) |
 | F1 | รวม precision และ recall | 2PR / (P + R) |
 
-เช่น TN=80, FP=10, FN=5, TP=5 จะได้ accuracy=0.85 แต่ precision≈0.333 และ recall=0.5 โค้ดใช้ `zero_division=0` ให้รายงาน 0 เมื่อสูตรนั้นหารด้วยศูนย์
+**ตัวอย่าง:** ถ้า TN=80, FP=10, FN=5 และ TP=5 จะได้ accuracy=0.85, precision≈0.333 และ recall=0.5
+
+โค้ดใช้ `zero_division=0` เพื่อรายงาน 0 เมื่อสูตรของ metric นั้นหารด้วยศูนย์
 
 ## เลือกด้วย validation
 
-ข้อมูล 1,500 แถวแบ่งเป็น train 900 / validation 300 / test 300: ฝึกบน train → เลือกจาก F1 บน validation → ฝึกตัวเลือกนั้นใหม่บน `X_dev` (train รวม validation 1,200 แถว) → ประเมิน test
+ข้อมูล 1,500 แถวแบ่งเป็น train 900 แถว, validation 300 แถว และ test 300 แถว แล้วทำตามลำดับนี้:
 
-ตัวเลือกใหม่คือ **Logistic Regression** ซึ่งแปลงคะแนนเชิงเส้นเป็นความน่าจะเป็น ใช้ threshold เริ่มต้น 0.5 แบ่งสองคลาส หากจะปรับ threshold ให้เลือกบน validation ตามต้นทุน FP/FN
+1. ฝึกโมเดลบน train
+2. เลือกโมเดลจาก F1 บน validation
+3. ฝึกตัวเลือกนั้นใหม่บน `X_dev` ซึ่งรวม train กับ validation เป็น 1,200 แถว
+4. ประเมินด้วย test
 
-ผลยังมี **average precision (AP)** ซึ่งสรุป precision/recall จากการเรียงคะแนนหลาย threshold ต้องส่งคะแนนของคลาส 1 จาก `predict_proba` ไม่ใช้ label ที่ทายแล้ว และ AP ไม่ใช่ accuracy
+**Logistic Regression:** โมเดลที่แปลงคะแนนเชิงเส้นเป็นความน่าจะเป็น แล้วใช้ threshold เริ่มต้น 0.5 ตัดสินระหว่างสองคลาส
+
+หากจะปรับ threshold ให้เลือกบน validation โดยพิจารณาต้นทุนของ FP และ FN
+
+**Average precision (AP):** คะแนนที่สรุป precision และ recall จากการเรียงคะแนนทำนายผ่านหลาย threshold
+
+การคำนวณ AP ใช้คะแนนคลาส 1 จาก `predict_proba` ไม่ใช้ label ที่ทายแล้ว และ AP มีความหมายต่างจาก accuracy
 
 ## ลงมือทำ
 
@@ -95,16 +108,23 @@ print(f"Test average precision: {average_precision_score(y_test, test_probabilit
 
 ## อ่านผล
 
-baseline มี accuracy สูงแต่ F1 เป็นศูนย์ เปรียบเทียบกับ logistic บน validation ก่อนอ่าน test confusion matrix: **แถวเป็นค่าจริง คอลัมน์เป็นคำทำนาย**
+baseline มี accuracy สูง แต่ F1 เป็นศูนย์ ให้เทียบ F1 กับ Logistic Regression บน validation ก่อนดูผล test
 
-สำหรับรายงานหลายคลาสจากบท 03: macro average เฉลี่ยทุกคลาสเท่ากัน ส่วน weighted average ถ่วงตามจำนวนตัวอย่าง (`support`)
+**Confusion matrix:** แถวเป็นค่าจริง ส่วนคอลัมน์เป็นคำทำนาย
+
+รายงานหลายคลาสจากบท 03 มีค่าเฉลี่ยสองแบบ:
+
+- **Macro average:** ให้น้ำหนักทุกคลาสเท่ากัน
+- **Weighted average:** ถ่วงน้ำหนักตามจำนวนตัวอย่างของคลาสนั้น (`support`)
 
 <details>
 <summary>ฝึกต่อพร้อมแนวคำตอบ</summary>
 
 **ลองคิด:** ถ้าต้องลด FN ควรดูอะไรและเลือก threshold จากชุดใด?
 
-**เฉลย:** ดู recall พร้อมติดตาม precision และใช้ validation เลือก threshold เช่น 0.3, 0.5, 0.7 ตรึงทางเลือกก่อนประเมิน test
+**เฉลย:** ดู recall พร้อมติดตาม precision
+
+ใช้ validation เปรียบเทียบ threshold เช่น 0.3, 0.5 และ 0.7 แล้วตรึงค่าที่เลือกก่อนประเมิน test
 
 </details>
 

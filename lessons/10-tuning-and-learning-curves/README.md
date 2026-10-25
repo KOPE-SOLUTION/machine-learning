@@ -8,26 +8,38 @@
 
 ## ใจความใหม่
 
-**Parameter** คือค่าที่เรียนจากข้อมูล เช่น coefficient; **hyperparameter** คือการตั้งค่าวิธีเรียน เช่น k ของ KNN
+- **Parameter:** ค่าที่เรียนจากข้อมูล เช่น coefficient
+- **Hyperparameter:** การตั้งค่าวิธีเรียน เช่น k ของ KNN
 
-Grid search ลองทุกชุดที่กำหนด: k=3, 5, 9 × weights สองแบบ = 6 ชุด ใช้ 5-fold CV รวม 30 fits แล้ว refit ผู้ชนะบน train ทั้งหมดอีกครั้ง
+**Grid search:** ลองทุกชุดค่าที่กำหนด แล้วเลือกจากคะแนน CV
 
-- `uniform` ให้เพื่อนบ้านลงคะแนนเท่ากัน; `distance` ให้น้ำหนักตัวที่ใกล้มากกว่า
-- `knn__n_neighbors` หมายถึง n_neighbors ของ step ชื่อ knn
-- `mean_test_score` คือค่าเฉลี่ย validation ใน CV; `std_test_score` คือการกระจายระหว่าง fold
-- `best_params_` คือค่าที่เลือก; `best_estimator_` คือ Pipeline ที่ refit แล้ว จึงเรียก `search.predict` ได้ทันที
+ตัวอย่าง: k=3, 5, 9 × weights สองแบบ = 6 ชุด หากใช้ 5-fold CV จะฝึก 30 ครั้ง แล้วฝึกชุดที่ชนะบน train ทั้งหมดอีกครั้ง เรียกว่า **refit**
 
-Scaler อยู่ใน Pipeline ตลอดการค้นหา คะแนน best CV ถูกใช้เลือกค่าแล้วจึงอาจสูงเกินจริง ต้องประเมิน test หลังเลือกเสร็จ
+| ชื่อในโค้ด | ความหมาย |
+|---|---|
+| `uniform` | ให้เพื่อนบ้านลงคะแนนเท่ากัน |
+| `distance` | ให้เพื่อนบ้านที่ใกล้มีน้ำหนักมากกว่า |
+| `knn__n_neighbors` | ค่า n_neighbors ของ step ชื่อ knn |
+| `mean_test_score` | ค่าเฉลี่ยคะแนน validation ใน CV |
+| `std_test_score` | ส่วนเบี่ยงเบนมาตรฐานของคะแนนระหว่าง fold |
+| `best_params_` | ชุดค่าที่เลือก |
+| `best_estimator_` | Pipeline ที่ refit แล้ว จึงเรียก `search.predict` ได้ทันที |
+
+Scaler อยู่ใน Pipeline ตลอดการค้นหา
+
+คะแนน best CV อาจสูงเกินจริง เพราะใช้คะแนนนี้เลือกค่าไปแล้ว จึงต้องประเมิน test หลังเลือกเสร็จ
 
 ## อ่าน learning curve
 
 | รูปแบบคะแนนเมื่อเพิ่มข้อมูลฝึก | สิ่งที่ควรตรวจ |
 |---|---|
 | train และ validation ต่ำใกล้กัน | feature หรือความสามารถโมเดลยังไม่พอ |
-| train สูง แต่ validation ต่ำกว่า | overfitting; ลองจำกัดความซับซ้อนหรือเพิ่มข้อมูล |
+| train สูง แต่ validation ต่ำกว่า | อาจ overfit ให้ลองจำกัดความซับซ้อนหรือเพิ่มข้อมูล |
 | validation สูงขึ้น | ข้อมูลเพิ่มอาจช่วย แต่ไม่รับประกันว่าจะดีขึ้นเสมอ |
 
-แกนนอนนับข้อมูลฝึก **ต่อ fold** จึงจบที่ 96 จาก train 120 แถว กราฟนี้ใช้ค่าที่เลือกจาก train เดิม เป็นเครื่องมือวินิจฉัย ไม่ใช่ผลประเมินอิสระอีกชุด
+**แกนนอน:** จำนวนข้อมูลฝึกต่อ fold จึงจบที่ 96 แถว จาก train ทั้งหมด 120 แถว
+
+กราฟนี้ใช้ค่าที่เลือกจาก train เดิม จึงเป็นเครื่องมือวินิจฉัย ไม่ใช่ผลประเมินอิสระอีกชุด
 
 ## ลงมือทำ
 
@@ -86,7 +98,9 @@ print(f"Final test accuracy: {accuracy_score(y_test, search.predict(X_test)):.3f
 
 ## อ่านผล
 
-อ่านตารางหกทางเลือก ตามด้วย best parameters และ learning curve สุดท้ายจึงดู test accuracy ภาพบันทึกที่ `outputs/10-tuning-and-learning-curves/learning-curve.png`
+อ่านผลตามลำดับ: ตารางหกทางเลือก → best parameters → learning curve → test accuracy
+
+ไฟล์ภาพ: `outputs/10-tuning-and-learning-curves/learning-curve.png`
 
 ![ผลการทดลอง 10-tuning-and-learning-curves](../../assets/figures/10-tuning-and-learning-curves-learning-curve.png)
 
@@ -95,7 +109,9 @@ print(f"Final test accuracy: {accuracy_score(y_test, search.predict(X_test)):.3f
 
 **ลองคิด:** k ห้าค่า × weights สองค่า × CV สี่ fold ต้อง fit กี่ครั้ง?
 
-**เฉลย:** 40 ครั้งสำหรับ CV และ refit อีก 1 ครั้ง ไม่ขยาย grid โดยเลือกจาก test ซ้ำ เพราะจะปรับเข้าหาความบังเอิญใน test
+**เฉลย:** ฝึก 40 ครั้งสำหรับ CV และ refit อีก 1 ครั้ง รวม 41 ครั้ง
+
+อย่าใช้ผล test เลือกว่าจะขยาย grid อย่างไรซ้ำ ๆ เพราะจะปรับโมเดลเข้าหาความบังเอิญใน test
 
 </details>
 
