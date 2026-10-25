@@ -12,34 +12,41 @@
 
 **Linear Regression — การถดถอยเชิงเส้น** เป็นโมเดล **Supervised Learning สำหรับ Regression** เรียนจาก feature พร้อมคำตอบตัวเลข เช่น ใช้ระยะทางทำนายระยะเวลาจัดส่ง
 
-บทนี้ใช้ feature เดียว จึงเขียนสมการเป็น **ŷ = b + wx** โดย ŷ คือคำทำนาย, w คือความชัน และ b คือค่าตัดแกน ในโค้ดอ่าน w จาก `coef_[0]` และ b จาก `intercept_`
+บทนี้ใช้ feature เดียว จึงเขียนสมการเป็น **ŷ = b + wx** โดย ŷ คือคำทำนาย:
 
-การ fit แบบ **least squares** เลือก w และ b ให้ผลรวมความผิดพลาดกำลังสองต่ำที่สุด
+- **b — intercept:** ค่าทำนายเมื่อ x = 0 อ่านจาก `intercept_`
+- **w — slope:** เมื่อ x เพิ่ม 1 ค่าทำนายเปลี่ยนไป w หน่วย อ่านจาก `coef_[0]`
 
-**ตัวอย่าง:** b=12, w=3.5 และ x=2 จะทายได้ 19 หากค่าจริงคือ 21 แปลว่าทายต่ำไป 2 หน่วย
+การ fit แบบ **least squares** เลือก w และ b ให้ผลรวมความผิดพลาดกำลังสองของ train ต่ำที่สุด โดยวัดความผิดพลาดในแนวดิ่งที่ x เดียวกัน
 
-**Residual:** ค่าจริงลบคำทำนาย (`y − ŷ`) ตัวอย่างข้างต้นจึงมี residual เท่ากับ 2
+**Residual:** ค่าจริงลบคำทำนาย (`y − ŷ`)
 
-ข้อมูลในบทสร้างจากสมการเส้นตรงนี้แล้วเติม noise
+![ตัวอย่างเส้นทำนาย y-hat เท่ากับ 12 บวก 3.5x: เมื่อ x เท่ากับ 2 ทายได้ 19 แต่ค่าจริง 21 จึงมี residual บวก 2 และทายต่ำกว่าค่าจริง](../../assets/figures/05-linear-regression-residual-explained.png)
 
-**หลักการทำงาน:** เรียน w และ b จากคู่ x/y ใน train แล้วแทน x ที่ต้องการทำนายในสมการเดิม กรณีหลาย feature จะมีน้ำหนักแยกให้แต่ละคอลัมน์
+**อ่านภาพ:** กำหนด b = 12, w = 3.5 และ x = 2 จะทายได้ 19 หากค่าจริงคือ 21 จะได้ residual = 21 − 19 = +2 หมายถึงทายต่ำไป 2 หน่วย ส่วน residual ติดลบหมายถึงทายสูงกว่าค่าจริง
 
-- **จุดเด่น:** เป็นจุดเริ่มต้นที่เรียบง่าย ทำนายได้รวดเร็ว และอ่านได้ว่าแต่ละ feature มีน้ำหนักในสมการอย่างไร
-- **ข้อจำกัด:** เส้นตรงอาจจับความสัมพันธ์โค้งได้ไม่ครบ และ least squares ไวต่อค่าผิดปกติที่สร้าง error ใหญ่ การใช้โมเดลนอกช่วงข้อมูลฝึกต้องพิจารณาว่าความสัมพันธ์เดิมยังใช้ได้หรือไม่
+ภาพนี้เป็นตัวอย่างอธิบายสมการ ไม่ใช่เส้นที่ fit ได้ใน Cell 2 ([เปิดภาพขนาดเต็ม](../../assets/figures/05-linear-regression-residual-explained.svg))
+
+**หลักการทำงาน:** เรียน w และ b จากคู่ x/y ใน train แล้วใช้สมการนั้นทำนาย x ใหม่ กรณีหลาย feature จะมีน้ำหนักแยกให้แต่ละคอลัมน์
+
+- **จุดเด่น:** เป็นจุดเริ่มต้นที่เรียบง่าย ทำนายได้รวดเร็ว และอ่านน้ำหนักในสมการได้
+- **ข้อจำกัด:** เส้นตรงอาจจับความสัมพันธ์โค้งได้ไม่ครบ และ least squares ไวต่อค่าผิดปกติที่สร้าง error ใหญ่ หากใช้ทำนายนอกช่วงข้อมูลฝึกต้องพิจารณาว่าความสัมพันธ์เดิมยังใช้ได้หรือไม่
 
 ### วัดความผิดพลาดอย่างไร
 
-| Metric | ความหมาย |
+| Metric | ชื่อเต็มและวิธีอ่าน |
 |---|---|
-| MAE | ค่าเฉลี่ยของขนาดความผิดพลาด ยิ่งต่ำยิ่งดี |
-| RMSE | รากของค่าเฉลี่ยความผิดพลาดกำลังสอง ให้น้ำหนักความผิดพลาดใหญ่มากกว่า MAE |
-| R² | เทียบ squared error กับการทายค่าเฉลี่ยของชุดประเมิน โดย 1 คือทายตรงทั้งหมด, 0 คือเท่าค่าเฉลี่ยนั้น และติดลบได้ |
+| **MAE** | **Mean Absolute Error:** นำขนาด residual ที่ไม่คิดเครื่องหมายมาเฉลี่ย ยิ่งต่ำยิ่งดี |
+| **RMSE** | **Root Mean Squared Error:** ยกกำลังสอง residual แล้วเฉลี่ยและถอดราก ยิ่งต่ำยิ่งดี และไวต่อความผิดพลาดขนาดใหญ่มากกว่า MAE |
+| **R²** | **Coefficient of Determination:** เทียบความผิดพลาดกำลังสองกับการทายค่าเฉลี่ยของชุดประเมิน; 1 คือทายตรงทั้งหมด, 0 คือเท่าการทายค่าเฉลี่ยนั้น และค่าติดลบคือแย่กว่า |
 
-- **หน่วย:** MAE และ RMSE มีหน่วยเดียวกับ y ส่วน R² ไม่ใช่เปอร์เซ็นต์ความถูกต้อง
-- **Baseline:** โค้ดเรียนค่าเฉลี่ยจาก train ซึ่งอาจต่างจากค่าเฉลี่ยชุดประเมินที่ใช้ในนิยาม R²
-- **กราฟ residual:** ควรกระจายรอบศูนย์ หากเหลือรูปโค้ง โมเดลอาจยังจับรูปแบบไม่ครบ
+**ตัวอย่างสมมติ:** residual ของ 3 แถวเป็น `[1, -1, 4]` จะได้ MAE = (1 + 1 + 4) / 3 = **2** และ RMSE = √((1² + (−1)² + 4²) / 3) ≈ **2.45**
 
-กราฟนี้ไม่ได้ยืนยันเหตุและผล หากนำผล test ไปปรับโมเดลต่อ ต้องกันข้อมูลที่ยังไม่ใช้ตัดสินใจไว้ประเมินใหม่
+- **หน่วย:** MAE และ RMSE มีหน่วยเดียวกับ y เช่น ถ้า y เป็นนาที MAE = 2 คือคลาดเคลื่อนโดยเฉลี่ย 2 นาที ส่วน R² ไม่ใช่เปอร์เซ็นต์ความถูกต้อง
+- **Baseline:** `DummyRegressor` เรียนค่าเฉลี่ยจาก train ซึ่งอาจต่างจากค่าเฉลี่ยของชุดประเมินที่ใช้เป็นจุดอ้างอิงใน R²
+- **กราฟ residual:** ดูว่าจุดกระจายรอบศูนย์โดยไม่มีรูปแบบชัดเจนหรือไม่ หากเหลือรูปโค้ง โมเดลอาจยังจับรูปแบบไม่ครบ
+
+ผลนี้ไม่ได้ยืนยันเหตุและผล บทนี้กำหนดโมเดลและการทดลองไว้ล่วงหน้า จึงใช้ train/test เพื่อฝึกและรายงานผล หากจะเลือกหรือปรับโมเดลเพิ่มเติม ให้ใช้ validation หรือ cross-validation (CV) ตามบท 04 และเก็บข้อมูลที่ยังไม่ใช้ตัดสินใจไว้ประเมินท้ายสุด
 
 ## ลงมือทำ
 
@@ -63,7 +70,9 @@ from sklearn.model_selection import train_test_split
 rng = np.random.default_rng(42)
 X = rng.uniform(0, 10, size=(240, 1))
 y = 12 + 3.5 * X[:, 0] + rng.normal(0, 3, size=len(X))
-X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=42)
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.25, random_state=42
+)
 ```
 
 **อ่านโค้ด**
@@ -71,7 +80,10 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=42)
 - `np.random.default_rng(42)` สร้างตัวสุ่มที่ทำซ้ำได้ เพื่อให้ตัวอย่างและ noise เหมือนเดิมเมื่อรันใหม่
 - `size=(240, 1)` สร้าง X เป็น 240 แถว หนึ่ง feature ส่วน `X[:, 0]` หยิบค่าคอลัมน์นั้นมาเป็นเวกเตอร์สำหรับสร้าง y
 - `12 + 3.5 * X[:, 0]` คือสมการจริงที่ตั้งไว้ แล้วเติม noise จาก `rng.normal(0, 3, ...)` ซึ่งมีค่าเฉลี่ย 0 และส่วนเบี่ยงเบนมาตรฐาน 3
-- `train_test_split` ในบทนี้ไม่ระบุ `test_size` จึงใช้ค่าเริ่มต้น 25% ได้ train 180 แถว และ test 60 แถว
+- `train_test_split(..., test_size=0.25)` กัน test 25% ได้ train 180 แถว และ test 60 แถว
+- สมการ `12 + 3.5 * x` ใช้สร้างข้อมูลจำลองเท่านั้น โมเดลจะเรียน b และ w จาก train เอง ไม่ได้รับค่า 12 และ 3.5 ตอน fit
+
+**ผลที่ได้:** Cell นี้สร้างตัวแปร จึงยังไม่มี output แสดงใต้ cell
 
 ### Cell 2 — ฝึกเส้นตรงและวัดความผิดพลาด
 
@@ -108,7 +120,9 @@ axes[1].set(xlabel="Prediction", ylabel="Residual")
 fig.tight_layout()
 out = Path("outputs/05-linear-regression")
 out.mkdir(parents=True, exist_ok=True)
-fig.savefig(out / "regression.png", dpi=140)
+figure_path = out / "regression.png"
+fig.savefig(figure_path, dpi=140)
+print("Saved figure:", figure_path.resolve())
 plt.show()
 plt.close(fig)
 ```
@@ -117,20 +131,37 @@ plt.close(fig)
 
 - `np.linspace(...).reshape(-1, 1)` สร้างจุด x สำหรับวาดเส้น แล้วจัดให้เป็นข้อมูลสองมิติที่โมเดลรับ โดย `-1` ให้ NumPy คำนวณจำนวนแถวเอง
 - `model.predict(grid)` สร้างค่าบนเส้นที่ฝึกแล้ว ไม่ได้ฝึกโมเดลใหม่ตามจุด grid
-- `y_test - pred` คือ residual ใช้วาดเทียบกับคำทำนายในกราฟขวา จุดเหนือศูนย์หมายถึงทายต่ำกว่าค่าจริง
+- `y_test - pred` คือ residual ใช้วาดเทียบกับคำทำนายในกราฟขวา จุดเหนือศูนย์หมายถึงทายต่ำกว่าค่าจริง ส่วนจุดใต้ศูนย์คือทายสูงกว่าค่าจริง
 - `axhline(0)` วางเส้นอ้างอิง residual ศูนย์ ส่วน `savefig` บันทึกภาพก่อนปิด figure ตามวิธีในบท 02
+- `Path("outputs/05-linear-regression")` อ้างอิงจากโฟลเดอร์ที่ notebook ทำงาน ส่วน `figure_path.resolve()` แสดงตำแหน่งเต็มของไฟล์ที่บันทึก
+
+**ผลที่ได้:** ตำแหน่งไฟล์จาก `Saved figure:` และกราฟสองช่อง โดย `plt.show()` แสดงกราฟก่อน `plt.close(fig)` ปิด figure
 <!-- CODE:END -->
 
 ## อ่านผล
 
-ได้ slope ใกล้ 3.5 และ intercept ใกล้ 12 พร้อมคะแนน MAE, RMSE และ R²
+ตัวอย่างผลเมื่อใช้ค่าตั้งต้นในบท:
+
+```text
+Baseline MAE: 8.599
+Linear MAE: 2.663
+Linear RMSE: 3.253
+Linear R2: 0.895
+Learned intercept=11.599, slope=3.567
+```
+
+Linear Regression มี MAE ต่ำกว่า baseline บน test ชุดนี้ โดยคลาดเคลื่อนเฉลี่ยประมาณ 2.663 หน่วย ส่วน R² = 0.895 ไม่ได้หมายถึงทายถูก 89.5%
+
+ได้ slope ใกล้ 3.5 และ intercept ใกล้ 12 แต่ไม่จำเป็นต้องตรงพอดี เพราะข้อมูลฝึกมี noise และมีจำนวนจำกัด
 
 - **กราฟซ้าย:** เทียบข้อมูลกับเส้นทำนาย
 - **กราฟขวา:** แสดง residual โดยจุดเหนือศูนย์หมายถึงทายต่ำกว่าค่าจริง
 
-ไฟล์ภาพ: `outputs/05-linear-regression/regression.png`
+ไฟล์ภาพ: `outputs/05-linear-regression/regression.png` ใต้โฟลเดอร์ที่ notebook ทำงาน โดย Cell 3 พิมพ์ตำแหน่งเต็มหลังบันทึก
 
-![ผลการทดลอง 05-linear-regression](../../assets/figures/05-linear-regression-regression.png)
+หาก notebook ทำงานจากโฟลเดอร์ `practics` จะได้ `practics/outputs/05-linear-regression/regression.png`; เมื่อเปิด notebook ของบทโดยตรง อาจได้โฟลเดอร์ปลายทางต่างกัน ให้ดูบรรทัด `Saved figure:` เป็นหลัก
+
+![ผลจาก Cell 3: กราฟซ้ายแสดงข้อมูล test และเส้นทำนาย กราฟขวาแสดง residual เทียบกับค่าทำนายและเส้นศูนย์](../../assets/figures/05-linear-regression-regression.png)
 
 <details>
 <summary>ฝึกต่อพร้อมแนวคำตอบ</summary>
@@ -146,4 +177,7 @@ plt.close(fig)
 ## อ้างอิง
 
 - [Handbook: Linear Regression](https://jakevdp.github.io/PythonDataScienceHandbook/05.06-linear-regression.html)
-- [scikit-learn: Linear models](https://scikit-learn.org/1.7/modules/linear_model.html)
+- [scikit-learn: LinearRegression และ least squares](https://scikit-learn.org/1.7/modules/generated/sklearn.linear_model.LinearRegression.html)
+- [scikit-learn: Mean Absolute Error](https://scikit-learn.org/1.7/modules/generated/sklearn.metrics.mean_absolute_error.html)
+- [scikit-learn: Root Mean Squared Error](https://scikit-learn.org/1.7/modules/generated/sklearn.metrics.root_mean_squared_error.html)
+- [scikit-learn: R² score](https://scikit-learn.org/1.7/modules/generated/sklearn.metrics.r2_score.html)

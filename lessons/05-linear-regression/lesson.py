@@ -11,7 +11,9 @@ from sklearn.model_selection import train_test_split
 rng = np.random.default_rng(42)
 X = rng.uniform(0, 10, size=(240, 1))
 y = 12 + 3.5 * X[:, 0] + rng.normal(0, 3, size=len(X))
-X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=42)
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.25, random_state=42
+)
 
 # %% [markdown]
 # **อ่านโค้ด**
@@ -19,7 +21,10 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=42)
 # - `np.random.default_rng(42)` สร้างตัวสุ่มที่ทำซ้ำได้ เพื่อให้ตัวอย่างและ noise เหมือนเดิมเมื่อรันใหม่
 # - `size=(240, 1)` สร้าง X เป็น 240 แถว หนึ่ง feature ส่วน `X[:, 0]` หยิบค่าคอลัมน์นั้นมาเป็นเวกเตอร์สำหรับสร้าง y
 # - `12 + 3.5 * X[:, 0]` คือสมการจริงที่ตั้งไว้ แล้วเติม noise จาก `rng.normal(0, 3, ...)` ซึ่งมีค่าเฉลี่ย 0 และส่วนเบี่ยงเบนมาตรฐาน 3
-# - `train_test_split` ในบทนี้ไม่ระบุ `test_size` จึงใช้ค่าเริ่มต้น 25% ได้ train 180 แถว และ test 60 แถว
+# - `train_test_split(..., test_size=0.25)` กัน test 25% ได้ train 180 แถว และ test 60 แถว
+# - สมการ `12 + 3.5 * x` ใช้สร้างข้อมูลจำลองเท่านั้น โมเดลจะเรียน b และ w จาก train เอง ไม่ได้รับค่า 12 และ 3.5 ตอน fit
+#
+# **ผลที่ได้:** Cell นี้สร้างตัวแปร จึงยังไม่มี output แสดงใต้ cell
 
 # %% Cell 2 — ฝึกเส้นตรงและวัดความผิดพลาด
 baseline = DummyRegressor(strategy="mean").fit(X_train, y_train)
@@ -52,7 +57,9 @@ axes[1].set(xlabel="Prediction", ylabel="Residual")
 fig.tight_layout()
 out = Path("outputs/05-linear-regression")
 out.mkdir(parents=True, exist_ok=True)
-fig.savefig(out / "regression.png", dpi=140)
+figure_path = out / "regression.png"
+fig.savefig(figure_path, dpi=140)
+print("Saved figure:", figure_path.resolve())
 plt.show()
 plt.close(fig)
 
@@ -61,5 +68,8 @@ plt.close(fig)
 #
 # - `np.linspace(...).reshape(-1, 1)` สร้างจุด x สำหรับวาดเส้น แล้วจัดให้เป็นข้อมูลสองมิติที่โมเดลรับ โดย `-1` ให้ NumPy คำนวณจำนวนแถวเอง
 # - `model.predict(grid)` สร้างค่าบนเส้นที่ฝึกแล้ว ไม่ได้ฝึกโมเดลใหม่ตามจุด grid
-# - `y_test - pred` คือ residual ใช้วาดเทียบกับคำทำนายในกราฟขวา จุดเหนือศูนย์หมายถึงทายต่ำกว่าค่าจริง
+# - `y_test - pred` คือ residual ใช้วาดเทียบกับคำทำนายในกราฟขวา จุดเหนือศูนย์หมายถึงทายต่ำกว่าค่าจริง ส่วนจุดใต้ศูนย์คือทายสูงกว่าค่าจริง
 # - `axhline(0)` วางเส้นอ้างอิง residual ศูนย์ ส่วน `savefig` บันทึกภาพก่อนปิด figure ตามวิธีในบท 02
+# - `Path("outputs/05-linear-regression")` อ้างอิงจากโฟลเดอร์ที่ notebook ทำงาน ส่วน `figure_path.resolve()` แสดงตำแหน่งเต็มของไฟล์ที่บันทึก
+#
+# **ผลที่ได้:** ตำแหน่งไฟล์จาก `Saved figure:` และกราฟสองช่อง โดย `plt.show()` แสดงกราฟก่อน `plt.close(fig)` ปิด figure
