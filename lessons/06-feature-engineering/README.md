@@ -4,48 +4,67 @@
 
 บทนี้เตรียมตารางที่มีตัวเลข หมวดหมู่ และค่าหาย ด้วย **ColumnTransformer** แล้วทำนายค่าบริการส่งสินค้าจำลอง
 
-**ใช้สิ่งที่เรียนแล้ว:** pandas, Pipeline/StandardScaler จากบท 03 และ regression/MAE จากบท 05
+**ใช้สิ่งที่เรียนแล้ว:** pandas, Pipeline/StandardScaler จาก[บท 03](../03-first-classifier/README.md) และ regression/MAE จาก[บท 05](../05-linear-regression/README.md)
 
-## Feature Engineering และการเตรียมข้อมูล
+## เตรียมข้อมูลคนละชนิดให้โมเดลใช้ร่วมกัน
 
-**Feature Engineering — การสร้างหรือปรับรูปแบบ feature** คือการทำให้ข้อมูลแทนสิ่งที่ต้องการทำนายได้เหมาะสม เช่น สร้างระยะทางจากพิกัด หรือเปลี่ยนประเภทบริการเป็นตัวเลข บทนี้เน้นการเตรียมคอลัมน์ที่มีอยู่ให้โมเดลรับได้
+**Feature Engineering — การสร้างหรือปรับรูปแบบ feature** คือการสร้างหรือแปลงข้อมูลนำเข้าให้โมเดลใช้ได้เหมาะสม เช่น สร้างระยะทางจากพิกัด หรือเปลี่ยนประเภทบริการเป็นตัวเลข บทนี้เน้นเตรียมคอลัมน์ที่มีอยู่ให้โมเดลรับได้
 
-**ColumnTransformer** เป็นเครื่องมือจัดการคอลัมน์ ไม่ใช่อัลกอริทึมทำนาย: ส่งแต่ละกลุ่มคอลัมน์ไปยังขั้นตอนที่เหมาะ แล้วต่อผลกลับเป็นตาราง feature ชุดเดียว
+**ColumnTransformer** เลือกคอลัมน์ ส่งแต่ละกลุ่มไปเตรียมด้วยวิธีที่เหมาะ แล้วต่อผลเป็น feature ชุดเดียว จึงเป็นเครื่องมือเตรียมข้อมูล ไม่ใช่โมเดลทำนาย
 
-**จุดเด่น:** ตัวเลขและหมวดหมู่ใช้วิธีเตรียมต่างกันได้ภายใน Pipeline เดียว **ข้อจำกัด:** ต้องกำหนดชนิดและความหมายของคอลัมน์ให้ถูก เครื่องมือไม่ได้เลือก feature ที่เหมาะให้โดยอัตโนมัติ
+![ตัวเลขผ่านการเติม median และปรับสเกล ส่วน service ผ่านการเติมค่าที่พบบ่อยและ one-hot ก่อนรวมเป็น 4 features เข้า Ridge พร้อมตัวอย่างหมวดหมู่ใหม่](../../assets/figures/06-feature-engineering-preprocessing.png)
 
-### เติมค่าหายและแทนหมวดหมู่
+*ภาพรวมตรงกับขั้นตอนใน Cell 2; ตัวอย่าง median ด้านล่างเป็นข้อมูลสมมติ ส่วนลำดับ express/standard ตรงกับ encoder ในบทนี้* · [เปิดภาพ SVG](../../assets/figures/06-feature-engineering-preprocessing.svg)
 
-**SimpleImputer:** เติมค่าหายโดยเรียนค่าทดแทนจาก train แล้วใช้ค่าเดิมกับข้อมูลใหม่ จึงต้องอยู่ใน Pipeline แทนการเติมทั้งตารางก่อนแบ่งข้อมูล
+### SimpleImputer: เติมค่าหายจาก train
 
-**One-hot encoding:** แยกคอลัมน์ตามหมวดหมู่ เพื่อไม่สร้างลำดับสมมติแบบรหัส 0, 1, 2
+- **ตัวเลข:** `strategy="median"` ใช้มัธยฐานของคอลัมน์ เช่น train มี `[1, 3, 5, NaN]` จะเรียนค่า 3 ไว้เติมช่องว่าง ทั้งใน train และข้อมูลใหม่
+- **หมวดหมู่:** `strategy="most_frequent"` ใช้ค่าที่พบบ่อย เช่น `[express, express, standard]` จะเรียนค่า express ไว้เติมช่องว่าง
 
-ตัวอย่าง: ถ้าลำดับคอลัมน์คือ standard และ express จะได้ standard→`[1, 0]` และ express→`[0, 1]` ตรวจลำดับจริงด้วย `get_feature_names_out()`
+**แบ่ง train/test ก่อน fit ตัวเติมค่า** เพื่อไม่ให้ข้อมูล test มาช่วยกำหนดค่าที่ใช้ฝึก โมเดลในบทนี้จึงรวมการเตรียมข้อมูลไว้ใน Pipeline
 
-| ข้อมูลเข้า | ขั้นตอนใน ColumnTransformer |
-|---|---|
-| distance_km, weight_kg | เติม median → scale |
-| service | เติมค่าที่พบบ่อย → one-hot |
-| ผลจากทั้งสองทาง | ต่อคอลัมน์ → ส่งเข้า Ridge |
+ข้อมูลจำลองจะมีค่าน้ำหนักหาย แต่ service ยังครบ ขั้นตอนเติม service เตรียมไว้รองรับช่องว่างที่เป็น `np.nan` ไม่ได้เปลี่ยนข้อความที่ไม่เคยพบให้เป็นค่าที่พบบ่อย
 
-### Ridge Regression คืออะไร
+### One-hot encoding: เปลี่ยนหมวดหมู่เป็นคอลัมน์ 0/1
 
-**Ridge Regression — การถดถอยแบบริดจ์** เป็นโมเดล Supervised Learning สำหรับทำนายตัวเลข โดยต่อยอด Linear Regression ด้วย **L2 regularization** หรือการเพิ่มโทษจากผลรวมกำลังสองของ coefficient
+ใช้คอลัมน์แยกแทนการกำหนดรหัสที่ทำให้โมเดลตีความว่าประเภทบริการมีลำดับหรือระยะห่างเชิงตัวเลข โดยตรวจลำดับคอลัมน์จริงด้วย `get_feature_names_out()`
 
-**หลักการ:** ระหว่าง fit โมเดลต้องลดทั้งความผิดพลาดในการทำนายและขนาดค่าน้ำหนัก เช่น น้ำหนัก 10 มีโทษกำลังสอง 100 แต่น้ำหนัก 2 มีโทษ 4 ก่อนคูณด้วย `alpha`
+| service | service_express | service_standard |
+|---|---:|---:|
+| express | 1 | 0 |
+| standard | 0 | 1 |
+| same_day ที่ไม่เคยพบ | 0 | 0 |
 
-- **จุดเด่น:** ช่วยให้ค่าน้ำหนักมีเสถียรภาพขึ้นเมื่อ feature บางคอลัมน์ให้ข้อมูลซ้ำกัน และอาจลด overfitting
-- **ข้อจำกัด:** ถ้าลงโทษแรงเกินไปอาจเรียนรูปแบบได้น้อยลง ยังใช้ความสัมพันธ์เชิงเส้นใน feature ที่ป้อนเข้าไป
+แถวสุดท้ายเป็นผลของ `handle_unknown="ignore"` เมื่อ encoder เรียนเพียง express และ standard **ไม่มีคอลัมน์ same_day เพิ่มขึ้นระหว่าง predict** และโมเดลยังไม่เคยเรียนค่าบริการชนิดนี้
 
-ค่า `alpha` คุมความแรงของโทษ หากจะเลือกค่าให้ใช้ validation หรือ CV บทนี้ใช้ Ridge ทำนายค่าจัดส่งหลังเตรียมตัวเลขและประเภทบริการแล้ว
+**จุดเด่นของ ColumnTransformer:** เตรียมตัวเลขและหมวดหมู่ด้วยวิธีต่างกันได้ภายใน Pipeline เดียว
 
-**หมวดหมู่ใหม่:** `handle_unknown="ignore"` แปลง service ที่ไม่เคยเห็นเป็นศูนย์ทุกคอลัมน์ของ field นั้น โปรแกรมจึงรันได้ แต่โมเดลยังไม่เคยเรียนบริการใหม่นี้
+**ข้อจำกัด:** ต้องเลือกคอลัมน์และวิธีเตรียมให้เหมาะเอง การเติม median ไม่ได้กู้ค่าน้ำหนักจริงกลับมา ส่วน one-hot อาจสร้างคอลัมน์จำนวนมากเมื่อมีหลายหมวดหมู่
 
-การเติม median เป็นวิธีตัวอย่าง ต้องพิจารณาสาเหตุของค่าหายก่อนนำไปใช้จริง
+## Ridge Regression เพิ่มอะไรจากบท 05
+
+**Ridge Regression — การถดถอยแบบริดจ์** เป็นโมเดล Supervised Learning สำหรับทำนายตัวเลข โดยต่อยอด Linear Regression ด้วย **L2 regularization** หรือโทษจากผลรวมกำลังสองของ coefficient (ค่าน้ำหนักของ feature)
+
+![Ridge ลดผลรวมความผิดพลาดกำลังสองบน train บวก alpha คูณผลรวมกำลังสองของน้ำหนัก พร้อมตัวอย่างน้ำหนัก 2 และลบ 1 ได้โทษ 5 เมื่อ alpha เท่ากับ 1](../../assets/figures/06-feature-engineering-ridge.png)
+
+*ภาพอธิบายสิ่งที่ Ridge ลดระหว่าง fit; ตัวเลขในตัวอย่างไม่ใช่น้ำหนักที่ได้จาก Cell 2* · [เปิดภาพ SVG](../../assets/figures/06-feature-engineering-ridge.svg)
+
+อ่านสูตรเป็นสองส่วน: **ผลรวม residual² บน train + alpha × ผลรวม weight²** โดย `y` คือค่าจริง, `ŷ` คือค่าทำนาย, `w` คือน้ำหนัก, `n` คือจำนวนแถว และ `p` คือจำนวน feature หลังแปลง ส่วน intercept ไม่รวมในโทษนี้
+
+เช่น น้ำหนัก `[2, -1]` และ `alpha=1` ให้โทษ `1 × (2² + (-1)²) = 5` ซึ่งนำไปบวกกับความผิดพลาดบน train ไม่ใช่ค่า MAE
+
+- **จุดเด่น:** ช่วยควบคุมน้ำหนักเมื่อ feature ให้ข้อมูลซ้ำกัน และอาจลด overfitting หรือการเรียนรายละเอียดของ train มากจนใช้กับข้อมูลใหม่ได้ไม่ดี
+- **ข้อจำกัด:** โทษแรงเกินไปอาจทำให้เรียนรูปแบบได้น้อยลง และโมเดลยังใช้ความสัมพันธ์เชิงเส้นใน feature ที่ป้อนเข้าไป
+
+`alpha` ยิ่งมาก ยิ่งให้น้ำหนักกับโทษมากขึ้น เราปรับสเกลคอลัมน์ตัวเลขก่อนใช้ Ridge เพราะขนาด coefficient ขึ้นกับหน่วยของ feature
+
+บทนี้กำหนด `alpha=1.0` ล่วงหน้าเพื่อเน้นการเตรียมข้อมูล หากจะเลือกค่า alpha ให้ใช้ validation หรือ Cross-validation (CV) ตามแนวทาง[บท 04](../04-validation-and-metrics/README.md) แล้วเก็บ test ไว้ประเมินครั้งสุดท้าย
 
 ## ลงมือทำ
 
-สร้าง Notebook ใหม่แล้วรัน **Cell 1–3 ตามลำดับ** หรือเปิด [Notebook ของบทนี้](lesson.ipynb) ใช้ kernel เดิมได้เลย อ่านคำอธิบายใต้โค้ดแต่ละช่วงประกอบผลที่ได้
+สร้าง Notebook ใหม่แล้วรัน **Cell 1–3 ตามลำดับ** หรือเปิด [Notebook ของบทนี้](lesson.ipynb) ใช้ kernel เดิมที่มี scikit-learn 1.7.1 ได้เลย
+
+ภาพด้านบนฝังไว้ใน README และ notebook แล้ว ส่วนโค้ดบทนี้แสดงตารางและคำทำนาย จึงไม่มีไฟล์กราฟให้บันทึก
 
 <!-- CODE:CELLS -->
 
@@ -72,16 +91,22 @@ service = rng.choice(["standard", "express"], n)
 y = 30 + 2 * distance + 5 * weight + 40 * (service == "express") + rng.normal(0, 8, n)
 X = pd.DataFrame({"distance_km": distance, "weight_kg": weight, "service": service})
 X.loc[rng.choice(n, 30, replace=False), "weight_kg"] = np.nan
-X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=42)
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.25, random_state=42
+)
+print("Train/Test rows:", len(X_train), len(X_test))
+print("Missing values (train):", X_train.isna().sum().to_dict())
+print("First three training rows:\n", X_train.iloc[:3].round(3).to_string(index=False))
 ```
 
 **อ่านโค้ด**
 
-- `y = 30 + ...` สร้างค่าบริการจำลองจากระยะทาง น้ำหนัก ประเภทบริการ และ noise
-- `40 * (service == "express")` เพิ่มค่าบริการ 40 เฉพาะแถว express โดยเงื่อนไข True/False ทำหน้าที่เป็น 1/0
-- `pd.DataFrame(...)` รวม feature ทั้งสามให้มีชื่อคอลัมน์ ซึ่งจะใช้เลือกวิธีแปลงข้อมูลใน Cell ถัดไป
-- `rng.choice(n, 30, replace=False)` สุ่ม index 30 แถวแบบไม่ซ้ำ แล้ว `X.loc[..., "weight_kg"] = np.nan` ทำให้น้ำหนักของแถวเหล่านั้นหายไปเพื่อจำลองข้อมูลไม่ครบ
-- สร้าง y ก่อนทำค่าหาย เพื่อจำลองว่าค่าบริการมีคำตอบอยู่แล้ว แต่ข้อมูลน้ำหนักบางแถวไม่ได้ถูกบันทึก
+- `y = 30 + ...` สร้างค่าบริการจำลองจากระยะทาง น้ำหนัก ประเภทบริการ และ noise ไม่ใช่อัตราค่าจัดส่งจริง และไม่ได้ส่งสูตรนี้ให้โมเดล
+- `40 * (service == "express")` เพิ่มค่าบริการ 40 เฉพาะ express โดย True/False ทำหน้าที่เป็น 1/0
+- `pd.DataFrame(...)` สร้าง X ที่มีชื่อคอลัมน์ เพื่อให้ ColumnTransformer เลือกแต่ละกลุ่มไปแปลงได้
+- `rng.choice(n, 30, replace=False)` เลือก 30 แถวไม่ซ้ำ แล้วใส่ `np.nan` ในน้ำหนัก สร้าง y ก่อนทำค่าหายเพื่อจำลองว่ามีคำตอบแล้ว แต่บันทึก feature ไม่ครบ
+- `test_size=0.25` กัน 100 แถวไว้ทดสอบ อีก 300 แถวใช้ฝึก โดยยังไม่คำนวณค่าทดแทนหรือ fit ตัวแปลงใด
+- ผลท้าย cell แสดงจำนวนแถว ค่าหายของ train และข้อมูล 3 แถวก่อนแปลง เพื่อเทียบกับ Cell 2
 
 ### Cell 2 — เตรียมแต่ละชนิดข้อมูลแล้วฝึก Ridge
 
@@ -89,7 +114,7 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=42)
 numeric = make_pipeline(SimpleImputer(strategy="median"), StandardScaler())
 categorical = make_pipeline(
     SimpleImputer(strategy="most_frequent"),
-    OneHotEncoder(handle_unknown="ignore"),
+    OneHotEncoder(handle_unknown="ignore", sparse_output=False),
 )
 preprocess = ColumnTransformer([
     ("numeric", numeric, ["distance_km", "weight_kg"]),
@@ -100,41 +125,64 @@ model.fit(X_train, y_train)
 baseline = DummyRegressor(strategy="median").fit(X_train, y_train)
 print(f"Baseline MAE: {mean_absolute_error(y_test, baseline.predict(X_test)):.3f}")
 print(f"Test MAE (synthetic cost units): {mean_absolute_error(y_test, model.predict(X_test)):.3f}")
-print("Transformed columns:", preprocess.get_feature_names_out())
+feature_names = preprocess.get_feature_names_out()
+print("Transformed columns:", feature_names)
 preview = preprocess.transform(X_train.iloc[:3])
 print("First three transformed rows:\n",
-      pd.DataFrame(preview, columns=preprocess.get_feature_names_out()).round(3).to_string(index=False))
+      pd.DataFrame(preview, columns=feature_names).round(3).to_string(index=False))
 ```
 
 **อ่านโค้ด**
 
-- `numeric` เป็น Pipeline ที่เติมค่าหายด้วย median แล้วปรับสเกล ส่วน `categorical` เติมค่าที่พบบ่อยแล้วทำ one-hot
-- แต่ละรายการใน `ColumnTransformer` มีสามส่วน: ชื่อขั้นตอน, ตัวแปลง และรายชื่อคอลัมน์ที่จะส่งเข้าไป
-- `make_pipeline(preprocess, Ridge(alpha=1.0))` รวมผลจากตัวแปลงทั้งสองทางก่อนส่งเข้า Ridge โดย `fit` เรียนทุกขั้นจาก train
-- `get_feature_names_out()` คืนชื่อคอลัมน์หลังแปลง เช่น คอลัมน์ service ที่แตกออกเป็น one-hot
-- `preprocess.transform(X_train.iloc[:3])` ใช้ค่าที่เรียนไว้แปลงสามแถวแรกเป็นตัวอย่าง โดยไม่ได้ fit ใหม่
-- `DummyRegressor(strategy="median")` ให้ baseline ทายมัธยฐานของ y_train เพื่อเทียบ MAE กับโมเดล
+- `numeric` เติม median ก่อนปรับสเกล ส่วน `categorical` เติมค่าที่พบบ่อยก่อนแยกหมวดหมู่เป็น one-hot
+- `sparse_output=False` ให้ encoder คืนอาร์เรย์ปกติ เพื่อแสดงตารางตัวอย่างได้ตรงไปตรงมา เหมาะกับสองหมวดหมู่ในบทนี้; ถ้ามีหมวดหมู่จำนวนมากควรพิจารณารูปแบบ sparse เพื่อประหยัดหน่วยความจำ
+- รายการใน `ColumnTransformer` มีสามส่วน: ชื่อขั้นตอน, ตัวแปลง และรายชื่อคอลัมน์ ชื่อ `numeric` และ `categorical` จะปรากฏเป็นคำนำหน้าในชื่อ feature หลังแปลง
+- `model.fit(X_train, y_train)` เรียนค่าทดแทน สเกล หมวดหมู่ และน้ำหนัก Ridge จาก train ส่วน `model.predict(X_test)` ใช้ค่าที่เรียนไว้ ไม่ fit test ใหม่
+- `get_feature_names_out()` ให้ชื่อ 4 คอลัมน์ตามลำดับจริง: ตัวเลข 2 คอลัมน์ และ service ที่แยกเป็น express/standard อีก 2 คอลัมน์
+- `preprocess.transform(X_train.iloc[:3])` แปลงสามแถวเดิมใน Cell 1 โดยไม่ fit ซ้ำ ตัวเลขอาจติดลบหลัง scale; คอลัมน์ one-hot ยังคงเป็น 0/1 เพราะไม่ผ่าน StandardScaler
+- `DummyRegressor(strategy="median")` ทายมัธยฐานของ y_train ทุกแถว เป็น baseline สำหรับเทียบ MAE ไม่ใช่ median ของน้ำหนักที่ใช้เติม feature
 
 ### Cell 3 — ลองข้อมูลใหม่ที่มีหมวดหมู่ไม่เคยพบ
 
 ```python
-new_order = pd.DataFrame({"distance_km": [20.0], "weight_kg": [np.nan], "service": ["same_day"]})
+new_order = pd.DataFrame({
+    "distance_km": [20.0],
+    "weight_kg": [np.nan],
+    "service": ["same_day"],
+})
+new_features = pd.DataFrame(
+    preprocess.transform(new_order), columns=feature_names
+)
+print("New order after preprocessing:\n", new_features.round(3).to_string(index=False))
 print("Unseen-category prediction:", model.predict(new_order).round(2))
 ```
 
 **อ่านโค้ด**
 
-- `new_order` เป็น DataFrame หนึ่งแถวที่มีชื่อคอลัมน์ตรงกับตอนฝึก แต่ใส่น้ำหนักเป็น `np.nan` และบริการเป็น `same_day`
-- เมื่อเรียก `model.predict(new_order)` ตัว imputer จะเติมน้ำหนักด้วย median จาก train
-- `handle_unknown="ignore"` ทำให้บริการที่ไม่เคยพบถูกแทนด้วยศูนย์ทุกคอลัมน์ one-hot ของ service
-- `round(2)` ปัดเฉพาะผลที่แสดงเป็นสองตำแหน่ง การรันผ่านยังไม่ยืนยันว่าคำทำนายสำหรับบริการใหม่น่าเชื่อถือ
+- `new_order` มีชื่อคอลัมน์ตรงกับตอนฝึก แต่ใส่น้ำหนักเป็น `np.nan` และบริการเป็น `same_day`
+- `preprocess.transform(new_order)` แสดงผลหลังเตรียมข้อมูล: น้ำหนักถูกเติมด้วย median จาก train แล้ว scale ส่วน service_express และ service_standard เป็น 0 ทั้งคู่
+- ค่าศูนย์ทั้งคู่หมายถึงหมวดหมู่ที่ encoder ไม่เคยพบในตัวอย่างนี้ ไม่ได้หมายถึงบริการฟรี และไม่มีการเรียนค่าน้ำหนักของ same_day ขึ้นมาใหม่
+- `model.predict(new_order)` รับตารางดิบ แล้วเตรียมข้อมูลด้วย Pipeline เดิมก่อนทำนาย ไม่ต้องส่ง `new_features` เข้าไปอีก
+- `round(2)` ปัดเฉพาะการแสดงคำทำนาย การรันผ่านยังไม่ยืนยันว่าคำทำนายสำหรับบริการใหม่น่าเชื่อถือ
 <!-- CODE:END -->
 
 ## อ่านผล
 
-- ตรวจชื่อ feature และสามแถวหลังแปลงข้อมูล
-- เทียบ MAE ของ Ridge กับ baseline ที่ทายค่ามัธยฐาน
-- ตัวอย่าง `same_day` ทำนายได้ แต่การไม่เกิด error ยังไม่ยืนยันความน่าเชื่อถือสำหรับหมวดหมู่ใหม่
+เมื่อใช้ข้อมูลและค่าตั้งต้นตามบทนี้กับ scikit-learn 1.7.1 จะได้:
+
+| ผลที่ตรวจ | ค่าที่ได้ |
+|---|---|
+| แถว train / test | 300 / 100 |
+| ค่าน้ำหนักที่หายใน train | 23 จาก 30 ค่าหายทั้งหมด |
+| Baseline MAE | 53.511 |
+| Ridge Test MAE | 6.494 |
+| คำทำนายสำหรับ same_day | 109.89 |
+
+MAE ของ Ridge ต่ำกว่า baseline บน test ชุดนี้ โดยหน่วยเป็นค่าบริการจำลอง ไม่ใช่อัตราค่าจัดส่งจริง และไม่ควรเทียบกับ MAE ของบท 05 ซึ่งใช้ข้อมูลคนละชุด
+
+หลังแปลงจะมี 4 features โดย express เป็น `[1, 0]`, standard เป็น `[0, 1]` และ same_day เป็น `[0, 0]` เฉพาะสองคอลัมน์ service
+
+คำทำนาย 109.89 แสดงว่า Pipeline รับข้อมูลนี้ได้ แต่ยังไม่มีคำตอบจริงของบริการ same_day สำหรับตรวจความแม่นยำ ควรตรวจจับหมวดหมู่ใหม่และวางวิธีรับมือก่อนใช้งานจริง
 
 <details>
 <summary>ฝึกต่อพร้อมแนวคำตอบ</summary>
@@ -152,5 +200,7 @@ print("Unseen-category prediction:", model.predict(new_order).round(2))
 
 - [Handbook: Feature Engineering](https://jakevdp.github.io/PythonDataScienceHandbook/05.04-feature-engineering.html)
 - [Pipelines and composite estimators](https://scikit-learn.org/1.7/modules/compose.html)
-- [Imputation](https://scikit-learn.org/1.7/modules/impute.html)
-- [Ridge Regression](https://scikit-learn.org/1.7/modules/linear_model.html#ridge-regression-and-classification)
+- [SimpleImputer](https://scikit-learn.org/1.7/modules/generated/sklearn.impute.SimpleImputer.html)
+- [OneHotEncoder](https://scikit-learn.org/1.7/modules/generated/sklearn.preprocessing.OneHotEncoder.html)
+- [ColumnTransformer](https://scikit-learn.org/1.7/modules/generated/sklearn.compose.ColumnTransformer.html)
+- [Ridge Regression](https://scikit-learn.org/1.7/modules/generated/sklearn.linear_model.Ridge.html)
