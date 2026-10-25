@@ -1,5 +1,4 @@
-"""ปรับ hyperparameter ใน CV และดูว่าข้อมูลเพิ่มช่วยหรือไม่"""
-# %% GridSearchCV รับ Pipeline ทั้งเส้น
+# %% Cell 1 — ค้นค่าที่เหมาะด้วย GridSearchCV
 from pathlib import Path
 
 import matplotlib.pyplot as plt
@@ -27,7 +26,17 @@ print(results[["param_knn__n_neighbors", "param_knn__weights",
 print("Best parameters:", search.best_params_)
 print(f"Best CV accuracy: {search.best_score_:.3f}")
 
-# %% ใช้ learning curve เพื่อวินิจฉัยบน train เท่านั้น
+# %% [markdown]
+# **อ่านโค้ด**
+#
+# - `load_iris(return_X_y=True)` คืน X และ y โดยตรง แทนการคืนชุดข้อมูลพร้อมรายละเอียดแบบบท 02
+# - `Pipeline([("scale", ...), ("knn", ...)])` ตั้งชื่อแต่ละขั้นเอง เพื่ออ้างชื่อในการค้นพารามิเตอร์
+# - `knn__n_neighbors` และ `knn__weights` ใช้รูปแบบ `ชื่อขั้น__ชื่อพารามิเตอร์` ให้ GridSearchCV รู้ว่าต้องปรับค่าของ KNN
+# - `search.fit(X_train, y_train)` ทดลองหกชุดค่าด้วยห้า fold แล้ว refit ชุดที่ชนะบน train ทั้งหมดตามค่าเริ่มต้น
+# - `pd.DataFrame(search.cv_results_)` ทำผลค้นหาเป็นตาราง แล้วเรียงด้วย `rank_test_score` เพื่ออ่านลำดับจากคะแนน CV
+# - `best_params_` บอกชุดค่าที่เลือก และ `best_score_` เป็นคะแนน CV เฉลี่ยของชุดนั้น ไม่ใช่ final test
+
+# %% Cell 2 — ดูผลของจำนวนข้อมูลฝึก
 sizes, train_scores, valid_scores = learning_curve(
     search.best_estimator_, X_train, y_train, cv=cv, scoring="accuracy",
     train_sizes=[0.4, 0.6, 0.8, 1.0], shuffle=True, random_state=42,
@@ -44,3 +53,12 @@ fig.savefig(out / "learning-curve.png", dpi=140)
 plt.show()
 plt.close(fig)
 print(f"Final test accuracy: {accuracy_score(y_test, search.predict(X_test)):.3f}")
+
+# %% [markdown]
+# **อ่านโค้ด**
+#
+# - `learning_curve(search.best_estimator_, ...)` ใช้การตั้งค่าที่เลือกแล้ว ฝึกซ้ำด้วยขนาด train หลายระดับ
+# - `train_sizes=[0.4, 0.6, 0.8, 1.0]` เป็นสัดส่วนของข้อมูลฝึกที่ใช้ได้ในแต่ละ fold ระดับ 1.0 จึงเท่ากับ 96 แถวในบทนี้
+# - `sizes` คืนจำนวนแถวจริง ส่วน `train_scores` และ `valid_scores` มีหนึ่งแถวต่อขนาดข้อมูล และหนึ่งคอลัมน์ต่อ fold
+# - `mean(axis=1)` เฉลี่ยคะแนนข้าม fold เพื่อวาดหนึ่งจุดต่อขนาดข้อมูล
+# - `search.predict(X_test)` ใช้โมเดลที่ GridSearchCV refit ไว้ประเมิน test หลังเลือกค่าเสร็จแล้ว

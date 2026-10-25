@@ -45,12 +45,14 @@
 
 ## ลงมือทำ
 
-สร้าง Notebook ใหม่แล้วรันโค้ดด้านล่างทั้งชุด หรือเปิด [Notebook ของบทนี้](lesson.ipynb) แล้วรันจากบนลงล่าง ใช้ kernel เดิมได้เลย
+สร้าง Notebook ใหม่แล้วรัน **Cell 1–3 ตามลำดับ** หรือเปิด [Notebook ของบทนี้](lesson.ipynb) ใช้ kernel เดิมได้เลย อ่านคำอธิบายใต้โค้ดแต่ละช่วงประกอบผลที่ได้
+
+<!-- CODE:CELLS -->
 
 <!-- CODE:START -->
+### Cell 1 — ประกาศฟังก์ชัน Gradient Descent
+
 ```python
-"""เรียนรู้พารามิเตอร์ด้วย gradient descent จาก NumPy"""
-# %% ฟังก์ชันนี้ใช้ซ้ำในแบบทดสอบและบทเสริม Mojo
 import numpy as np
 
 
@@ -83,8 +85,21 @@ def fit_gradient_descent(x, y, learning_rate=0.1, steps=1000):
     except FloatingPointError as error:
         raise FloatingPointError("Gradient descent diverged; reduce learning_rate or scale x") from error
     return w, b, np.asarray(history)
+```
 
+**อ่านโค้ด**
 
+- `def fit_gradient_descent(...)` ประกาศฟังก์ชันไว้เรียกภายหลัง การรัน Cell นี้ยังไม่เริ่มฝึก
+- `np.asarray(..., dtype=np.float64)` จัด x และ y เป็น array ตัวเลข จากนั้นเงื่อนไขตรวจ shape ค่าที่ไม่ finite และค่าตั้งต้นที่ใช้ไม่ได้ ก่อนเริ่มวนรอบ
+- `w, b = 0.0, 0.0` เป็นจุดเริ่ม ส่วน `error = w * x + b - y` คำนวณคำทำนายลบค่าจริงจากทุกแถว
+- `dw` และ `db` คำนวณ gradient จาก w และ b รอบเดียวกัน แล้วจึงอัปเดตด้วย `w -= learning_rate * dw` และ `b -= learning_rate * db`
+- `history.append(loss)` เก็บ MSE **หลังอัปเดต** แต่ละรอบ เพื่อนำไปวาดกราฟ
+- `np.errstate(over="raise", invalid="raise")` ให้หยุดเมื่อคำนวณล้นหรือใช้ค่าที่ผิด แล้วส่งข้อความแนะนำให้ลด learning rate หรือปรับสเกล
+- `return w, b, np.asarray(history)` คืนพารามิเตอร์สองค่าและประวัติ loss ให้ผู้เรียก
+
+### Cell 2 — ประกาศขั้นตอนทดลองและวาดกราฟ
+
+```python
 def main():
     from pathlib import Path
     import matplotlib.pyplot as plt
@@ -110,12 +125,27 @@ def main():
     fig.savefig(out / "loss.png", dpi=140)
     plt.show()
     plt.close(fig)
+```
 
+**อ่านโค้ด**
 
-# %% เรียกการทดลอง
+- `main()` รวมขั้นตอนทดลองไว้ แต่ Cell นี้เพียงประกาศฟังก์ชัน ยังไม่เรียกทำงาน
+- `y = 3 * x + 2 + ...` สร้างข้อมูลจากเส้นจริงที่รู้ w=3 และ b=2 แล้วเติม noise เล็กน้อย
+- `w, b, history = fit_gradient_descent(...)` รับผลสามส่วนจากฟังก์ชันที่สร้างใน Cell 1
+- `x_train.reshape(-1, 1)` จัด x เป็นหนึ่งคอลัมน์ให้ `LinearRegression` รับได้ เพื่อเทียบกับ least squares บนข้อมูลเดียวกัน
+- `w * x_test + b` คือคำทำนายที่นำไปวัด test MAE
+- `ax.semilogy(history)` วาด MSE โดยแกน y ใช้สเกล log เพื่อเห็นการลดลงหลายระดับได้ชัด
+
+### Cell 3 — เรียกการทดลอง
+
+```python
 if __name__ == "__main__":
     main()
 ```
+
+**อ่านโค้ด:** `if __name__ == "__main__":` เรียก `main()` เมื่อรันไฟล์นี้โดยตรงหรือรัน Cell นี้ใน notebook
+
+หากไฟล์อื่น import ฟังก์ชันไปใช้ เงื่อนไขนี้จะไม่เรียกการทดลองซ้ำ เมื่อรันใน notebook ต้องรัน Cell 1–2 ก่อน เพื่อประกาศฟังก์ชันให้ครบ
 <!-- CODE:END -->
 
 ## อ่านผล

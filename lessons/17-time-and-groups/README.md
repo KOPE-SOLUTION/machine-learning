@@ -41,12 +41,14 @@ label ที่สุ่มระหว่างคนไม่มีรูป�
 
 ## ลงมือทำ
 
-สร้าง Notebook ใหม่แล้วรันโค้ดด้านล่างทั้งชุด หรือเปิด [Notebook ของบทนี้](lesson.ipynb) แล้วรันจากบนลงล่าง ใช้ kernel เดิมได้เลย
+สร้าง Notebook ใหม่แล้วรัน **Cell 1–2 ตามลำดับ** หรือเปิด [Notebook ของบทนี้](lesson.ipynb) ใช้ kernel เดิมได้เลย อ่านคำอธิบายใต้โค้ดแต่ละช่วงประกอบผลที่ได้
+
+<!-- CODE:CELLS -->
 
 <!-- CODE:START -->
+### Cell 1 — เปรียบเทียบการสุ่มแถวกับการแยกคน
+
 ```python
-"""เลือกรูปแบบการแบ่งข้อมูลให้ตรงกับคำถามเรื่องคนใหม่และอนาคต"""
-# %% คนเดิมหลายแถว: แยกเป็นกลุ่มก่อนประเมินคนใหม่
 import numpy as np
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_absolute_error
@@ -74,8 +76,20 @@ model = KNeighborsClassifier(n_neighbors=3).fit(X[train_idx], y[train_idx])
 print("Group split - shared users:", len(set(groups[train_idx]) & set(groups[test_idx])))
 print("Held-out user groups:", len(np.unique(groups[test_idx])))
 print(f"New-user accuracy (random user labels): {model.score(X[test_idx], y[test_idx]):.3f}")
+```
 
-# %% เวลาต้องเดินไปข้างหน้า: ตัวอย่างมีหนึ่ง observation ต่อเวลา
+**อ่านโค้ด**
+
+- `np.repeat(np.arange(60), 5)` สร้างรหัสคน 0–59 โดยแต่ละคนมีห้าแถว รวมเป็น 300 แถว
+- `user_signal[groups]` ใช้รหัสคนเลือก feature ตั้งต้นของคนนั้น แล้วเติม noise เล็กน้อย ส่วน `user_label[groups]` ทำให้ห้าแถวของคนเดียวกันได้ label เดียวกัน
+- `set(groups[row_train]) & set(groups[row_test])` หารหัสคนที่อยู่ทั้ง train และ test หลังสุ่มแถว เพื่อแสดงปัญหาคนเดิมข้ามชุด
+- `next(split.split(X, y, groups))` รับคู่ index จาก `GroupShuffleSplit` รอบแรก โดยตัวแบ่งใช้ groups กันคนออกทั้งกลุ่ม
+- `isdisjoint` ตรวจว่ารหัสคนไม่ซ้ำสองฝั่ง ส่วน `np.unique(groups[test_idx])` ใช้นับจำนวนคนที่กันไว้
+- สำหรับ KNN classifier ในบทนี้ `model.score(...)` คืน accuracy ของข้อมูลที่ส่งให้ประเมิน จึงต้องอ่านพร้อมจำนวนคนที่ซ้ำ ไม่เลือกวิธีแบ่งจากคะแนนสูงสุด
+
+### Cell 2 — แบ่งข้อมูลตามเวลาและเทียบค่าล่าสุด
+
+```python
 t = np.arange(180)
 series = 0.1 * t + np.sin(t / 6) + rng.normal(0, 0.2, len(t))
 # ทำนายค่าถัดไปจากค่าก่อนหน้า ไม่ใช้ centered rolling ที่เห็นอนาคต
@@ -90,6 +104,16 @@ for fold, (train_idx, valid_idx) in enumerate(TimeSeriesSplit(n_splits=4, gap=1)
           f"model MAE={mean_absolute_error(target[valid_idx], pred):.3f}, "
           f"last-value MAE={mean_absolute_error(target[valid_idx], persistence):.3f}")
 ```
+
+**อ่านโค้ด**
+
+- `series[:-1].reshape(-1, 1)` เลือกค่าตั้งแต่ตัวแรกถึงก่อนตัวสุดท้ายเป็น feature หนึ่งคอลัมน์ ส่วน `series[1:]` เลื่อนคำตอบไปข้างหน้าหนึ่งตำแหน่ง
+- แต่ละแถวจึงจับคู่ค่าก่อนหน้ากับค่าถัดไป โดย `lag` และ `target` มีจำนวนแถวเท่ากัน
+- `TimeSeriesSplit(n_splits=4, gap=1).split(lag)` คืน index สี่รอบ ฝึกจากอดีตและเว้นหนึ่งแถวก่อนช่วง validation
+- `train_idx.max() < valid_idx.min()` ตรวจว่าแถวฝึกอยู่ก่อนแถว validation
+- `persistence = lag[valid_idx, 0]` ใช้ค่าล่าสุดเป็นคำทำนาย baseline แล้ววัด MAE กับ target ชุดเดียวกับโมเดล
+
+การใช้ค่าจริงก่อนหน้าของทุกจุดเหมาะกับ one-step-ahead ตามโจทย์นี้ ไม่ใช่การทายหลายก้าวโดยยังไม่เห็นค่าจริงระหว่างทาง
 <!-- CODE:END -->
 
 ## อ่านผล

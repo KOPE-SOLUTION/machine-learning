@@ -35,12 +35,14 @@ K-means ไวต่อสเกลและเหมาะกับกลุ่
 
 ## ลงมือทำ
 
-สร้าง Notebook ใหม่แล้วรันโค้ดด้านล่างทั้งชุด หรือเปิด [Notebook ของบทนี้](lesson.ipynb) แล้วรันจากบนลงล่าง ใช้ kernel เดิมได้เลย
+สร้าง Notebook ใหม่แล้วรัน **Cell 1–2 ตามลำดับ** หรือเปิด [Notebook ของบทนี้](lesson.ipynb) ใช้ kernel เดิมได้เลย อ่านคำอธิบายใต้โค้ดแต่ละช่วงประกอบผลที่ได้
+
+<!-- CODE:CELLS -->
 
 <!-- CODE:START -->
+### Cell 1 — ลองจำนวนกลุ่มและเลือกจาก silhouette
+
 ```python
-"""แบ่งกลุ่มจุดโดยไม่ให้ K-means เห็นคำตอบ"""
-# %% เลือก k จาก silhouette เป็นการสำรวจ ไม่ใช่ test accuracy
 from pathlib import Path
 
 import matplotlib.pyplot as plt
@@ -63,8 +65,20 @@ model = models[chosen]
 print("Selected k:", chosen)
 print("ARI against hidden synthetic labels (after selection):", round(adjusted_rand_score(truth, model.labels_), 3))
 print("New point cluster ID:", model.predict(scale.transform([[0.0, 0.0]]))[0])
+```
 
-# %% หมายเลขกลุ่มไม่มีลำดับหรือความหมายทางธุรกิจโดยตัวเอง
+**อ่านโค้ด**
+
+- `make_blobs(..., centers=3, ...)` สร้างข้อมูลจำลองจากสามกลุ่ม พร้อมเก็บ label จริงใน `truth` แต่ไม่ส่ง label นี้ให้ K-means
+- `scale.fit_transform(X)` เรียนสถิติและปรับสเกลเป็น `Z` สำหรับการสำรวจกลุ่มในข้อมูลชุดนี้
+- `range(2, 7)` ลองจำนวนกลุ่มตั้งแต่ 2 ถึง 6 ส่วน `n_init=10` ให้แต่ละค่า k ลองสิบจุดเริ่มต้น
+- `model.labels_` คือหมายเลขกลุ่มของข้อมูลที่ใช้ fit ส่วน `model.inertia_` คือผลรวมระยะกำลังสองภายในกลุ่ม
+- `scores[k] = silhouette_score(...)` เก็บคะแนนเพื่อเลือก k ที่ได้คะแนนสูงสุดด้วย `max(scores, key=scores.get)` แล้วจึงใช้ `truth` คำนวณ ARI
+- `scale.transform([[0.0, 0.0]])` ปรับสเกลจุดใหม่ด้วยสถิติเดิมก่อนเรียก `predict` และ `[0]` เลือกหมายเลขกลุ่มของจุดนั้น
+
+### Cell 2 — แสดงกลุ่มและศูนย์กลาง
+
+```python
 fig, ax = plt.subplots(figsize=(6, 4))
 ax.scatter(Z[:, 0], Z[:, 1], c=model.labels_, cmap="tab10", s=18, alpha=0.7)
 ax.scatter(model.cluster_centers_[:, 0], model.cluster_centers_[:, 1], c="black", marker="X", s=150)
@@ -76,6 +90,14 @@ fig.savefig(out / "clusters.png", dpi=140)
 plt.show()
 plt.close(fig)
 ```
+
+**อ่านโค้ด**
+
+- `c=model.labels_` ระบายสีจุดตามกลุ่มที่ K-means หาได้ ไม่ได้ใช้ `truth` ระบายสี
+- `model.cluster_centers_` เก็บพิกัด centroid ของแต่ละกลุ่มในสเกลเดียวกับ `Z`
+- `[:, 0]` กับ `[:, 1]` เลือกสองแกนของ centroid แล้ว `marker="X"` วาดเป็นกากบาทดำ
+
+หมายเลขกลุ่มเป็นเพียงรหัส จึงใช้ตัดสินลำดับหรือคุณค่าของกลุ่มไม่ได้
 <!-- CODE:END -->
 
 ## อ่านผล

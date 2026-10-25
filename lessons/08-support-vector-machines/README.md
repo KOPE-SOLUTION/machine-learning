@@ -38,12 +38,14 @@
 
 ## ลงมือทำ
 
-สร้าง Notebook ใหม่แล้วรันโค้ดด้านล่างทั้งชุด หรือเปิด [Notebook ของบทนี้](lesson.ipynb) แล้วรันจากบนลงล่าง ใช้ kernel เดิมได้เลย
+สร้าง Notebook ใหม่แล้วรัน **Cell 1–2 ตามลำดับ** หรือเปิด [Notebook ของบทนี้](lesson.ipynb) ใช้ kernel เดิมได้เลย อ่านคำอธิบายใต้โค้ดแต่ละช่วงประกอบผลที่ได้
+
+<!-- CODE:CELLS -->
 
 <!-- CODE:START -->
+### Cell 1 — เลือก kernel จากคะแนน CV
+
 ```python
-"""SVM แบบเส้นตรงและ RBF บนข้อมูลวงจันทร์เสี้ยว"""
-# %% กัน test แล้วเปรียบเทียบโมเดลด้วย cross-validation
 from pathlib import Path
 
 import matplotlib.pyplot as plt
@@ -72,8 +74,19 @@ chosen = max(scores, key=scores.get)
 model = models[chosen].fit(X_train, y_train)
 print("Selected:", chosen)
 print(f"Test accuracy: {accuracy_score(y_test, model.predict(X_test)):.3f}")
+```
 
-# %% ภาพขอบเขตช่วยอธิบายผล ไม่ใช้เลือกโมเดลจาก test
+**อ่านโค้ด**
+
+- `make_moons(n_samples=400, noise=0.25, ...)` สร้างข้อมูลสองคลาสรูปโค้ง แล้วแบ่งเป็น train 300 แถวและ test 100 แถว
+- `StratifiedKFold(n_splits=5, shuffle=True, ...)` กำหนดการแบ่ง train เป็นห้าส่วน โดยสลับแถวและรักษาสัดส่วนคลาส
+- dictionary `models` สร้าง Pipeline สองตัวจากค่า kernel `linear` และ `rbf` โดยใช้ scaler และ C แบบเดียวกัน
+- `cross_val_score(..., cv=cv, scoring="accuracy")` คืนคะแนนห้าค่า ใช้ `mean()` สรุปคะแนนเฉลี่ย และ `std()` ดูการกระจายระหว่าง fold
+- `max(scores, key=scores.get)` เลือกชื่อ kernel ที่มีค่าเฉลี่ยสูงสุด แล้ว `fit(X_train, y_train)` ฝึกตัวที่เลือกบน train ทั้งหมดก่อนวัด test
+
+### Cell 2 — วาดขอบเขตของโมเดลที่เลือก
+
+```python
 fig, ax = plt.subplots(figsize=(6, 4))
 DecisionBoundaryDisplay.from_estimator(model, X_train, response_method="predict", alpha=0.3, ax=ax)
 ax.scatter(X_train[:, 0], X_train[:, 1], c=y_train, edgecolors="k", s=20)
@@ -85,6 +98,13 @@ fig.savefig(out / "boundary.png", dpi=140)
 plt.show()
 plt.close(fig)
 ```
+
+**อ่านโค้ด**
+
+- `DecisionBoundaryDisplay.from_estimator` สร้างจุดบนพื้นที่กราฟ แล้วให้โมเดลที่ฝึกแล้วทำนายเพื่อระบายบริเวณของแต่ละคลาส
+- `response_method="predict"` ใช้ผลทำนายคลาส และส่ง Pipeline ทั้งชุดเข้าไป จึงใช้ scaler เดิมด้วย
+- `X_train[:, 0]` และ `X_train[:, 1]` เป็นพิกัดจุดฝึก ส่วน `c=y_train` ใส่สีตามคำตอบจริง
+- ภาพใช้ train เพื่ออธิบายรูปร่างขอบเขต ส่วนคะแนน test อ่านจาก Cell ก่อนหน้า
 <!-- CODE:END -->
 
 ## อ่านผล

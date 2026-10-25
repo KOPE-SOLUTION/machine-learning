@@ -27,12 +27,14 @@ PCA หาแกนจาก X โดยไม่ใช้ y ดังนั้�
 
 ## ลงมือทำ
 
-สร้าง Notebook ใหม่แล้วรันโค้ดด้านล่างทั้งชุด หรือเปิด [Notebook ของบทนี้](lesson.ipynb) แล้วรันจากบนลงล่าง ใช้ kernel เดิมได้เลย
+สร้าง Notebook ใหม่แล้วรัน **Cell 1–2 ตามลำดับ** หรือเปิด [Notebook ของบทนี้](lesson.ipynb) ใช้ kernel เดิมได้เลย อ่านคำอธิบายใต้โค้ดแต่ละช่วงประกอบผลที่ได้
+
+<!-- CODE:CELLS -->
 
 <!-- CODE:START -->
+### Cell 1 — ฝึก Pipeline ที่มี PCA
+
 ```python
-"""PCA ลดจำนวน feature โดยเรียนทิศทางจาก train"""
-# %% ทำ PCA ใน Pipeline
 from pathlib import Path
 
 import matplotlib.pyplot as plt
@@ -57,8 +59,20 @@ pca = model.named_steps["pca"]
 print("Original features:", X.shape[1], "Retained components:", pca.n_components_)
 print("Retained variance:", round(pca.explained_variance_ratio_.sum(), 3))
 print(f"Test accuracy: {accuracy_score(y_test, model.predict(X_test)):.3f}")
+```
 
-# %% แสดง 2 component แรกเพื่อสำรวจ ไม่ใช่ feature ทั้งหมดของโมเดล
+**อ่านโค้ด**
+
+- `load_digits(return_X_y=True)` คืนภาพที่คลี่เป็น 64 feature ต่อแถว พร้อม label ตัวเลข 0–9
+- Pipeline ทำ `scale → pca → classifier` ตามลำดับ โดย `fit` เรียนทุกขั้นจาก train เท่านั้น
+- `PCA(n_components=0.9, svd_solver="full")` เลือกจำนวนแกนตามเกณฑ์ variance 90% ไม่ใช่เลือก 0.9 แกน
+- `model.named_steps["pca"]` ดึง PCA ที่ fit แล้วออกมาอ่านผล ส่วน `pca.n_components_` คือจำนวนแกนที่เลือกได้จริง
+- `explained_variance_ratio_.sum()` รวมสัดส่วน variance ที่เก็บไว้ ขณะที่ accuracy คำนวณจากคำทำนายของ Pipeline ทั้งชุด
+- `max_iter=2000` ตั้งเพดานรอบให้ตัวแก้ปัญหาของ Logistic Regression ไม่ใช่จำนวน component ของ PCA
+
+### Cell 2 — อ่านพิกัดใหม่และ variance สะสม
+
+```python
 Z_train = model[:-1].transform(X_train)
 fig, axes = plt.subplots(1, 2, figsize=(10, 4))
 points = axes[0].scatter(Z_train[:, 0], Z_train[:, 1], c=y_train, cmap="tab10", s=9, alpha=0.6)
@@ -73,6 +87,14 @@ fig.savefig(out / "pca.png", dpi=140)
 plt.show()
 plt.close(fig)
 ```
+
+**อ่านโค้ด**
+
+- `model[:-1]` เลือกทุกขั้นก่อน classifier จึงเหลือ scaler กับ PCA
+- `transform(X_train)` ใช้สถิติและแกนเดิมแปลงข้อมูลเป็น `Z_train` โดยไม่ fit ใหม่
+- `Z_train[:, 0]` และ `Z_train[:, 1]` เลือกเพียงสอง component แรกมาวาด แต่ classifier ใช้ทุก component ที่เก็บไว้
+- `np.cumsum(pca.explained_variance_ratio_)` หาผลรวมสะสมทีละแกน เพื่อดูว่าเพิ่มแกนแล้วเก็บ variance ได้เท่าไร
+- `np.arange(1, pca.n_components_ + 1)` สร้างแกนนอนให้เริ่มนับ component จาก 1
 <!-- CODE:END -->
 
 ## อ่านผล

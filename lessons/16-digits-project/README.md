@@ -32,12 +32,14 @@
 
 ## ลงมือทำ
 
-สร้าง Notebook ใหม่แล้วรันโค้ดด้านล่างทั้งชุด หรือเปิด [Notebook ของบทนี้](lesson.ipynb) แล้วรันจากบนลงล่าง ใช้ kernel เดิมได้เลย
+สร้าง Notebook ใหม่แล้วรัน **Cell 1–4 ตามลำดับ** หรือเปิด [Notebook ของบทนี้](lesson.ipynb) ใช้ kernel เดิมได้เลย อ่านคำอธิบายใต้โค้ดแต่ละช่วงประกอบผลที่ได้
+
+<!-- CODE:CELLS -->
 
 <!-- CODE:START -->
+### Cell 1 — นำเข้าเครื่องมือและตรวจรูปข้อมูล
+
 ```python
-"""โครงงานจำแนกภาพตัวเลข: เลือกโมเดล รายงานข้อผิดพลาด บันทึก Pipeline"""
-# %% การตรวจ schema ใช้ร่วมกันทั้งตอนฝึกและทำนาย
 import json
 import platform
 from pathlib import Path
@@ -61,8 +63,20 @@ def validate_pixels(values):
     if not np.isfinite(array).all() or np.any((array < 0) | (array > 16)):
         raise ValueError("Pixels must be finite and in the interval [0, 16]")
     return array
+```
 
+**อ่านโค้ด**
 
+- `validate_pixels(values)` รับข้อมูลภาพ แล้ว `np.asarray(..., dtype=np.float64)` จัดให้เป็น array ตัวเลข
+- `array.ndim != 2`, `array.shape[1] != 64` และ `len(array) == 0` ตรวจว่ามีอย่างน้อยหนึ่งภาพ โดยแต่ละภาพคลี่เป็น 64 ค่า
+- `np.isfinite(array).all()` ตรวจ NaN/infinity ส่วน `np.any((array < 0) | (array > 16))` ตรวจว่ามีค่าหลุดช่วง 0–16 หรือไม่
+- หากไม่ผ่านจะ `raise ValueError` เพื่อหยุดก่อนส่งข้อมูลผิดรูปเข้าโมเดล ถ้าผ่านจะคืน array ที่พร้อมใช้
+
+Cell นี้ประกาศฟังก์ชัน ยังไม่มีการฝึกโมเดล
+
+### Cell 2 — ประกาศฟังก์ชันสร้าง GridSearchCV
+
+```python
 def build_search():
     return GridSearchCV(
         Pipeline([("scale", StandardScaler()), ("svc", SVC())]),
@@ -70,8 +84,19 @@ def build_search():
         scoring="f1_macro", cv=StratifiedKFold(3, shuffle=True, random_state=42),
         n_jobs=1,
     )
+```
 
+**อ่านโค้ด**
 
+- `build_search()` คืนตัวค้นหาโมเดลที่ยังไม่ได้ fit เพื่อให้เรียกสร้างใหม่ได้เมื่อเริ่มโครงงาน
+- `("scale", StandardScaler())` และ `("svc", SVC())` ตั้งชื่อขั้นสำหรับใช้ใน Pipeline และพารามิเตอร์ค้นหา
+- `svc__C` สองค่า × `svc__gamma` สองค่า รวมสี่ชุดตัวเลือก โดยชื่อก่อน `__` ต้องตรงกับชื่อขั้น `svc`
+- `scoring="f1_macro"` ใช้ F1 ที่เฉลี่ยทุกคลาสเท่ากันเลือกโมเดล และ `StratifiedKFold(3, ...)` กำหนดสาม fold
+- `n_jobs=1` จำกัดจำนวนงานที่ทำพร้อมกัน ส่วนการฝึกจริงจะเกิดเมื่อเรียก `.fit(...)` ใน main
+
+### Cell 3 — ประกาศขั้นตอนฝึก บันทึก และตรวจผล
+
+```python
 def main():
     import matplotlib.pyplot as plt
     from sklearn.metrics import ConfusionMatrixDisplay
@@ -129,12 +154,34 @@ def main():
         fig.savefig(out / "errors.png", dpi=140)
         plt.show()
         plt.close(fig)
+```
 
+**อ่านโค้ด: ฝึกและประเมิน**
 
-# %% รันโครงงานตั้งแต่ต้น
+- `validate_pixels(data.data)` ใช้เงื่อนไขเดียวกับตอนรับข้อมูลใหม่ ส่วนการแบ่ง `np.arange(len(X))` เก็บ index ไว้ให้ตรวจย้อนกลับได้ว่าแถวใดอยู่ชุดไหน
+- `X[train_idx]` กับ `data.target[train_idx]` เลือกภาพและคำตอบด้วย index ชุดเดียวกัน เช่นเดียวกับฝั่ง test
+- `build_search().fit(X_train, y_train)` สร้างตัวค้นหาแล้วฝึก ส่วน `search.predict(X_test)` ใช้ Pipeline ที่เลือกและ refit แล้ว
+- `report` เก็บคะแนน วิธีแบ่ง รุ่น Python และ scikit-learn ส่วน `output_dict=True` ให้ classification report เป็น dictionary ที่เขียนเป็น JSON ได้
+
+**อ่านโค้ด: บันทึกและนำกลับมาใช้**
+
+- `joblib.dump(search.best_estimator_, ...)` บันทึก Pipeline ที่ fit แล้วทั้ง scaler และ SVC ส่วน `np.savez` เก็บ index ของชุดข้อมูล
+- `joblib.load(...)` โหลดไฟล์ที่เพิ่งสร้าง แล้ว `np.testing.assert_array_equal` ตรวจว่าคำทำนายก่อนและหลังบันทึกตรงกัน
+- `np.loadtxt(..., ndmin=2)` อ่าน CSV ให้ยังเป็นข้อมูลสองมิติแม้มีแถวเดียว แล้วตรวจด้วย `validate_pixels` ก่อนทำนาย
+- `np.flatnonzero(pred != y_test)` หาตำแหน่งที่ทายผิดใน X_test ส่วน `reshape(8, 8)` จัด 64 ค่ากลับเป็นภาพเพื่อดูข้อผิดพลาด
+
+Cell นี้ยังเป็นการประกาศ `main` ต้องรัน Cell ถัดไปจึงเริ่มโครงงาน
+
+### Cell 4 — รันโครงงาน
+
+```python
 if __name__ == "__main__":
     main()
 ```
+
+**อ่านโค้ด:** เงื่อนไข `__name__ == "__main__"` เรียก `main()` เพื่อรันตั้งแต่โหลดข้อมูลจนบันทึกผล ต้องรัน Cell 1–3 ก่อนให้มีฟังก์ชันครบ
+
+เมื่อทำงานเสร็จจะได้รายงานคะแนน คำทำนายจาก CSV และกราฟ หากไม่มีตัวอย่างทายผิด เงื่อนไข `if len(errors):` จะข้ามการสร้าง errors.png
 <!-- CODE:END -->
 
 ## อ่านผล

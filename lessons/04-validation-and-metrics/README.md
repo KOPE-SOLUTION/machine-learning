@@ -47,12 +47,14 @@
 
 ## ลงมือทำ
 
-สร้าง Notebook ใหม่แล้วรันโค้ดด้านล่างทั้งชุด หรือเปิด [Notebook ของบทนี้](lesson.ipynb) แล้วรันจากบนลงล่าง ใช้ kernel เดิมได้เลย
+สร้าง Notebook ใหม่แล้วรัน **Cell 1–3 ตามลำดับ** หรือเปิด [Notebook ของบทนี้](lesson.ipynb) ใช้ kernel เดิมได้เลย อ่านคำอธิบายใต้โค้ดแต่ละช่วงประกอบผลที่ได้
+
+<!-- CODE:CELLS -->
 
 <!-- CODE:START -->
+### Cell 1 — สร้างข้อมูลและแยก train/validation/test
+
 ```python
-"""Accuracy อาจดูดีเมื่อคลาสไม่สมดุล"""
-# %% แบ่ง train / validation / test เป็น 60 / 20 / 20
 from sklearn.datasets import make_classification
 from sklearn.dummy import DummyClassifier
 from sklearn.linear_model import LogisticRegression
@@ -74,8 +76,18 @@ X_dev, X_test, y_dev, y_test = train_test_split(
 X_train, X_valid, y_train, y_valid = train_test_split(
     X_dev, y_dev, test_size=0.25, stratify=y_dev, random_state=42
 )
+```
 
-# %% เลือกวิธีจาก F1 บน validation
+**อ่านโค้ด**
+
+- `make_classification` สร้างข้อมูลจำลอง 1,500 แถว 8 feature โดย `n_informative=5` กำหนดจำนวน feature ที่ใช้สร้างสัญญาณแยกคลาส
+- `weights=[0.9, 0.1]` ตั้งสัดส่วนคลาสก่อนเติมความผิดพลาดของ label ด้วย `flip_y=0.02` สัดส่วนสุดท้ายจึงอาจไม่ใช่ 90/10 พอดี
+- แบ่งรอบแรกกัน test 20% เหลือ `X_dev` 1,200 แถวสำหรับพัฒนาโมเดล
+- แบ่งรอบสองกัน validation 25% **ของ X_dev** คือ 300 แถว จึงเหลือ train 900 แถว
+
+### Cell 2 — เปรียบเทียบโมเดลบน validation
+
+```python
 models = {
     "baseline": DummyClassifier(strategy="most_frequent"),
     "logistic": make_pipeline(StandardScaler(), LogisticRegression(max_iter=1000)),
@@ -91,8 +103,19 @@ for name, model in models.items():
         "recall": round(recall_score(y_valid, pred), 3),
         "f1": round(valid_scores[name], 3),
     })
+```
 
-# %% ตัดสินใจแล้วจึง refit และประเมิน test
+**อ่านโค้ด**
+
+- `models` เก็บชื่อกับโมเดลแต่ละตัว เพื่อวนฝึกและประเมินด้วยข้อมูลชุดเดียวกัน
+- `LogisticRegression(max_iter=1000)` เพิ่มเพดานจำนวนรอบของตัวแก้ปัญหา ไม่ได้หมายความว่าต้องฝึกครบ 1,000 รอบ
+- `fit(X_train, y_train)` ใช้ชุดฝึก ส่วน `predict(X_valid)` ใช้ทำนายชุด validation
+- `valid_scores[name]` เก็บ F1 ของแต่ละโมเดล เพื่อใช้เลือกใน Cell ถัดไป
+- `zero_division=0` ให้รายงาน 0 เมื่อสูตรของ metric นั้นหารด้วยศูนย์ ไม่ได้เปลี่ยนคำทำนายของโมเดล
+
+### Cell 3 — ฝึกตัวเลือกที่ชนะและประเมิน test
+
+```python
 chosen = max(valid_scores, key=valid_scores.get)
 final = models[chosen].fit(X_dev, y_dev)
 test_pred = final.predict(X_test)
@@ -104,6 +127,14 @@ print("Test confusion matrix (rows=true, columns=predicted):\n",
 print(f"Test F1: {f1_score(y_test, test_pred):.3f}")
 print(f"Test average precision: {average_precision_score(y_test, test_probability):.3f}")
 ```
+
+**อ่านโค้ด**
+
+- `max(valid_scores, key=valid_scores.get)` เลือก **ชื่อโมเดล** ที่มี F1 บน validation สูงสุด
+- `models[chosen].fit(X_dev, y_dev)` ฝึกโมเดลที่เลือกใหม่ด้วย train รวม validation ก่อนประเมิน test
+- `list(final.classes_).index(1)` หาว่าคลาส 1 อยู่คอลัมน์ใดของผล `predict_proba`
+- `[:, positive_column]` เลือก probability ของคลาส 1 ทุกแถว เพื่อใช้คำนวณ average precision
+- `confusion_matrix(..., labels=[0, 1])` กำหนดลำดับคลาสของแถวและคอลัมน์ ส่วน F1 ใช้ label จาก `predict` ต่างจาก AP ที่ใช้ probability
 <!-- CODE:END -->
 
 ## อ่านผล

@@ -1,5 +1,4 @@
-"""ทำนายตัวเลขด้วยเส้นตรง และดู residual"""
-# %% สร้างข้อมูลจำลองที่รู้สมการจริง
+# %% Cell 1 — สร้างข้อมูลสำหรับทำนายตัวเลข
 from pathlib import Path
 
 import matplotlib.pyplot as plt
@@ -14,7 +13,15 @@ X = rng.uniform(0, 10, size=(240, 1))
 y = 12 + 3.5 * X[:, 0] + rng.normal(0, 3, size=len(X))
 X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=42)
 
-# %% เปรียบเทียบกับการทายค่าเฉลี่ยจาก train
+# %% [markdown]
+# **อ่านโค้ด**
+#
+# - `np.random.default_rng(42)` สร้างตัวสุ่มที่ทำซ้ำได้ เพื่อให้ตัวอย่างและ noise เหมือนเดิมเมื่อรันใหม่
+# - `size=(240, 1)` สร้าง X เป็น 240 แถว หนึ่ง feature ส่วน `X[:, 0]` หยิบค่าคอลัมน์นั้นมาเป็นเวกเตอร์สำหรับสร้าง y
+# - `12 + 3.5 * X[:, 0]` คือสมการจริงที่ตั้งไว้ แล้วเติม noise จาก `rng.normal(0, 3, ...)` ซึ่งมีค่าเฉลี่ย 0 และส่วนเบี่ยงเบนมาตรฐาน 3
+# - `train_test_split` ในบทนี้ไม่ระบุ `test_size` จึงใช้ค่าเริ่มต้น 25% ได้ train 180 แถว และ test 60 แถว
+
+# %% Cell 2 — ฝึกเส้นตรงและวัดความผิดพลาด
 baseline = DummyRegressor(strategy="mean").fit(X_train, y_train)
 model = LinearRegression().fit(X_train, y_train)
 pred = model.predict(X_test)
@@ -24,7 +31,15 @@ print(f"Linear RMSE: {root_mean_squared_error(y_test, pred):.3f}")
 print(f"Linear R2: {r2_score(y_test, pred):.3f}")
 print(f"Learned intercept={model.intercept_:.3f}, slope={model.coef_[0]:.3f}")
 
-# %% residual = ค่าจริง - ค่าทำนาย
+# %% [markdown]
+# **อ่านโค้ด**
+#
+# - `DummyRegressor(strategy="mean")` เรียนค่าเฉลี่ย y_train แล้วใช้ค่านั้นทายทุกแถว เป็น baseline ของโจทย์ตัวเลข
+# - `LinearRegression().fit(...)` สร้างโมเดลและฝึกในบรรทัดเดียว จากนั้น `predict(X_test)` คืนตัวเลขทำนายหนึ่งค่าต่อแถว
+# - ฟังก์ชัน MAE, RMSE และ R² รับ `y_test` กับ `pred` เพื่อเทียบคำตอบจริงกับคำทำนายชุดเดียวกัน
+# - `model.intercept_` คือ b ที่เรียนได้ ส่วน `model.coef_[0]` คือ w ของ feature แรก ควรใกล้ 12 และ 3.5 ตามสมการจำลอง
+
+# %% Cell 3 — วาดเส้นทำนายและ residual
 fig, axes = plt.subplots(1, 2, figsize=(10, 4))
 grid = np.linspace(0, 10, 100).reshape(-1, 1)
 axes[0].scatter(X_test[:, 0], y_test, label="Test observations", alpha=0.7)
@@ -40,3 +55,11 @@ out.mkdir(parents=True, exist_ok=True)
 fig.savefig(out / "regression.png", dpi=140)
 plt.show()
 plt.close(fig)
+
+# %% [markdown]
+# **อ่านโค้ด**
+#
+# - `np.linspace(...).reshape(-1, 1)` สร้างจุด x สำหรับวาดเส้น แล้วจัดให้เป็นข้อมูลสองมิติที่โมเดลรับ โดย `-1` ให้ NumPy คำนวณจำนวนแถวเอง
+# - `model.predict(grid)` สร้างค่าบนเส้นที่ฝึกแล้ว ไม่ได้ฝึกโมเดลใหม่ตามจุด grid
+# - `y_test - pred` คือ residual ใช้วาดเทียบกับคำทำนายในกราฟขวา จุดเหนือศูนย์หมายถึงทายต่ำกว่าค่าจริง
+# - `axhline(0)` วางเส้นอ้างอิง residual ศูนย์ ส่วน `savefig` บันทึกภาพก่อนปิด figure ตามวิธีในบท 02

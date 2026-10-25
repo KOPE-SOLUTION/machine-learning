@@ -1,5 +1,4 @@
-"""ดู overfitting ของต้นไม้และการเฉลี่ยผลด้วย Random Forest"""
-# %% เปรียบเทียบทุกตัวบน CV ชุดเดียวกัน
+# %% Cell 1 — เทียบต้นไม้และป่าด้วย CV
 import numpy as np
 from sklearn.datasets import make_classification
 from sklearn.ensemble import RandomForestClassifier
@@ -25,7 +24,16 @@ for name, model in models.items():
     scores[name] = result["test_score"].mean()
     print(f"{name}: train={result['train_score'].mean():.3f}, CV={scores[name]:.3f}")
 
-# %% อธิบายโมเดลที่เลือกแล้ว ผลบน test ใช้รายงาน ไม่ใช้เลือก feature รอบนี้
+# %% [markdown]
+# **อ่านโค้ด**
+#
+# - `make_classification` สร้าง 10 feature โดย 4 ตัวใช้สร้างสัญญาณ และ 2 ตัวเป็นค่าผสมจาก informative features ส่วน `flip_y=0.08` เติมความผิดพลาดของ label
+# - `models` เก็บต้นไม้จำกัดความลึก 3 ชั้น ต้นไม้ไม่กำหนดเพดานความลึก และ Random Forest 120 ต้น
+# - `cross_validate(..., return_train_score=True)` คืนทั้งคะแนนบนข้อมูลที่ใช้ฝึกและ validation ของแต่ละ fold
+# - `result["train_score"]` ใช้ดูผลบนชุดฝึก ส่วน `result["test_score"]` ในคำสั่งนี้หมายถึง validation fold ไม่ใช่ final test
+# - `scores[name]` เก็บค่าเฉลี่ย CV เพื่อให้ทุกโมเดลเลือกด้วยเกณฑ์เดียวกัน ส่วน `n_jobs=1` จำกัดการทำงานให้ใช้หนึ่งงานพร้อมกัน
+
+# %% Cell 2 — ตรวจ feature ของโมเดลที่เลือก
 chosen = max(scores, key=scores.get)
 model = models[chosen].fit(X_train, y_train)
 print("Selected:", chosen, "test accuracy:", round(accuracy_score(y_test, model.predict(X_test)), 3))
@@ -33,3 +41,12 @@ importance = permutation_importance(model, X_test, y_test, scoring="accuracy", n
 order = np.argsort(importance.importances_mean)[::-1][:5]
 for i in order:
     print(f"feature_{i}: accuracy drop={importance.importances_mean[i]:.3f} +/- {importance.importances_std[i]:.3f}")
+
+# %% [markdown]
+# **อ่านโค้ด**
+#
+# - เลือกโมเดลจาก `scores` แล้ว fit บน train ทั้งหมดก่อนประเมิน test ตามวิธีในบท 08
+# - `permutation_importance(..., n_repeats=8)` สลับค่าของ feature แต่ละตัวซ้ำแปดครั้ง แล้ววัดว่า accuracy ลดลงเท่าไร
+# - `importances_mean` และ `importances_std` คือค่าเฉลี่ยและส่วนเบี่ยงเบนมาตรฐานของคะแนนที่ลดลงจากการสลับ
+# - `np.argsort(...)[::-1][:5]` เรียง index ของ feature จาก importance มากไปน้อย แล้วเลือกห้าอันดับแรก
+# - ผลนี้ใช้รายงานโมเดลที่เลือกแล้ว หากจะนำไปเลือก feature ต้องทำขั้นตอนนั้นบน validation
