@@ -10,7 +10,7 @@
 
 ## 2. คัดลอกโค้ดแล้วรัน
 
-เปิด [README บท 01](../lessons/01-ml-workflow/README.md) อ่านแนวคิด แล้วคัดลอก Python block ทั้งชุดลง Code cell กด **Shift+Enter** ผลลัพธ์จะแสดงใต้ cell หากแบ่งโค้ดตาม `# %%` ให้สร้าง cell เองและรันจากบนลงล่าง โดยคัดลอก import มาครบด้วย
+เปิด [README บท 01](../lessons/01-ml-workflow/README.md) อ่านแนวคิด แล้วคัดลอกโค้ด **Cell 1–10 แยกกันตามลำดับ** ลง Code cell ใน Jupyter กด **Shift+Enter** หลังแต่ละ cell ผลลัพธ์จะแสดงด้านล่าง เริ่มจาก Cell 1 เพื่อให้ import เครื่องมือครบก่อนใช้
 
 บทนี้ใช้ `scikit-learn` เพิ่มจากไลบรารีเดิม ถ้ารันแล้วพบ `No module named sklearn` ให้เพิ่ม Code cell ด้านบนแล้วรัน:
 
