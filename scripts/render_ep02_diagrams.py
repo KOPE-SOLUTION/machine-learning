@@ -5,6 +5,8 @@ import contextlib
 import io
 
 import numpy as np
+from thai_figure_text import enable_thai_shaping
+
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -187,6 +189,7 @@ def schema(ns):
 
 
 def main():
+    enable_thai_shaping()
     OUTPUT.mkdir(parents=True, exist_ok=True)
     plt.rcParams.update({"svg.fonttype": "path", "svg.hashsalt": "ml-ep02"})
     # Execute Cells 1–5 only. Optional Cell 6 writes to the learner's practice folder.

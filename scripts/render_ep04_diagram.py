@@ -1,6 +1,8 @@
 """Render the EP04 teaching diagram; this example is not a model's test output."""
 from pathlib import Path
 
+from thai_figure_text import enable_thai_shaping
+
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -23,6 +25,7 @@ def thai_font():
 
 
 def main():
+    enable_thai_shaping()
     plt.rcParams.update({
         "font.family": thai_font(),
         "svg.fonttype": "path",

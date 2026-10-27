@@ -5,6 +5,8 @@ import io
 import runpy
 
 import numpy as np
+from thai_figure_text import enable_thai_shaping
+
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -173,6 +175,7 @@ def smoothing_diagram(ns):
 
 
 def main():
+    enable_thai_shaping()
     plt.rcParams.update({
         "font.family": thai_font(), "mathtext.fontset": "dejavusans",
         "svg.fonttype": "path", "svg.hashsalt": "ml-ep07",

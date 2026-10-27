@@ -6,6 +6,8 @@ Run from any directory with Python; PNG/SVG assets go into assets/figures.
 from pathlib import Path
 import argparse
 
+from thai_figure_text import enable_thai_shaping
+
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -25,6 +27,7 @@ NAVY, MUTED, BG, EDGE = "#142A43", "#52667D", "#F6F8FC", "#CCD9EA"
 
 
 def configure():
+    enable_thai_shaping()
     for name in ("Noto Sans Thai", "Tahoma", "Leelawadee UI", "Thonburi", "Loma"):
         try:
             font_manager.findfont(name, fallback_to_default=False)
@@ -233,7 +236,7 @@ def pca():
     b.axhline(0,color=ORANGE,lw=2)
     b.scatter(z[:,0],np.zeros(len(z)),s=45,c=ORANGE,zorder=3)
     b.set(ylim=(-.5,.5),yticks=[],title="ใหม่: เหลือพิกัดค่าเดียว")
-    box(p,.60,.64,.33,.10,"ฉายจุดลงแกนที่เก็บ variance มาก",size=17)
+    box(p,.60,.69,.33,.10,"ฉายจุดลงแกนที่เก็บ variance มาก",size=17)
     footer(p,"เส้นเชื่อมแสดงส่วนที่หายไปเมื่อเหลือแกนเดียว · PCA ผสม feature ไม่ใช่เลือกคอลัมน์เดิม",
            "ในบทใช้ 64 feature และเก็บ variance 90% · ตัวเลขนี้ไม่ใช่ accuracy 90%")
     save(fig,p,"11-principal-components-projection")

@@ -1,6 +1,8 @@
 """Render an original EP05 conceptual figure (not the fitted experiment result)."""
 from pathlib import Path
 
+from thai_figure_text import enable_thai_shaping
+
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -24,6 +26,7 @@ def thai_font():
 
 
 def main():
+    enable_thai_shaping()
     plt.rcParams.update({
         "font.family": thai_font(), "font.size": 14,
         "svg.fonttype": "path", "svg.hashsalt": "ml-ep05-residual",

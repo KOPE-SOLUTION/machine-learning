@@ -1,0 +1,3 @@
+# Authoring only; learner notebooks do not require these packages.
+-r ../requirements.txt
+uharfbuzz==0.57.0

@@ -1,6 +1,8 @@
 """Render original EP06 preprocessing and Ridge teaching diagrams."""
 from pathlib import Path
 
+from thai_figure_text import enable_thai_shaping
+
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -158,6 +160,7 @@ def ridge():
 
 
 def main():
+    enable_thai_shaping()
     plt.rcParams.update({
         "font.family": thai_font(), "mathtext.fontset": "dejavusans",
         "svg.fonttype": "path", "svg.hashsalt": "ml-ep06",

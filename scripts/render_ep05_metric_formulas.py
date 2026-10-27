@@ -1,6 +1,8 @@
 """Render original EP05 metric formula cards from one shared three-row example."""
 from pathlib import Path
 
+from thai_figure_text import enable_thai_shaping
+
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -130,6 +132,7 @@ def render(metric, values):
 
 
 def main():
+    enable_thai_shaping()
     plt.rcParams.update({
         "font.family": thai_font(), "mathtext.fontset": "dejavusans",
         "svg.fonttype": "path", "svg.hashsalt": "ml-ep05-metrics",

@@ -1,6 +1,8 @@
 """Render the original EP04 Logistic Regression concept diagram."""
 from pathlib import Path
 
+from thai_figure_text import enable_thai_shaping
+
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -37,6 +39,7 @@ def card(ax, x, y, width, height, color):
 
 
 def main():
+    enable_thai_shaping()
     OUTPUT.mkdir(parents=True, exist_ok=True)
     plt.rcParams.update({"font.family": thai_font(), "mathtext.fontset": "dejavusans",
                          "svg.fonttype": "path", "svg.hashsalt": "ml-ep04-logistic"})
