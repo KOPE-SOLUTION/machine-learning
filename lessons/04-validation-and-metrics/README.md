@@ -1,10 +1,38 @@
-# 04 · วัดผลให้ตรงโจทย์: accuracy, precision, recall และ F1
+# 04 · Logistic Regression และการวัดผล: accuracy, precision, recall และ F1
 
 [กลับสารบัญ](../../README.md) · [Notebook](lesson.ipynb) · [Python](lesson.py)
 
-บทนี้เลือกคะแนนที่สะท้อนความผิดพลาด และใช้ **validation** เลือกโมเดลก่อนประเมิน test
+บทนี้เรียน **Logistic Regression** สำหรับจำแนกสองคลาส แล้วอ่าน accuracy, precision, recall และ F1 เพื่อใช้ validation เลือกโมเดลก่อนประเมิน test
 
 **ใช้สิ่งที่เรียนแล้ว:** fit/predict, baseline และ Pipeline จากบท 01–03
+
+## Logistic Regression: โมเดลที่ใช้จำแนกสองคลาส
+
+**Logistic Regression — การถดถอยโลจิสติก** เป็นโมเดล **Supervised Learning สำหรับ Classification** เรียนจาก X พร้อมคำตอบ y แม้ชื่อมีคำว่า Regression แต่ในบทนี้คำตอบคือคลาส 0 หรือ 1
+
+**รับอะไร และทำนายอะไร:** โค้ดสร้าง feature ตัวเลข 8 คอลัมน์ แล้วให้โมเดลทำนายคลาส 0/1 ตัวอย่างสแปมในภาพ confusion matrix ใช้อธิบายความผิดพลาด ส่วนโค้ดบทนี้ยังไม่ได้อ่านข้อความจริง
+
+**หลักการทำงาน:**
+
+1. ตอน `fit` เรียนค่าน้ำหนักของแต่ละ feature และค่าคงที่จาก train โดยใช้ความผิดพลาดแบบ **log loss** ร่วมกับการควบคุมขนาดน้ำหนัก ค่า log loss เพิ่มมากเมื่อโมเดลมั่นใจแต่ตอบผิดคลาส
+2. นำ feature คูณน้ำหนักแล้วรวมกับค่าคงที่ ได้คะแนน `z` จากนั้นใช้ **sigmoid** แปลงเป็นความน่าจะเป็นของคลาส 1
+3. `predict_proba` คืนความน่าจะเป็น ส่วน `predict` ใช้เกณฑ์ตัดสินหรือ **threshold** เพื่อคืนคลาส 0/1 โดยบทนี้ใช้เกณฑ์เริ่มต้น 0.5
+
+![คะแนน z ผ่าน sigmoid เป็นความน่าจะเป็นคลาส 1 ตัวอย่าง z เท่ากับ 2 ได้ประมาณ 0.881 และทายคลาส 1 เมื่อใช้เกณฑ์ 0.5](../../assets/figures/04-validation-and-metrics-logistic.png)
+
+*ตัวอย่างสมมติสำหรับอธิบายโมเดล ไม่ใช่ probability ของแถวใน Cell 3* · [เปิดภาพ SVG](../../assets/figures/04-validation-and-metrics-logistic.svg)
+
+**ตัวอย่าง:** เมื่อโมเดลให้โอกาสเป็นคลาส 1 เท่ากับ 0.8 เกณฑ์ 0.5 จะทาย 1 แต่ถ้าใช้เกณฑ์ 0.9 จะทาย 0 การเปลี่ยนเกณฑ์จึงเปลี่ยน FP/FN ได้ ต้องเลือกเกณฑ์ด้วย validation ตามต้นทุนความผิดพลาด แล้วค่อยประเมิน test
+
+**การตั้งค่าที่ใช้จริงใน Cell 2:**
+
+- `StandardScaler` ปรับสเกลก่อนเข้าโมเดล โดยเรียนสถิติจาก train ภายใน Pipeline
+- `max_iter=1000` คือเพดานจำนวนรอบของตัวแก้ปัญหา ไม่ใช่จำนวนรอบที่ต้องทำครบ และไม่ใช่ threshold
+- `LogisticRegression` ใน scikit-learn รุ่นที่ใช้มี L2 regularization เป็นค่าเริ่มต้น เพื่อควบคุมขนาดน้ำหนัก ส่วน `C=1.0` เป็นค่าตั้งต้น; C น้อยลงหมายถึงควบคุมน้ำหนักเข้มขึ้น การเรียนเลือก C อยู่นอกการทดลองบทนี้
+
+**จุดเด่น:** เป็นโมเดลเริ่มต้นที่ฝึกได้รวดเร็วในหลายงาน และให้ probability เพื่อพิจารณา threshold **ข้อจำกัด:** แนวแบ่งเป็นเชิงเส้นใน feature ที่ป้อนเข้าไป และ probability ที่สูงไม่ได้รับประกันว่าจะทายถูกตามสัดส่วนนั้นจริง
+
+เราจะเทียบกับ **DummyClassifier** จาก [บท 01](../01-ml-workflow/README.md) ซึ่งทายคลาสที่พบบ่อยใน train ทุกแถว แล้วใช้คะแนนต่อไปนี้ตรวจว่า Logistic Regression ช่วยจับคลาส 1 ได้ดีขึ้นเพียงใด
 
 ## อ่านคะแนนเมื่อคลาสไม่สมดุล
 
@@ -49,25 +77,6 @@ F1 ของตัวอย่างนี้เท่ากับ 0.4 จึง
 2. เลือกโมเดลจาก F1 บน validation
 3. ฝึกตัวเลือกนั้นใหม่บน `X_dev` ซึ่งรวม train กับ validation เป็น 1,200 แถว
 4. ประเมินด้วย test
-
-### Logistic Regression คืออะไร
-
-**Logistic Regression — การถดถอยโลจิสติก** เป็นโมเดล **Supervised Learning สำหรับ Classification** แม้ชื่อมีคำว่า Regression แต่เป้าหมายในบทนี้คือทายคลาส 0 หรือ 1
-
-**หลักการทำงานในกรณีสองคลาส:**
-
-1. รวม feature ด้วยค่าน้ำหนักที่เรียนจาก train เป็นคะแนนเชิงเส้น
-2. แปลงคะแนนผ่านฟังก์ชัน **sigmoid** ให้เป็นค่าความน่าจะเป็นของคลาส 1 ระหว่าง 0 กับ 1
-3. ใช้ **threshold** หรือเกณฑ์ตัดสิน เพื่อเปลี่ยนความน่าจะเป็นเป็นคลาส โดยค่าเริ่มต้นคือ 0.5
-
-**ตัวอย่าง:** ความน่าจะเป็นคลาส 1 เท่ากับ 0.8 จะทายเป็น 1 เมื่อใช้ threshold 0.5 แต่ถ้าเพิ่ม threshold เป็น 0.9 ตัวอย่างเดิมจะถูกทายเป็น 0
-
-- **จุดเด่น:** เป็นโมเดลเริ่มต้นที่ฝึกได้รวดเร็วในหลายงาน และให้ probability สำหรับพิจารณา threshold ตามต้นทุนความผิดพลาด
-- **ข้อจำกัด:** ขอบเขตการตัดสินใจเป็นเชิงเส้นใน feature ที่ป้อนเข้าไป หากรูปแบบซับซ้อนอาจต้องสร้าง feature เพิ่มหรือใช้โมเดลอื่น
-
-บทนี้ใช้โมเดลนี้เป็นตัวอย่างสำหรับฝึกอ่านคะแนนและเลือกด้วย validation
-
-หากจะปรับ threshold ให้เลือกบน validation โดยพิจารณาต้นทุนของ FP และ FN
 
 **Average precision (AP):** คะแนนที่สรุป precision และ recall จากการเรียงคะแนนทำนายผ่านหลาย threshold
 
@@ -190,6 +199,7 @@ baseline มี accuracy สูง แต่ F1 เป็นศูนย์ ใ�
 ## อ้างอิง
 
 - [Logistic Regression](https://scikit-learn.org/1.7/modules/linear_model.html#logistic-regression)
+- [LogisticRegression: พารามิเตอร์และค่าตั้งต้น](https://scikit-learn.org/1.7/modules/generated/sklearn.linear_model.LogisticRegression.html)
 - [Metrics and scoring](https://scikit-learn.org/1.7/modules/model_evaluation.html)
 - [Cross-validation](https://scikit-learn.org/1.7/modules/cross_validation.html)
 - [Google MLCC: Classification](https://developers.google.com/machine-learning/crash-course/classification)

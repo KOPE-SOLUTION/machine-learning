@@ -1,10 +1,20 @@
-# 16 · โครงงาน: จำแนกภาพตัวเลขและนำโมเดลกลับมาใช้
+# 16 · โครงงาน SVM: จำแนกภาพตัวเลขและนำโมเดลกลับมาใช้
 
 [กลับสารบัญ](../../README.md) · [Notebook](lesson.ipynb) · [Python](lesson.py)
 
 โครงงานนี้ทำนายเลข 0–9 จาก **digits ขนาด 8×8** แล้วบันทึกโมเดลกลับมาใช้
 
-**ใช้สิ่งที่เรียนแล้ว:** Pipeline, metrics, SVM และ GridSearchCV จากบท 03–10 จะรวมเป็นงานเดียวโดยไม่ทวนอัลกอริทึม
+**ใช้สิ่งที่เรียนแล้ว:** Pipeline, metrics, SVM และ GridSearchCV จากบท 03–10 เพื่อนำมารวมเป็นโครงงานเดียว
+
+## โมเดลในโครงงาน: SVM แบบ RBF
+
+**SVC — Support Vector Classification** คือโมเดล SVM สำหรับจำแนกประเภทจาก [บท 08](../08-support-vector-machines/README.md) รับค่า pixel 64 ค่า หลัง StandardScaler แล้วทายเลข 0–9 โค้ดใช้ kernel เริ่มต้น `"rbf"` ซึ่งสร้างขอบเขตไม่เป็นเส้นตรงได้
+
+สำหรับสิบคลาส SVC ฝึกตัวจำแนกสำหรับแต่ละคู่ของคลาสแล้วรวมผล เรียกว่า **one-versus-one** ส่วน `predict` คืนชื่อคลาสที่เลือก โค้ดไม่ได้เปิด `probability=True` จึงไม่ได้รายงานความน่าจะเป็นของคำตอบ
+
+เราลอง `C` ที่ 1 และ 10 เพื่อปรับความเข้มของการลงโทษการละเมิด margin และ `gamma` ที่ `"scale"` กับ 0.01 เพื่อปรับขอบเขตอิทธิพลของจุดใน RBF เลือกจาก macro F1 บน CV โดย **GridSearchCV เป็นตัวเลือกการตั้งค่า ส่วน SVC เป็นโมเดลทำนาย**
+
+SVM จับรูปแบบโค้งได้ แต่ผลขึ้นกับสเกลและ C/gamma จึงเทียบกับ **DummyClassifier** ที่ทายคลาสพบบ่อยตาม [บท 01](../01-ml-workflow/README.md) และประเมิน test หลังเลือกเสร็จ
 
 ## สิ่งที่เพิ่มในโครงงาน
 
@@ -226,6 +236,7 @@ if __name__ == "__main__":
 
 ## อ้างอิง
 
+- [SVM: หลายคลาสและ RBF kernel](https://scikit-learn.org/1.7/modules/svm.html)
 - [scikit-learn: load_digits](https://scikit-learn.org/1.7/modules/generated/sklearn.datasets.load_digits.html)
 - [Model persistence](https://scikit-learn.org/1.7/model_persistence.html)
 - [Handbook: Application pipeline](https://jakevdp.github.io/PythonDataScienceHandbook/05.14-image-features.html)

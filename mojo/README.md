@@ -6,8 +6,8 @@
 
 | บท | เป้าหมาย |
 |---|---|
-| [M01: Gradient descent](01-gradient-descent/README.md) | เขียนการอัปเดตพารามิเตอร์ด้วย typed loop |
-| [M02: Python interoperability](02-python-interop/README.md) | เรียก scikit-learn Pipeline จาก Mojo |
+| [M01: Linear Regression และ Gradient Descent](01-gradient-descent/README.md) | เขียนการอัปเดตพารามิเตอร์ด้วย typed loop |
+| [M02: KNN ผ่าน Python interoperability](02-python-interop/README.md) | เรียก scikit-learn Pipeline จาก Mojo |
 
 ## สถานะของตัวอย่าง
 

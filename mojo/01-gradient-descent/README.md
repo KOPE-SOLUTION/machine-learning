@@ -1,10 +1,14 @@
-# M01 · เขียน Gradient Descent ด้วย Mojo
+# M01 · ฝึก Linear Regression ด้วย Gradient Descent ใน Mojo
 
 [กลับเส้นทาง Mojo](../README.md) · [Mojo](main.mojo) · [Python reference](reference.py)
 
 เวลาเรียนประมาณ 45–60 นาที เรียน [บท 15](../../lessons/15-gradient-descent/README.md) ก่อนเริ่ม
 
 **ทดสอบแล้วด้วย Mojo 1.2.0 บน Ubuntu 24.04 / WSL และ CPython 3.12.3** ใช้ environment ตาม [คู่มือติดตั้ง](../README.md) เพื่อให้รุ่นตรงกัน
+
+## โมเดลที่ฝึกในบทนี้
+
+โมเดลคือ **Linear Regression** ใช้ `ŷ = wx + b` ทำนาย y จาก x ส่วน Gradient Descent เป็นวิธีปรับ w/b โค้ด Mojo เรียนจากตัวอย่างห้าจุดบนเส้น `y = 3x + 2` แล้วตรวจว่าค่าที่เรียนเข้าใกล้ w=3 และ b=2 ทบทวนความหมายโมเดลและการอัปเดตใน [บท 15](../../lessons/15-gradient-descent/README.md)
 
 ## สิ่งที่เพิ่มจากบท 15
 

@@ -58,22 +58,22 @@ flowchart LR
 | 01 | [เริ่มต้น Machine Learning](lessons/01-ml-workflow/README.md) | รู้จัก X/y แบ่ง train/test และวัด baseline |
 | 02 | [ตรวจข้อมูลสำหรับ ML: leakage, schema และ EDA](lessons/02-data-and-plots/README.md) | แยก X/y ตรวจชุดฝึก และอ่านกราฟใน 5 cell |
 | 03 | [โมเดลแรกด้วย scikit-learn และ KNN](lessons/03-first-classifier/README.md) | Pipeline จำแนกดอกไม้ |
-| 04 | [วัดผลให้ตรงโจทย์: accuracy, precision, recall และ F1](lessons/04-validation-and-metrics/README.md) | รายงาน confusion matrix และ metrics |
+| 04 | [Logistic Regression และการวัดผล: accuracy, precision, recall และ F1](lessons/04-validation-and-metrics/README.md) | รายงาน confusion matrix และ metrics |
 | 05 | [Linear Regression และการอ่านความผิดพลาด](lessons/05-linear-regression/README.md) | เส้นทำนายและ residual plot |
-| 06 | [เตรียมตัวเลข หมวดหมู่ และค่าที่หาย](lessons/06-feature-engineering/README.md) | Pipeline จัดการค่าที่หาย/หมวดหมู่ |
-| 07 | [จำแนกข้อความด้วย Naive Bayes](lessons/07-naive-bayes-text/README.md) | ตัวจำแนกข้อความสั้น |
+| 06 | [Ridge Regression กับการเตรียมตัวเลข หมวดหมู่ และค่าที่หาย](lessons/06-feature-engineering/README.md) | Pipeline จัดการค่าที่หาย/หมวดหมู่ |
+| 07 | [จำแนกข้อความด้วย Multinomial Naive Bayes](lessons/07-naive-bayes-text/README.md) | ตัวจำแนกข้อความสั้น |
 | 08 | [Support Vector Machines และขอบเขตไม่เป็นเส้นตรง](lessons/08-support-vector-machines/README.md) | ขอบเขต linear/RBF SVM |
 | 09 | [Decision Trees, Random Forests และ overfitting](lessons/09-trees-and-forests/README.md) | ตาราง train/CV และ feature importance |
-| 10 | [เลือก hyperparameter ด้วย CV และ learning curve](lessons/10-tuning-and-learning-curves/README.md) | Grid search และ learning curve |
-| 11 | [PCA: ลดมิติโดยเก็บความแปรปรวน](lessons/11-principal-components/README.md) | PCA pipeline และกราฟ variance |
-| 12 | [Manifold Learning และการอ่านภาพ t-SNE](lessons/12-manifold-learning/README.md) | ภาพเปรียบเทียบ PCA/t-SNE |
+| 10 | [ปรับ KNN ด้วย GridSearchCV และอ่าน learning curve](lessons/10-tuning-and-learning-curves/README.md) | Grid search และ learning curve |
+| 11 | [PCA และ Logistic Regression: ลดมิติก่อนจำแนกภาพตัวเลข](lessons/11-principal-components/README.md) | PCA pipeline และกราฟ variance |
+| 12 | [PCA และ t-SNE: ลดมิติเพื่อสำรวจข้อมูล](lessons/12-manifold-learning/README.md) | ภาพเปรียบเทียบ PCA/t-SNE |
 | 13 | [K-means: ค้นกลุ่มโดยไม่มี label](lessons/13-kmeans-clustering/README.md) | กลุ่มข้อมูลและการเลือก k |
 | 14 | [Gaussian Mixtures และ Kernel Density Estimation](lessons/14-mixtures-and-density/README.md) | กราฟ GMM/KDE |
-| 15 | [เขียน Gradient Descent ด้วย NumPy](lessons/15-gradient-descent/README.md) | Gradient descent จาก NumPy |
-| 16 | [โครงงาน: จำแนกภาพตัวเลขและนำโมเดลกลับมาใช้](lessons/16-digits-project/README.md) | โมเดลตัวเลขพร้อมรายงานและไฟล์ทำนาย |
-| 17 | [ข้อมูลคนเดิม ข้อมูลเวลา และการประเมินให้ตรงการใช้งาน](lessons/17-time-and-groups/README.md) | แผน split ตามกลุ่มและเวลา |
-| M01 | [Gradient descent ด้วย Mojo](mojo/01-gradient-descent/README.md) | คำนวณ w,b ด้วย typed loop |
-| M02 | [เรียก scikit-learn จาก Mojo](mojo/02-python-interop/README.md) | ใช้ Python pipeline จากโปรแกรม Mojo |
+| 15 | [ฝึก Linear Regression ด้วย Gradient Descent และ NumPy](lessons/15-gradient-descent/README.md) | Gradient descent จาก NumPy |
+| 16 | [โครงงาน SVM: จำแนกภาพตัวเลขและนำโมเดลกลับมาใช้](lessons/16-digits-project/README.md) | โมเดลตัวเลขพร้อมรายงานและไฟล์ทำนาย |
+| 17 | [ประเมิน KNN และ Linear Regression กับข้อมูลกลุ่มและเวลา](lessons/17-time-and-groups/README.md) | แผน split ตามกลุ่มและเวลา |
+| M01 | [ฝึก Linear Regression ด้วย Gradient Descent ใน Mojo](mojo/01-gradient-descent/README.md) | คำนวณ w,b ด้วย typed loop |
+| M02 | [ใช้ KNN จาก scikit-learn ร่วมกับ Mojo](mojo/02-python-interop/README.md) | ใช้ Python pipeline จากโปรแกรม Mojo |
 
 Mojo เป็นบทเสริมหลังเรียน Python ML และมี [คู่มือเฉพาะของ Mojo](mojo/README.md)
 

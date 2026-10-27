@@ -1,4 +1,4 @@
-# 11 · PCA: ลดมิติโดยเก็บความแปรปรวน
+# 11 · PCA และ Logistic Regression: ลดมิติก่อนจำแนกภาพตัวเลข
 
 [กลับสารบัญ](../../README.md) · [Notebook](lesson.ipynb) · [Python](lesson.py)
 
@@ -39,6 +39,16 @@ PCA หาแกนจาก X โดยไม่ใช้ y ดังนั้�
 **`explained_variance_ratio_`:** สัดส่วน variance ของแต่ละแกน เช่น 0.5, 0.3 และ 0.1 รวมกันเป็น 0.9
 
 หากจะเปรียบเทียบหลายระดับของ variance ที่เก็บ ให้เลือกด้วย CV
+
+## Logistic Regression: ผู้ทำนายหลังลดมิติ
+
+**PCA** เรียนแกนใหม่จาก X และส่งคืนพิกัดที่มีมิติน้อยลง ส่วน **Logistic Regression** เรียนจากพิกัดเหล่านั้นพร้อม y เพื่อทายเลข 0–9 ทบทวนแนวคิดโมเดลใน [บท 04](../04-validation-and-metrics/README.md)
+
+ต่างจากกรณีสองคลาสในบท 04 ตัวแก้ปัญหาเริ่มต้นที่ใช้กับสิบคลาสนี้เรียนแบบ **multinomial logistic regression**: คำนวณคะแนนให้แต่ละคลาส แล้วใช้ **softmax** แปลงเป็น probability สิบค่าที่รวมกันเป็น 1 และเลือกคลาสที่ได้ค่าสูงสุด จึงไม่ใช้เกณฑ์ 0.5 ตัดสินทุกคลาส
+
+**ตัวอย่างสมมติ:** ถ้าความน่าจะเป็นสูงสุดคือเลข 7 ที่ 0.30 ก็เลือกเลข 7 แม้ค่านั้นยังไม่ถึง 0.5
+
+PCA อาจลดข้อมูลรบกวนและจำนวน feature แต่ก็อาจตัดข้อมูลที่ช่วยแยกเลขออกไป ต้องอ่าน accuracy จาก Logistic Regression หลังแปลงข้อมูลด้วย ค่า variance ที่ PCA เก็บไว้ไม่ใช่คะแนนจำแนก
 
 ## ลงมือทำ
 
@@ -139,5 +149,6 @@ plt.close(fig)
 
 ## อ้างอิง
 
+- [Logistic Regression แบบหลายคลาส](https://scikit-learn.org/1.7/modules/linear_model.html#multinomial-case)
 - [Handbook: PCA](https://jakevdp.github.io/PythonDataScienceHandbook/05.09-principal-component-analysis.html)
 - [scikit-learn: PCA](https://scikit-learn.org/1.7/modules/decomposition.html#pca)

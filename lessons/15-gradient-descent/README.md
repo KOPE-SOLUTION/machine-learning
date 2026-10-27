@@ -1,10 +1,16 @@
-# 15 · เขียน Gradient Descent ด้วย NumPy
+# 15 · ฝึก Linear Regression ด้วย Gradient Descent และ NumPy
 
 [กลับสารบัญ](../../README.md) · [Notebook](lesson.ipynb) · [Python](lesson.py)
 
 บทนี้เขียน **Gradient Descent** เพื่อเรียน w และ b ของเส้นตรงด้วย NumPy
 
 **ใช้สิ่งที่เรียนแล้ว:** สมการเส้นตรงและ MAE จากบท 05; vectorization และการวาดกราฟใช้พื้นฐานเดิม
+
+## โมเดลที่ฝึก: Linear Regression
+
+โมเดลคือ **Linear Regression** จาก [บท 05](../05-linear-regression/README.md) ใช้สมการ `ŷ = wx + b` ทำนายคำตอบตัวเลขจาก x ส่วน **Gradient Descent เป็นวิธีหาค่า w และ b** ให้โมเดลนี้
+
+โค้ดจึงมีทั้งเส้นตรงที่ฝึกด้วย NumPy และ `LinearRegression()` ของ scikit-learn สำหรับเทียบผลบน train เดียวกัน ทั้งสองเป็นโมเดลเชิงเส้น แต่ใช้วิธีหาพารามิเตอร์ต่างกัน ความสัมพันธ์ที่ไม่เหมาะกับเส้นตรงยังเป็นข้อจำกัด แม้ฝึกจน loss ลดลงแล้ว
 
 ## Gradient Descent คืออะไร
 

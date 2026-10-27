@@ -1,4 +1,4 @@
-# 07 · จำแนกข้อความด้วย Naive Bayes
+# 07 · จำแนกข้อความด้วย Multinomial Naive Bayes
 
 [กลับสารบัญ](../../README.md) · [Notebook](lesson.ipynb) · [Python](lesson.py)
 

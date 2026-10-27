@@ -1,10 +1,16 @@
-# M02 · ใช้ scikit-learn ร่วมกับ Mojo
+# M02 · ใช้ KNN จาก scikit-learn ร่วมกับ Mojo
 
 [กลับเส้นทาง Mojo](../README.md) · [Mojo](main.mojo) · [Python reference](reference.py)
 
 เวลาเรียนประมาณ 45–60 นาที เรียน [บท 03](../../lessons/03-first-classifier/README.md) และ M01 ก่อนเริ่ม
 
 **ทดสอบแล้วด้วย Mojo 1.2.0 บน Ubuntu 24.04 / WSL และ CPython 3.12.3** ใช้ environment ตาม [คู่มือติดตั้ง](../README.md) เพื่อให้รุ่นตรงกัน
+
+## โมเดลที่เรียกผ่าน Mojo: KNN
+
+โมเดลยังเป็น **KNeighborsClassifier(n_neighbors=5)** จาก [บท 03](../../lessons/03-first-classifier/README.md) รับขนาดกลีบ Iris สี่ค่า หลังปรับสเกล แล้วทายสายพันธุ์จากเสียงของห้าเพื่อนบ้านใกล้ที่สุด การ fit เก็บตัวอย่าง train พร้อมคำตอบ ส่วน predict หาเพื่อนบ้านของแถวที่ส่งเข้าไป
+
+Mojo เรียก Pipeline นี้ผ่าน Python จึงยังต้องรักษาชื่อหรือลำดับและหน่วยของ feature รวมถึง fit scaler เฉพาะ train เช่นเดิม การเปลี่ยนภาษาเรียกใช้งานไม่ได้เปลี่ยนวิธีเรียนของ KNN
 
 ## สิ่งที่เพิ่มจากบท 03 และ M01
 
