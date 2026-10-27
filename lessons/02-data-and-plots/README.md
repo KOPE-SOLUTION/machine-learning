@@ -1,4 +1,4 @@
-# 02 · รู้จักข้อมูลก่อนสร้างโมเดล
+# 02 · ตรวจข้อมูลสำหรับ ML: leakage, schema และ EDA
 
 [กลับสารบัญ](../../README.md) · [Notebook](lesson.ipynb) · [Python](lesson.py)
 
