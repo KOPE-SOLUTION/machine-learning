@@ -1,4 +1,4 @@
-"""Render original EP02 teaching diagrams and the actual Cell 9 scatter plot."""
+"""Render original EP02 teaching diagrams and the actual Cell 5 scatter plot."""
 from pathlib import Path
 from unittest.mock import patch
 import contextlib
@@ -73,36 +73,41 @@ def save(fig, suffix, dpi=150):
 
 def feature_selection(ns):
     fig, ax = canvas(
-        "เลือก X · ใช้ข้อมูลที่มีอยู่ก่อนรู้คำตอบ",
+        "เตรียมข้อมูล · แยก X กับ y แล้วแบ่งฝึก/ทดสอบ",
         "โจทย์: ทำนายสายพันธุ์ Iris จากขนาดกลีบที่วัดได้",
     )
-    card(ax, 0.05, 0.55, 0.51, 0.26, "#EDF4FF")
-    label(ax, 0.075, 0.764, "ใช้เป็น X · ขนาดกลีบ 4 ค่า", size=23, color=BLUE, weight="bold")
+    card(ax, 0.05, 0.61, 0.51, 0.20, "#EDF4FF")
+    label(ax, 0.075, 0.765, "X · ขนาดกลีบ 150 ดอก × 4 ค่า", size=21, color=BLUE, weight="bold")
     for x, y, name in zip((0.075, 0.315, 0.075, 0.315),
-                          (0.696, 0.696, 0.642, 0.642), ns["features"]):
+                          (0.705, 0.705, 0.65, 0.65), ns["data"].feature_names):
         label(ax, x, y, name, size=16)
-    label(ax, 0.075, 0.586, "วัดได้ก่อนรู้สายพันธุ์  •  หน่วย cm", size=18, color=BLUE)
-    card(ax, 0.62, 0.55, 0.33, 0.26, "#FFF5EA")
-    label(ax, 0.645, 0.764, "เก็บเป็น y · คำตอบ", size=23, color=ORANGE, weight="bold")
-    label(ax, 0.645, 0.69, "target: 0, 1, 2", size=23, color=ORANGE)
-    label(ax, 0.645, 0.615, "รหัสแทนชื่อสายพันธุ์", size=19)
+    card(ax, 0.62, 0.61, 0.33, 0.20, "#FFF5EA")
+    label(ax, 0.645, 0.765, "y · คำตอบ 150 ดอก", size=22, color=ORANGE, weight="bold")
+    label(ax, 0.645, 0.705, "target: 0, 1, 2", size=21, color=ORANGE)
+    label(ax, 0.645, 0.65, "เก็บแยกจาก X", size=19)
+    arrow(ax, (0.30, 0.60), (0.30, 0.565))
+    arrow(ax, (0.78, 0.60), (0.78, 0.565), ORANGE)
 
-    card(ax, 0.05, 0.28, 0.90, 0.21)
-    label(ax, 0.075, 0.448, "เปลี่ยนรหัสเป็นชื่อ ก็ยังเป็นเฉลย", size=22, color=ORANGE, weight="bold")
-    label(ax, 0.17, 0.358, "target = 0", size=23, ha="center")
-    arrow(ax, (0.285, 0.358), (0.38, 0.358), ORANGE)
-    label(ax, 0.49, 0.377, "species_name", size=20, ha="center")
-    label(ax, 0.49, 0.326, ns["label_names"][0], size=23, color=ORANGE, ha="center", weight="bold")
-    arrow(ax, (0.61, 0.358), (0.70, 0.358), ORANGE)
-    label(ax, 0.815, 0.382, "ใส่ใน X =", size=23, color=ORANGE, weight="bold", ha="center")
-    label(ax, 0.815, 0.325, "target leakage", size=18, color=ORANGE, ha="center")
+    card(ax, 0.05, 0.43, 0.90, 0.12)
+    label(ax, 0.5, 0.512, "train_test_split(X, y, test_size=0.2, ...)",
+          size=24, ha="center", weight="bold")
+    label(ax, 0.5, 0.46, "แบ่งแถวของ X และ y พร้อมกัน · ดอกไม้แต่ละดอกยังจับคู่กับคำตอบเดิม",
+          size=18, ha="center", color=MUTED)
+    arrow(ax, (0.265, 0.42), (0.265, 0.37))
+    arrow(ax, (0.735, 0.42), (0.735, 0.37), ORANGE)
 
-    card(ax, 0.05, 0.11, 0.90, 0.105)
-    label(ax, 0.075, 0.164, "sample_id: 0, 1, …, 149", size=22, weight="bold")
-    label(ax, 0.465, 0.164, "ใช้ระบุแถว  •  ไม่เลือกเป็น feature ในบทนี้", size=19, color=MUTED)
-    label(ax, 0.05, 0.048,
-          "เชื่อมกับ Cell 3–4  •  ลบ target แต่ยังเก็บ species_name ใน X = ยังมีเฉลยรั่วเข้าไป",
-          size=17, color=ORANGE)
+    card(ax, 0.05, 0.13, 0.43, 0.22, "#EDF4FF")
+    label(ax, 0.075, 0.305, "ชุดฝึก · 120 ดอก", size=23, color=BLUE, weight="bold")
+    label(ax, 0.075, 0.238, "X_train: 120 แถว × 4 คอลัมน์", size=20)
+    label(ax, 0.075, 0.177, "y_train: 120 คำตอบ", size=20)
+    card(ax, 0.52, 0.13, 0.43, 0.22, "#FFF5EA")
+    label(ax, 0.545, 0.305, "ชุดทดสอบ · 30 ดอก", size=23, color=ORANGE, weight="bold")
+    label(ax, 0.545, 0.238, "X_test: 30 แถว × 4 คอลัมน์", size=20)
+    label(ax, 0.545, 0.177, "y_test: 30 คำตอบ", size=20)
+
+    label(ax, 0.05, 0.059,
+          "EP2 สำรวจเฉพาะ X_train · ใช้ y_train แยกสายพันธุ์ในกราฟ · เก็บชุดทดสอบไว้ก่อน",
+          size=18, color=BLUE, weight="bold")
     save(fig, "feature-selection")
 
 
@@ -148,16 +153,16 @@ def schema(ns):
 def main():
     OUTPUT.mkdir(parents=True, exist_ok=True)
     plt.rcParams.update({"svg.fonttype": "path", "svg.hashsalt": "ml-ep02"})
-    # Execute Cells 1–9 only. Cell 10 writes to the learner's practice folder.
+    # Execute Cells 1–5 only. Optional Cell 6 writes to the learner's practice folder.
     source = (ROOT / "lessons/02-data-and-plots/lesson.py").read_text(encoding="utf-8")
-    source = source.split("# %% Cell 10", 1)[0]
+    source = source.split("# %% Cell 6", 1)[0]
     ns = {}
     with contextlib.redirect_stdout(io.StringIO()), patch.object(plt, "show"):
-        exec(compile(source, "ep02-cells-1-9", "exec"), ns)
-    assert len(ns["train"]) == 120 and len(ns["test_idx"]) == 30
+        exec(compile(source, "ep02-cells-1-5", "exec"), ns)
+    assert len(ns["X_train"]) == 120 and len(ns["X_test"]) == 30
     assert len(ns["fig"].axes[0].collections) == 3
-    assert ns["fig"].axes[0].get_xlabel() == ns["features"][2]
-    assert ns["fig"].axes[0].get_ylabel() == ns["features"][3]
+    assert ns["fig"].axes[0].get_xlabel() == ns["data"].feature_names[2]
+    assert ns["fig"].axes[0].get_ylabel() == ns["data"].feature_names[3]
     save(ns["fig"], "iris", dpi=140)
     plt.rcParams.update({"font.family": thai_font(), "mathtext.fontset": "dejavusans"})
     feature_selection(ns)

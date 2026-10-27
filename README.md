@@ -56,7 +56,7 @@ flowchart LR
 |---|---|---|
 | 00 | [แนะนำหลักสูตรและวิธีเรียน](lessons/00-setup/README.md) | รู้เส้นทางและเตรียม notebook |
 | 01 | [เริ่มต้น Machine Learning](lessons/01-ml-workflow/README.md) | รู้จัก X/y แบ่ง train/test และวัด baseline |
-| 02 | [ตรวจข้อมูลสำหรับ ML: leakage, schema และ EDA](lessons/02-data-and-plots/README.md) | รายงาน audit และ feature ที่อนุญาตให้ใช้ |
+| 02 | [รู้จักข้อมูลก่อนสร้างโมเดล](lessons/02-data-and-plots/README.md) | แยก X/y ตรวจชุดฝึก และอ่านกราฟใน 5 cell |
 | 03 | [โมเดลแรกด้วย scikit-learn และ KNN](lessons/03-first-classifier/README.md) | Pipeline จำแนกดอกไม้ |
 | 04 | [วัดผลให้ตรงโจทย์: accuracy, precision, recall และ F1](lessons/04-validation-and-metrics/README.md) | รายงาน confusion matrix และ metrics |
 | 05 | [Linear Regression และการอ่านความผิดพลาด](lessons/05-linear-regression/README.md) | เส้นทำนายและ residual plot |
@@ -85,7 +85,7 @@ Mojo เป็นบทเสริมหลังเรียน Python ML แ�
 
 เริ่มจาก README และ notebook ที่สร้างเองได้เลย เมื่อลองใหม่ ให้รันจาก cell แรกเพื่อให้ตัวแปรครบ โค้ดแต่ละบทไม่อาศัยตัวแปรจากบทก่อน
 
-โดยทั่วไปบทที่สร้างกราฟหรือโมเดลจะบันทึกลง `outputs/` ใต้โฟลเดอร์ที่ notebook ทำงาน สำหรับ [บท 02 บน Windows](lessons/02-data-and-plots/README.md) จะบันทึกใน `practics/outputs/02-data-and-plots/` ของโปรเจกต์ `Documents/L/L04_CoreData/machine-learning` ใต้โฟลเดอร์ผู้ใช้ หากเก็บโปรเจกต์ไว้ที่อื่น ให้ปรับตำแหน่งใน Cell 10 ตามคำอธิบายของบท
+โดยทั่วไปบทที่สร้างกราฟหรือโมเดลจะบันทึกลง `outputs/` ใต้โฟลเดอร์ที่ notebook ทำงาน สำหรับ [บท 02 บน Windows](lessons/02-data-and-plots/README.md) จะบันทึกใน `practics/outputs/02-data-and-plots/` ของโปรเจกต์ `Documents/L/L04_CoreData/machine-learning` ใต้โฟลเดอร์ผู้ใช้ หากเก็บโปรเจกต์ไว้ที่อื่น ให้ปรับตำแหน่งใน Cell 6 (บันทึกไฟล์ เลือกทำ) ตามคำอธิบายของบท
 
 ## สิ่งที่ควรจำตลอดหลักสูตร
 

@@ -1,69 +1,33 @@
-# 02 · ตรวจข้อมูลสำหรับ ML: leakage, schema และ EDA
+# 02 · รู้จักข้อมูลก่อนสร้างโมเดล
 
 [กลับสารบัญ](../../README.md) · [Notebook](lesson.ipynb) · [Python](lesson.py)
 
-ก่อนให้โมเดลเรียนจากข้อมูล ต้องเลือกให้ได้ว่า **คอลัมน์ไหนใช้ทำนายได้จริง** และตรวจว่าค่าข้างในพร้อมใช้งานหรือยัง บทนี้ใช้ Iris ต่อจากบท 01 แต่เตรียมข้อมูลใหม่ครบในโค้ด
+**โจทย์เดิมจาก EP1:** ทำนายสายพันธุ์ Iris จากขนาดกลีบสี่ค่า บทนี้ตรวจข้อมูลที่จะใช้ฝึกให้เข้าใจก่อนนำไปสร้างโมเดล KNN ในบท 03
 
-**ใช้สิ่งที่เรียนแล้ว:** NumPy, pandas, Matplotlib และ X/y กับ train/test จาก [บท 01](../01-ml-workflow/README.md) โดยเน้นเหตุผลที่นำเครื่องมือเหล่านี้มาตรวจข้อมูลสำหรับ ML
+บทหลักมี **5 cell** ใช้ชื่อตัวแปรและการแบ่ง X/y แบบเดียวกับบท 01:
 
-## เลือกข้อมูลที่มีอยู่ก่อนรู้คำตอบ
+| Cell | ทำอะไร | ทำไปเพื่ออะไร |
+|---|---|---|
+| 1 | โหลดตาราง | ดูว่าหนึ่งแถวและแต่ละคอลัมน์หมายถึงอะไร |
+| 2 | แยก X กับ y | แยกข้อมูลที่ใช้ทำนายออกจากคำตอบ |
+| 3 | แบ่ง train/test | เก็บชุดทดสอบไว้ แล้วสำรวจเฉพาะชุดฝึก |
+| 4 | ตรวจตารางสถิติ | ดูช่วงค่า ค่าหาย และชนิดข้อมูล |
+| 5 | วาดกราฟ | ดูรูปแบบของขนาดกลีบในแต่ละสายพันธุ์ |
 
-สำหรับดอกไม้ดอกใหม่ที่ยังไม่รู้สายพันธุ์ เราวัดขนาดกลีบได้ จึงใช้ขนาดเป็น **feature** ส่วนรหัสหรือชื่อสายพันธุ์เป็น **คำตอบ** ที่ต้องการให้โมเดลทำนาย
+สร้าง `ml-02.ipynb` ใช้ kernel เดิมจากบท 01 แล้วรัน **Cell 1–5 แยกกันตามลำดับ** ใน Jupyter ด้วย Shift+Enter ส่วน **Cell 6 เป็นการบันทึกไฟล์ เลือกทำได้** ใช้พื้นฐาน pandas และ Matplotlib ที่เคยเรียนแล้ว
 
-**Target leakage** คือกรณีที่คำตอบหรือข้อมูลซึ่งเปิดเผยคำตอบรั่วเข้าไปในข้อมูลที่ใช้ทำนาย ทำให้ดูเหมือนทายได้ดี แต่ใช้ตามนั้นไม่ได้เมื่อเจอดอกใหม่ที่ยังไม่มีเฉลย
-
-![ขนาดกลีบสี่คอลัมน์ใช้เป็น X ส่วน target เก็บเป็น y การแปลง target 0 เป็น species_name setosa ยังเป็นเฉลยจึงไม่ใส่ใน X และ sample_id เป็นเลขลำดับแถวที่ไม่เลือกเป็น feature](../../assets/figures/02-data-and-plots-feature-selection.png)
-
-*เชื่อมกับ Cell 3–4: การเปลี่ยนชื่อหรือรูปแบบของเฉลย ไม่ได้ทำให้กลายเป็นข้อมูลสำหรับทำนาย* · [เปิดภาพ SVG](../../assets/figures/02-data-and-plots-feature-selection.svg)
-
-- `target` เป็นเฉลย เก็บไว้ใน y
-- `species_name` แปลงจาก target จึงเป็นเฉลยในรูปชื่อ **แม้ลบ target ออกจาก X แต่ยังเก็บ species_name ไว้ ก็ยังเกิด leakage**
-- `sample_id` เป็นเลขลำดับแถวในตัวอย่างนี้ ใช้อ้างอิงแถวได้ แต่ไม่เลือกเป็นข้อมูลทำนาย เพราะไม่ใช่ลักษณะดอกไม้
-
-## Schema: ชื่อ ลำดับ ชนิด และหน่วยต้องตรงกัน
-
-**Schema** คือข้อตกลงว่าข้อมูลแต่ละคอลัมน์หมายถึงอะไร ใช้ชื่อและลำดับใด เป็นข้อมูลชนิดไหน และใช้หน่วยอะไร ข้อมูลที่ส่งให้โมเดลตอนทำนายต้องสอดคล้องกับตอนฝึก
-
-![ตัวอย่างค่าขนาดกลีบสี่ค่าในหน่วยเซนติเมตร เทียบกับค่าของขนาดเดียวกันในหน่วยมิลลิเมตร ต้องหาร 10 ก่อนนำไปใช้กับคอลัมน์หน่วยเซนติเมตร แม้จำนวนคอลัมน์จะเท่ากัน](../../assets/figures/02-data-and-plots-schema.png)
-
-*ตัวอย่างหน่วยที่สร้างเพื่ออธิบาย โดยอิงค่าดอกแรกของ Iris; ข้อมูลในบทมีหน่วย cm อยู่แล้ว จึงไม่ต้องหาร 10 ในโค้ด* · [เปิดภาพ SVG](../../assets/figures/02-data-and-plots-schema.svg)
-
-เช่น `51 mm = 5.1 cm` หากนำเลข 51 ไปใส่ในช่องที่ใช้หน่วย cm จะกลายเป็น 51 cm ซึ่งใหญ่กว่าค่าที่ตั้งใจ 10 เท่า การมีสี่คอลัมน์ครบจึงยังไม่พอ ต้องตรวจความหมายและหน่วยด้วย
-
-## EDA: สำรวจชุดฝึกก่อนสร้างโมเดล
-
-**Exploratory Data Analysis (EDA)** คือการสำรวจข้อมูลด้วยสถิติและกราฟ เพื่อดูช่วงค่า ค่าหาย แถวที่เหมือนกัน และรูปแบบที่อาจเป็นประโยชน์ต่อการสร้างโมเดล
-
-บทนี้เลือกคอลัมน์จากความหมายของโจทย์ก่อน แล้วกัน test ไว้ **สถิติและกราฟใน Cell 6–9 ใช้เฉพาะ train** เพื่อไม่ให้ข้อมูลทดสอบมาช่วยตัดสินใจระหว่างพัฒนาโมเดล
-
-ผลตรวจไม่ได้รับรองว่าข้อมูลถูกต้องทุกอย่าง เช่น แถวที่มีค่าเท่ากันอาจเป็นคนละดอก หรืออาจบันทึกดอกเดิมซ้ำ ต้องตรวจที่มาของข้อมูลก่อนตัดสินใจแก้ไข
-
-## ลงมือทำ
-
-สร้าง `ml-02.ipynb` แล้วรัน **Cell 1–10 แยกกันตามลำดับ** ใน Jupyter เพื่อให้ตารางท้ายแต่ละ cell แสดงครบ ใช้ kernel เดิมจากบท 01
+หากเคยรันฉบับก่อนหน้า ให้ Restart Kernel แล้วใช้โค้ดฉบับนี้ตั้งแต่ Cell 1 เพื่อให้ตัวแปรตรงกัน
 
 <!-- CODE:CELLS -->
 
 <!-- CODE:START -->
-### Cell 1 — เตรียมเครื่องมือ
+### Cell 1 — โหลดตารางดอกไม้
 
 ```python
-from pathlib import Path
-
 import matplotlib.pyplot as plt
-import numpy as np
-import pandas as pd
 from sklearn.datasets import load_iris
 from sklearn.model_selection import train_test_split
-```
 
-**อ่านโค้ด:** `load_iris` ใช้โหลดข้อมูลดอกไม้ ส่วน `train_test_split` ใช้แบ่งชุดข้อมูล และ `Path` ใช้กำหนดที่บันทึกไฟล์ใน Cell 10
-
-NumPy, pandas และ Matplotlib ใช้งานต่อจากพื้นฐานเดิม Cell นี้นำเข้าเครื่องมือ จึงยังไม่มีผลลัพธ์แสดง
-
-### Cell 2 — โหลดข้อมูลและอ่านโครงสร้างตาราง
-
-```python
 data = load_iris(as_frame=True)
 frame = data.frame.copy()
 
@@ -71,206 +35,130 @@ print("Table shape:", frame.shape)
 frame.head(3)
 ```
 
-**อ่านโค้ด**
+**ทำเพื่อ:** ดูว่าหนึ่งแถวแทนอะไร และมีคอลัมน์ใดบ้าง ก่อนเลือกข้อมูลให้โมเดล
 
-- `load_iris(as_frame=True)` โหลด Iris โดยให้ข้อมูลอยู่ในรูปแบบ pandas พร้อมชื่อคอลัมน์ ตัวแปร `data` เก็บทั้งข้อมูล คำตอบ และชื่อสายพันธุ์
-- `data.frame` คือตารางที่รวมขนาดกลีบสี่คอลัมน์กับ `target` ไว้ด้วยกัน
-- `frame = data.frame.copy()` คัดลอกตารางนั้นมาเก็บใน `frame` เพื่อเพิ่มคอลัมน์หรือแก้ข้อมูลต่อ โดยไม่เปลี่ยนตารางต้นฉบับใน `data.frame`
-- `frame.head(3)` แสดงสามแถวแรกใต้ cell เพื่อให้เห็นชื่อคอลัมน์และตัวอย่างค่า
+- `as_frame=True` ให้ข้อมูลอยู่ในรูปตาราง pandas ส่วน `data.frame` รวมขนาดกลีบกับคำตอบไว้แล้ว
+- `frame = data.frame.copy()` คัดลอกตารางมาใช้งาน โดยไม่แก้ตารางต้นฉบับใน `data.frame`
+- `head(3)` แสดงสามแถวแรก ตารางเต็มยังมี 150 แถว
 
-**ผลที่ได้:** shape `(150, 5)` คือ 150 ดอก 5 คอลัมน์ โดยหนึ่งแถวแทนหนึ่งดอก
+**ผลที่ได้:** `(150, 5)` คือ 150 ดอก ขนาดกลีบสี่คอลัมน์และ `target` หนึ่งคอลัมน์ ขนาดใช้หน่วยเซนติเมตร; sepal คือกลีบเลี้ยง และ petal คือกลีบดอก ส่วน target 0, 1, 2 แทน setosa, versicolor, virginica ตามลำดับ
 
-**คำศัพท์:** sepal คือกลีบเลี้ยง ส่วน petal คือกลีบดอก ขนาดมีหน่วยเซนติเมตร
-
-### Cell 3 — เพิ่มคอลัมน์ตัวอย่างและดูการจับคู่รหัสกับชื่อ
+### Cell 2 — แยกข้อมูลเข้า X และคำตอบ y
 
 ```python
-frame["sample_id"] = np.arange(len(frame))
-label_names = dict(enumerate(data.target_names))
-frame["species_name"] = frame["target"].map(label_names)  # สร้างจากคำตอบ: ใช้ทำนายไม่ได้
+X = frame[data.feature_names].copy()
+y = frame["target"].copy()
 
-frame.loc[[0, 50, 100], ["sample_id", "target", "species_name"]]
-```
-
-**อ่านโค้ด**
-
-- `np.arange(len(frame))` สร้างเลข 0–149 ให้ `sample_id` ใช้เป็นเลขลำดับแถวในตัวอย่างนี้
-- `dict(enumerate(data.target_names))` จับคู่รหัสกับชื่อเป็น `{0: "setosa", 1: "versicolor", 2: "virginica"}` แล้วเก็บใน `label_names`
-- `frame["target"].map(label_names)` แปลงรหัสในแต่ละแถวเป็นชื่อ แล้วเก็บใน `species_name`
-- `frame.loc[[0, 50, 100], ["sample_id", "target", "species_name"]]` เลือกสามแถวและสามคอลัมน์มาแสดง เพื่อดูหนึ่งตัวอย่างต่อสายพันธุ์ ตารางเดิมยังมี 150 แถว
-
-**คอลัมน์ที่ตัดออกจาก X**
-
-- `species_name` สร้างจากคำตอบ หากนำเข้า X จะเกิด target leakage การเพิ่มคอลัมน์นี้ใช้สาธิตปัญหา ไม่ได้เลือกเป็นข้อมูลทำนาย
-- `sample_id` เป็นลำดับแถวในตัวอย่างนี้ ไม่ใช่ลักษณะดอกไม้
-
-### Cell 4 — เลือก feature ที่ใช้ได้และแยก X กับ y
-
-```python
-features = list(data.feature_names)
-forbidden = {"target", "species_name", "sample_id"}
-assert forbidden.isdisjoint(features)
-
-X = frame[features]
-y = frame["target"]
-assert X.index.equals(y.index)
-
-print("Approved features:", features)
-print("Excluded columns:", sorted(forbidden))
+print("X columns:", X.columns.tolist())
 print("X shape:", X.shape)
 print("y shape:", y.shape)
 ```
 
-**อ่านโค้ด**
+**ทำเพื่อ:** แยกสิ่งที่ใช้ทำนายออกจากสิ่งที่ต้องการทำนาย
 
-- `list(data.feature_names)` ดึงชื่อขนาดกลีบสี่คอลัมน์จากชุดข้อมูล จึงไม่ติดคอลัมน์ที่เพิ่มเองใน Cell 3
-- `forbidden.isdisjoint(features)` ตรวจว่าสองกลุ่มชื่อไม่มีชื่อซ้ำกัน ถ้าไม่ผ่าน `assert` จะหยุดให้แก้รายการ feature คำสั่งนี้ตรวจชื่อที่ระบุไว้ ไม่ได้ค้นหา leakage ทุกชนิดให้อัตโนมัติ
-- `frame[features]` เลือกเฉพาะข้อมูลเข้า X ส่วน `frame["target"]` เลือกคำตอบเป็น y ตาราง `frame` เดิมยังมีทุกคอลัมน์
-- `X.index.equals(y.index)` ตรวจว่า index ของ X และ y ตรงกันทั้งค่าและลำดับ เพื่อให้ข้อมูลแต่ละดอกจับคู่กับคำตอบถูกแถว
+- `data.feature_names` คือชื่อขนาดกลีบสี่คอลัมน์ จึงเลือกเฉพาะสี่คอลัมน์เข้า X
+- `y` เก็บรหัสสายพันธุ์จาก `target` แยกไว้เป็นคำตอบ
+- `X.columns.tolist()` แสดงรายชื่อคอลัมน์ที่เลือก เพื่อตรวจด้วยตาว่าไม่มี `target` ปะปน
 
-**ผลที่ได้:** `X: (150, 4)` และ `y: (150,)`
+**ผลที่ได้:** X มีขนาด `(150, 4)` ส่วน y มี 150 คำตอบ ทั้งสองชุดยังจับคู่กันตามแถวเดิม
 
-**Schema:** ข้อตกลงเรื่องชื่อ ลำดับ ชนิดข้อมูล และหน่วยของคอลัมน์ ข้อมูลตอนทำนายต้องตรงกับตอนฝึก
+**ทำไมไม่ใส่ target ใน X?** เราต้องการทำนายสายพันธุ์ของดอกใหม่ที่ยังไม่รู้คำตอบ หากใส่ target หรือชื่อสายพันธุ์เข้า X จะเท่ากับส่งเฉลยให้ดู เรียกว่า **Target leakage** ส่วนการเก็บคำตอบแยกเป็น y เพื่อสอนตอนฝึกและตรวจผลตอนทดสอบ เป็นขั้นตอนปกติ
 
-ภาพ Schema ด้านบนแสดงตัวอย่างหน่วย mm กับ cm; คำสั่ง assert ใน cell นี้ไม่ได้ตรวจหน่วยให้ ต้องตรวจจากที่มาของข้อมูล
+![แยกขนาดกลีบเป็น X และคำตอบเป็น y จากนั้นแบ่งทั้งสองพร้อมกันเป็น X_train y_train สำหรับฝึก และ X_test y_test สำหรับทดสอบ](../../assets/figures/02-data-and-plots-feature-selection.png)
 
-### Cell 5 — กัน test แล้วเลือกแถวสำหรับสำรวจ
+*ภาพเชื่อม Cell 2–3: X และ y ถูกแบ่งพร้อมกัน โดยข้อมูลแต่ละดอกยังจับคู่กับคำตอบของดอกนั้น* · [เปิดภาพ SVG](../../assets/figures/02-data-and-plots-feature-selection.svg)
+
+### Cell 3 — แบ่งชุดฝึกและชุดทดสอบแบบบท 01
 
 ```python
-train_idx, test_idx = train_test_split(
-    frame.index, test_size=0.2, stratify=y, random_state=42
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, stratify=y, random_state=42
 )
-assert set(train_idx).isdisjoint(test_idx)
 
-train = frame.loc[train_idx].copy()
-print("Train rows:", len(train_idx), "Reserved test rows:", len(test_idx))
-print("Training class counts:\n", train["target"].value_counts().sort_index())
+print("X_train:", X_train.shape, "y_train:", y_train.shape)
+print("X_test:", X_test.shape, "y_test:", y_test.shape)
+print("Training class counts:\n", y_train.value_counts().sort_index())
 ```
 
-**อ่านโค้ด**
+**ทำเพื่อ:** กันข้อมูลส่วนหนึ่งไว้ทดสอบในภายหลัง แล้วสำรวจเฉพาะชุดฝึก
 
-- `train_test_split(frame.index, ...)` แบ่ง **index ของแถว** แล้วเก็บไว้ใน `train_idx` และ `test_idx` เพื่อใช้เลือกข้อมูลจากตารางเดิม
-- `test_size=0.2` กัน 20% เป็น test ส่วน `stratify=y` ช่วยรักษาสัดส่วนสายพันธุ์ และ `random_state=42` ทำให้แบ่งซ้ำได้เหมือนเดิมเมื่อข้อมูลเดิม
-- `set(train_idx).isdisjoint(test_idx)` ตรวจว่าไม่มี index อยู่ทั้งสองชุด
-- `frame.loc[train_idx].copy()` เลือกเฉพาะแถวฝึกและคัดลอกมาเป็น `train` สำหรับสำรวจต่อ
-- `value_counts().sort_index()` นับจำนวนแต่ละสายพันธุ์ แล้วแสดงตามรหัส 0, 1, 2
+ส่งเข้าไปสองชุด คือ X และ y แต่ละชุดถูกแบ่งเป็น train/test จึงรับกลับ **สี่ชุด** ตามลำดับ `X_train, X_test, y_train, y_test` จำนวนชุดที่คืนมาไม่เกี่ยวกับจำนวนคอลัมน์ใน X
 
-**ผลที่ได้:** train 120 แถว คลาสละ 40 และ test 30 แถว
+- `test_size=0.2` กัน 20% เป็นชุดทดสอบ
+- `stratify=y` รักษาสัดส่วนสายพันธุ์; เป็นเงื่อนไขการแบ่ง ไม่ใช่ข้อมูลอีกชุดที่คืนออกมา
+- `random_state=42` ทำให้แบ่งซ้ำได้เหมือนเดิมเมื่อใช้ข้อมูลเดิม
+- `value_counts().sort_index()` นับคำตอบในชุดฝึก แล้วเรียงตามรหัส 0, 1, 2
 
-ใช้ **train เท่านั้น** สำหรับสถิติและกราฟถัดไป
+**ผลที่ได้:** X_train มี 120 แถว 4 คอลัมน์ คู่กับ y_train 120 คำตอบ สายพันธุ์ละ 40 ดอก ส่วน X_test มี 30 แถว คู่กับ y_test 30 คำตอบ
 
-index ไม่ซ้ำยังไม่รับรองว่าเป็นคนละตัวอย่างจริง ดูกรณีคนเดิมหลายแถวในบท 17
+จากนี้ใช้ **X_train** ตรวจสถิติและวาดกราฟ โดยใช้ **y_train** ช่วยแยกสายพันธุ์ในภาพ เก็บ X_test และ y_test ไว้ เพื่อไม่ให้ข้อมูลทดสอบมาช่วยตัดสินใจระหว่างพัฒนาโมเดล
 
-### Cell 6 — สรุปช่วงค่า ค่าหาย และชนิดข้อมูล
+### Cell 4 — ตรวจค่าข้างในชุดฝึก
 
 ```python
-summary = train[features].agg(["min", "max", "mean", "std"]).T
-summary["missing"] = train[features].isna().sum()
-summary["dtype"] = train[features].dtypes.astype(str)
+summary = X_train.agg(["min", "max", "mean", "std"]).T
+summary["missing"] = X_train.isna().sum()
+summary["dtype"] = X_train.dtypes.astype(str)
 
 summary.round(3)
 ```
 
-**อ่านโค้ด**
+**ทำเพื่อ:** ดูช่วงค่าที่วัดได้ ตรวจค่าหายและชนิดข้อมูล ก่อนนำข้อมูลไปฝึกโมเดล
 
-- `train[features]` จำกัดตารางให้เหลือ feature ของชุดฝึก จึงไม่รวมคำตอบหรือแถว test
-- `agg(["min", "max", "mean", "std"]).T` สรุปสถิติ แล้วสลับแถวกับคอลัมน์ให้หนึ่งแถวแทนหนึ่ง feature
-- `isna().sum()` นับค่าหายของแต่ละคอลัมน์ ส่วน `dtypes.astype(str)` นำชื่อชนิดข้อมูลมาใส่ในตารางรายงาน
-- `summary.round(3)` แสดงค่าทศนิยมสามตำแหน่ง โดยยังไม่ได้เขียนทับค่าใน `summary`
+- `agg(...).T` สรุปค่าต่ำสุด สูงสุด ค่าเฉลี่ย และส่วนเบี่ยงเบนมาตรฐาน แล้วจัดให้หนึ่งแถวเป็นหนึ่ง feature
+- `isna().sum()` นับค่าหาย ส่วน `dtypes.astype(str)` นำชื่อชนิดข้อมูลมาใส่ในรายงาน
+- `round(3)` แสดงทศนิยมสามตำแหน่ง โดยไม่เขียนทับค่าต้นฉบับใน summary
 
-**ผลที่ได้:** `missing=0` และ `float64` ทุก feature เช่น ความยาวกลีบดอกใน train อยู่ระหว่าง 1.1–6.9 cm ใช้ช่วงค่าช่วยตรวจสิ่งผิดปกติเบื้องต้น
+**อ่านผล:** missing เป็น 0 และ dtype เป็น float64 ทั้งสี่คอลัมน์ เช่น ความยาวกลีบดอกในชุดฝึกอยู่ระหว่าง 1.1–6.9 cm หากพบค่าหายหรือตัวเลขผิดจากที่คาด ต้องตรวจที่มาก่อน; การเติมค่าหายจะเรียนในบท 06
 
-### Cell 7 — ตรวจ NaN และค่าที่เป็นอนันต์
+การสำรวจด้วยสถิติและกราฟเรียกว่า **EDA (Exploratory Data Analysis)** ใช้เครื่องมือ pandas และ Matplotlib ที่เคยเรียน โดยเน้นอ่านข้อมูลเพื่อเตรียมสร้างโมเดล
 
-```python
-matrix = train[features].to_numpy()
-
-assert np.isfinite(matrix).all(), "Handle non-finite values inside a training pipeline"
-assert len(features) == matrix.shape[1]
-
-print("Matrix shape:", matrix.shape)
-print("All feature values are finite")
-```
-
-**อ่านโค้ด**
-
-- `train[features].to_numpy()` เปลี่ยนค่าจาก DataFrame เป็น array โดยคงลำดับคอลัมน์ใน `features` ไว้ แล้วเก็บใน `matrix`
-- `np.isfinite(matrix).all()` ตรวจว่าทุกค่าไม่ใช่ NaN หรือ infinity ถ้าพบค่าใดไม่ผ่าน `assert` จะหยุด
-- `matrix.shape[1]` คือจำนวนคอลัมน์ ใช้ตรวจว่ามีครบตามรายการ feature
-
-**ผลที่ได้:** matrix ขนาด `(120, 4)` ผ่านทั้งสองเงื่อนไข `isfinite` ตรวจเพิ่มจาก `isna` โดยจับ `inf` และ `-inf` ได้ด้วย
-
-ยังต้องตรวจว่าค่าที่วัดสมเหตุสมผล หากพบค่าหายจะจัดการใน Pipeline ตามบท 06
-
-### Cell 8 — ตรวจ feature ที่ซ้ำและคอลัมน์ค่าคงที่
-
-```python
-duplicate_mask = train[features].duplicated(keep=False)
-constant_features = train[features].columns[
-    train[features].nunique() <= 1
-].tolist()
-
-print("Duplicate feature rows in train:", duplicate_mask.sum())
-print("Constant features in train:", constant_features)
-train.loc[duplicate_mask, features + ["target"]]
-```
-
-**อ่านโค้ด**
-
-- `duplicated(keep=False)` ทำเครื่องหมายทุกแถวในกลุ่มที่มีค่า feature ซ้ำกัน รวมทั้งแถวแรก
-- `duplicate_mask.sum()` นับจำนวนแถวที่ถูกทำเครื่องหมาย จึงได้ 2 แถวสำหรับข้อมูลซ้ำหนึ่งคู่
-- `nunique() <= 1` เลือกคอลัมน์ที่มีค่าแตกต่างกันไม่เกินหนึ่งค่า เช่น ถ้าทุกแถวเป็น 1 คอลัมน์นั้นไม่มีความต่างให้ใช้แยกตัวอย่างใน train
-- `train.loc[duplicate_mask, features + ["target"]]` แสดงแถวที่ซ้ำพร้อมคำตอบ เพื่อให้ตรวจรายละเอียดได้
-
-**ผลที่ได้:** พบ 2 แถว คือ index 101 และ 142 ที่มีขนาดกลีบเหมือนกันทั้งสี่ค่า เป็นหนึ่งคู่ ไม่ใช่สองคู่ และไม่พบคอลัมน์ค่าคงที่ (`[]`)
-
-อย่าเพิ่งลบแถวซ้ำ ต้องตรวจว่าเป็นคนละดอกที่วัดได้เท่ากัน หรือบันทึกดอกเดิมซ้ำ
-
-### Cell 9 — วาดกราฟจาก train และอ่านความหมาย
+### Cell 5 — ดูว่าขนาดกลีบต่างกันตามสายพันธุ์อย่างไร
 
 ```python
 fig, ax = plt.subplots(figsize=(6, 4))
 markers = {0: "o", 1: "s", 2: "^"}
 
-for label, name in label_names.items():
-    subset = train[train["target"] == label]
+for label, name in enumerate(data.target_names):
+    subset = X_train.loc[y_train == label]
     ax.scatter(
-        subset[features[2]],
-        subset[features[3]],
+        subset["petal length (cm)"],
+        subset["petal width (cm)"],
         label=name,
         marker=markers[label],
         alpha=0.75
     )
 
 ax.set(
-    xlabel=features[2],
-    ylabel=features[3],
-    title="Approved features: training data only"
+    xlabel="petal length (cm)",
+    ylabel="petal width (cm)",
+    title="Iris: training data only"
 )
 ax.legend()
 fig.tight_layout()
 plt.show()
 ```
 
-**อ่านโค้ด**
+**ทำเพื่อ:** ดูว่าขนาดกลีบดอกสองค่ามีรูปแบบที่อาจช่วยแยกสายพันธุ์ได้หรือไม่
 
-- `label_names.items()` วนทีละคู่รหัสกับชื่อสายพันธุ์ ส่วน `train[train["target"] == label]` เลือกเฉพาะดอกไม้สายพันธุ์นั้นมาวาด
-- `features[2]` คือความยาวกลีบดอก และ `features[3]` คือความกว้างกลีบดอก จึงใช้เป็นแกน x และ y
-- `label=name` ตั้งชื่อชุดจุดสำหรับ legend ส่วน `markers[label]` เลือกวงกลม สี่เหลี่ยม หรือสามเหลี่ยมตามรหัสสายพันธุ์ จึงแยกชุดจุดได้ทั้งจากสีและรูปทรง
-- `plt.show()` แสดงกราฟใต้ cell
+- `enumerate(data.target_names)` วนทีละรหัส 0, 1, 2 พร้อมชื่อสายพันธุ์
+- `y_train == label` เลือกคำตอบของสายพันธุ์นั้น แล้ว `X_train.loc[...]` เลือกข้อมูลดอกไม้แถวเดียวกันมาวาด
+- แกน x คือความยาวกลีบดอก ส่วนแกน y คือความกว้างกลีบดอก ทั้งคู่มีหน่วย cm
+- `label=name` ใส่ชื่อใน legend ส่วน `markers[label]` แยกด้วยวงกลม สี่เหลี่ยม และสามเหลี่ยม
 
-**อ่านผล:** setosa แยกค่อนข้างชัด ส่วนอีกสองสายพันธุ์ยังทับกันบางส่วน
+![ชุดฝึก Iris 120 ดอก แกนนอนเป็นความยาวกลีบดอก แกนตั้งเป็นความกว้างกลีบดอก วงกลมคือ setosa สี่เหลี่ยมคือ versicolor สามเหลี่ยมคือ virginica](../../assets/figures/02-data-and-plots-iris.png)
 
-สีและรูปทรงใช้คำตอบเพื่อช่วยอ่านภาพ ไม่ได้ใส่เป็น feature ใน X กราฟนี้ยังไม่ใช่คะแนนโมเดล และ X ที่เลือกไว้ยังมีสี่ feature
+**อ่านผล:** หนึ่งจุดแทนหนึ่งดอก กลุ่ม setosa แยกค่อนข้างชัด ส่วน versicolor กับ virginica ทับกันบางส่วน รูปนี้ช่วยให้เข้าใจข้อมูล แต่ยังบอกคะแนนทำนายของโมเดลไม่ได้ · [เปิดภาพ SVG](../../assets/figures/02-data-and-plots-iris.svg)
 
-![กราฟจาก train 120 ดอก แกนนอนคือความยาวกลีบดอก แกนตั้งคือความกว้างกลีบดอก หน่วยเซนติเมตร วงกลมคือ setosa สี่เหลี่ยมคือ versicolor และสามเหลี่ยมคือ virginica](../../assets/figures/02-data-and-plots-iris.png)
+เราใช้ y_train เพื่อแยกสีและรูปทรงในภาพเท่านั้น ไม่ได้นำคำตอบไปเพิ่มเป็นคอลัมน์ใน X_train และแม้วาดสองแกน ข้อมูล X_train ยังมีสี่ feature เหมือนเดิม
 
-*ผลจาก Cell 9: setosa แยกชัดในสองแกนนี้ ส่วน versicolor กับ virginica ทับกันบางส่วน* · [เปิดภาพ SVG](../../assets/figures/02-data-and-plots-iris.svg)
+**จบบทหลัก:** ได้ข้อมูลเข้าแยกจากคำตอบ ชุดฝึก/ทดสอบ ตารางตรวจข้อมูล และกราฟของชุดฝึก พร้อมต่อ [บท 03: KNN และ Pipeline](../03-first-classifier/README.md)
 
-### Cell 10 — บันทึกตารางและรูปกราฟ
+### Cell 6 — บันทึกตารางและกราฟ (เลือกทำ)
 
 ```python
 import os
+from pathlib import Path
 
 out = Path("outputs/02-data-and-plots")
 if os.name == "nt":
@@ -290,48 +178,46 @@ print("Saved CSV:", (out / "feature-audit.csv").resolve())
 print("Saved figure:", (out / "iris.png").resolve())
 ```
 
-**อ่านโค้ด**
+**ทำเพื่อ:** เก็บผลจาก Cell 4–5 ไว้เปิดดูนอก Jupyter รันหลัง Cell 5 เมื่ออยากได้ไฟล์ CSV และ PNG
 
-- `Path(...)` กำหนดโฟลเดอร์ปลายทาง ส่วน `os.name == "nt"` เลือกตำแหน่งสำหรับ Windows และ `Path.home()` คือโฟลเดอร์ผู้ใช้ปัจจุบัน
-- `mkdir(parents=True, exist_ok=True)` สร้างโฟลเดอร์ที่ยังไม่มี รวมถึงโฟลเดอร์ชั้นบน และรันซ้ำได้เมื่อโฟลเดอร์มีอยู่แล้ว
-- `summary.to_csv(..., index_label="feature")` บันทึกตาราง โดยตั้งชื่อคอลัมน์ index ว่า `feature`
-- `fig.savefig(...)` บันทึกรูปจากตัวแปร `fig` ที่สร้างใน Cell 9 จึงต้องรัน Cell 9 ก่อน จากนั้น `plt.close(fig)` ปิด figure เมื่อใช้งานเสร็จ
-- `resolve()` ใช้แสดงตำแหน่งเต็มของไฟล์ เพื่อให้เปิดถูกโฟลเดอร์
+- `os.name == "nt"` เลือกตำแหน่งสำหรับ Windows ใต้โฟลเดอร์ผู้ใช้จาก `Path.home()`
+- `mkdir(parents=True, exist_ok=True)` สร้างโฟลเดอร์ที่ยังไม่มี และรันซ้ำได้
+- `summary.to_csv(...)` บันทึกตาราง ส่วน `fig.savefig(...)` บันทึกกราฟจาก Cell 5 แล้ว `plt.close(fig)` ปิด figure
+- `resolve()` แสดงตำแหน่งเต็มของไฟล์ เพื่อเปิดได้ถูกโฟลเดอร์
 
-**ตำแหน่งไฟล์บน Windows:** ใช้ `practics/outputs/02-data-and-plots/` ในโปรเจกต์ `Documents/L/L04_CoreData/machine-learning` ใต้โฟลเดอร์ผู้ใช้
-
-หากวางโปรเจกต์ที่อื่น ให้ปรับส่วนนี้ให้ตรงกับเครื่องตัวเอง
-
-WSL/Colab ใช้ `outputs/02-data-and-plots/` ใต้โฟลเดอร์ที่ notebook ทำงาน
+**ตำแหน่งบน Windows:** `practics/outputs/02-data-and-plots/` ภายในโปรเจกต์ `Documents/L/L04_CoreData/machine-learning` ใต้โฟลเดอร์ผู้ใช้ หากเก็บโปรเจกต์ไว้ที่อื่น ให้ปรับตำแหน่งใน cell นี้ ส่วน WSL/Colab ใช้ `outputs/02-data-and-plots/` ใต้โฟลเดอร์ที่ notebook ทำงาน
 <!-- CODE:END -->
 
-
-## อ่านผล
-
-ผลที่ได้มีสามส่วน:
-
-- รายการ feature สี่คอลัมน์ที่ใช้ทำนายได้
-- ตารางตรวจข้อมูล บันทึกเป็น `feature-audit.csv`
-- กราฟของชุดฝึก บันทึกเป็น `iris.png`
-
-เปิดไฟล์ตามตำแหน่งที่ Cell 10 แสดง แล้วต่อ [บท 03: KNN และ Pipeline](../03-first-classifier/README.md)
+## อ่านเพิ่มเมื่อพร้อม
 
 <details>
-<summary>ฝึกต่อพร้อมแนวคำตอบ</summary>
+<summary>ชื่อคอลัมน์ครบแล้ว ยังต้องดูหน่วยด้วย: Schema</summary>
 
-**ลองคิด:** ลบ target แล้วแต่เก็บ species_name ไว้ ใช้เป็น X ได้หรือไม่?
+**Schema** คือข้อตกลงเรื่องชื่อ ลำดับ ชนิดข้อมูล และหน่วยของคอลัมน์ ข้อมูลที่ส่งให้โมเดลตอนทำนายต้องสอดคล้องกับตอนฝึก
 
-**เฉลย:** ใช้ไม่ได้ เพราะ `species_name` สร้างจากคำตอบ การนำคอลัมน์นี้เข้า X คือ **target leakage**
+![ขนาดดอกเดียวกันในหน่วยมิลลิเมตรต้องหารสิบเพื่อแปลงเป็นเซนติเมตรก่อนใช้กับคอลัมน์หน่วย cm](../../assets/figures/02-data-and-plots-schema.png)
 
-ผลตรวจที่กรอกหลังรู้สายพันธุ์ก็ต้องตัดออก หากยังไม่มีข้อมูลนั้นตอนทำนาย
+เช่น `51 mm = 5.1 cm` หากนำเลข 51 ใส่ในช่องที่ใช้หน่วย cm จะใหญ่กว่าค่าที่ตั้งใจสิบเท่า แม้จำนวนคอลัมน์จะครบก็ตาม
+
+*ภาพเป็นตัวอย่างสมมติโดยอิงค่าดอกแรกของ Iris; ข้อมูลในบทเป็น cm อยู่แล้ว จึงไม่ต้องหาร 10 ในโค้ด* · [เปิดภาพ SVG](../../assets/figures/02-data-and-plots-schema.svg)
 
 </details>
 
+<details>
+<summary>ถ้าเปลี่ยน target เป็นชื่อสายพันธุ์ จะใช้เป็น X ได้ไหม?</summary>
+
+**ไม่ได้สำหรับโจทย์นี้** เพราะชื่อสายพันธุ์ยังเป็นคำตอบที่ต้องการทำนาย หากนำคอลัมน์ชื่อเข้า X ก่อนแบ่งชุด มันจะติดไปทั้ง X_train และ X_test จึงเป็น target leakage แม้ลบคอลัมน์ target ไปแล้วก็ตาม
+
+โค้ดบทหลักเลือกเฉพาะขนาดกลีบสี่ค่าเข้า X จึงไม่มีคอลัมน์คำตอบปะปน ส่วน y_train ใช้เป็นเฉลยตอนฝึก และ y_test ใช้ตรวจผลหลังทำนาย
+
+</details>
+
+อยากตรวจข้อมูลเพิ่ม: [assert, ค่าอนันต์, แถวซ้ำ และคอลัมน์ค่าคงที่](../../docs/ep02-extra-checks.md) เป็นส่วนเสริมหลังรันบทหลัก ไม่จำเป็นต้องรันเพื่อเรียนบทถัดไป
+
 ## อ้างอิง
 
-- [pandas: DataFrame.copy](https://pandas.pydata.org/pandas-docs/version/2.3/reference/api/pandas.DataFrame.copy.html)
 - [scikit-learn: load_iris และข้อมูลที่คืนมา](https://scikit-learn.org/1.7/modules/generated/sklearn.datasets.load_iris.html)
+- [scikit-learn: train_test_split](https://scikit-learn.org/1.7/modules/generated/sklearn.model_selection.train_test_split.html)
 - [scikit-learn: Data leakage](https://scikit-learn.org/1.7/common_pitfalls.html#data-leakage)
-- [NumPy: isfinite — ตรวจ NaN และ infinity](https://numpy.org/doc/2.2/reference/generated/numpy.isfinite.html)
-- [pandas: ตรวจแถวซ้ำ](https://pandas.pydata.org/pandas-docs/version/2.3/reference/api/pandas.DataFrame.duplicated.html)
+- [pandas: DataFrame.copy](https://pandas.pydata.org/pandas-docs/version/2.3/reference/api/pandas.DataFrame.copy.html)
 - [ทบทวนพื้นฐานและลิงก์บทเรียนในช่อง](../../docs/prerequisites.md)
