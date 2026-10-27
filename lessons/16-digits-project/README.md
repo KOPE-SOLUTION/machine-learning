@@ -16,6 +16,10 @@
 
 SVM จับรูปแบบโค้งได้ แต่ผลขึ้นกับสเกลและ C/gamma จึงเทียบกับ **DummyClassifier** ที่ทายคลาสพบบ่อยตาม [บท 01](../01-ml-workflow/README.md) และประเมิน test หลังเลือกเสร็จ
 
+![ทบทวนภาพแนวแบ่ง Linear และ RBF ของ SVM พร้อมวงแหวนแสดง support vectors ในตัวอย่างสองมิติ](../../assets/figures/08-support-vector-machines-model.png)
+
+**ทบทวนภาพจากบท 08:** ดูด้าน RBF เพื่อเชื่อมเรื่องแนวแบ่งโค้งและ support vectors ภาพมีสอง feature และสองคลาส ส่วนโครงงานใช้ 64 pixel กับสิบคลาส จึงไม่ได้มีแนวแบ่งสองมิติแบบภาพนี้โดยตรง · [เปิดภาพ SVG](../../assets/figures/08-support-vector-machines-model.svg)
+
 ## สิ่งที่เพิ่มในโครงงาน
 
 | ขั้นตอน | สิ่งที่ตรวจ |

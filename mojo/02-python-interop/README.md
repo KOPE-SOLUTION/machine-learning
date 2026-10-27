@@ -12,6 +12,10 @@
 
 Mojo เรียก Pipeline นี้ผ่าน Python จึงยังต้องรักษาชื่อหรือลำดับและหน่วยของ feature รวมถึง fit scaler เฉพาะ train เช่นเดิม การเปลี่ยนภาษาเรียกใช้งานไม่ได้เปลี่ยนวิธีเรียนของ KNN
 
+![ทบทวน KNN ใช้ห้าเพื่อนบ้านใกล้สุดและโหวตคลาส เมื่อ versicolor มีสามเสียงและ virginica มีสองเสียงจึงเลือก versicolor](../../assets/figures/03-first-classifier-knn.png)
+
+**ทบทวนภาพจากบท 03:** Mojo เรียก KNN แบบห้าเพื่อนบ้านและให้น้ำหนักเท่ากันเช่นเดียวกัน ภาพเป็นตัวอย่างสมมติสองมิติ ส่วนข้อมูล Iris ในโค้ดมีสี่ feature · [เปิดภาพ SVG](../../assets/figures/03-first-classifier-knn.svg)
+
 ## สิ่งที่เพิ่มจากบท 03 และ M01
 
 ใช้ KNN/Pipeline เดิม จึงไม่ทวนการ scale, fit และ predict รอบนี้ให้ Mojo เรียก Python ผ่าน `Python.import_module`

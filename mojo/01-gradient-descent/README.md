@@ -10,6 +10,10 @@
 
 โมเดลคือ **Linear Regression** ใช้ `ŷ = wx + b` ทำนาย y จาก x ส่วน Gradient Descent เป็นวิธีปรับ w/b โค้ด Mojo เรียนจากตัวอย่างห้าจุดบนเส้น `y = 3x + 2` แล้วตรวจว่าค่าที่เรียนเข้าใกล้ w=3 และ b=2 ทบทวนความหมายโมเดลและการอัปเดตใน [บท 15](../../lessons/15-gradient-descent/README.md)
 
+![ทบทวน Gradient Descent ปรับ w และ b ของ Linear Regression หนึ่งก้าวแล้ว squared error ลดจาก 25 เป็น 9](../../assets/figures/15-gradient-descent-update.png)
+
+**ทบทวนภาพจากบท 15:** ภาพใช้จุดเดียวและ learning rate=0.1 เพื่อแสดงการอัปเดตหนึ่งก้าว ส่วนโค้ด Mojo ด้านล่างใช้ข้อมูลห้าจุดและการตั้งค่าตามโค้ด · [เปิดภาพ SVG](../../assets/figures/15-gradient-descent-update.svg)
+
 ## สิ่งที่เพิ่มจากบท 15
 
 ใช้สูตร gradient descent เดิมกับห้าจุดบนเส้น y=3x+2 รอบนี้เขียนเป็น typed loop ใน Mojo จึงไม่ทวนสูตร MSE/gradient
