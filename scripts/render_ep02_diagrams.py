@@ -111,6 +111,42 @@ def feature_selection(ns):
     save(fig, "feature-selection")
 
 
+def target_leakage(ns):
+    fig, ax = canvas(
+        "Target leakage · เฉลยปะปนในข้อมูลเข้า",
+        "โจทย์: ทำนายสายพันธุ์ของดอกใหม่ที่ยังไม่รู้คำตอบ",
+    )
+    card(ax, 0.05, 0.62, 0.43, 0.19, "#EDF4FF")
+    label(ax, 0.075, 0.764, "X · ข้อมูลที่ใช้ทำนาย", size=23, color=BLUE, weight="bold")
+    label(ax, 0.075, 0.701, "ขนาดกลีบ 4 ค่า (cm)", size=22)
+    label(ax, 0.075, 0.651, "วัดได้ก่อนรู้สายพันธุ์", size=18, color=BLUE)
+    card(ax, 0.52, 0.62, 0.43, 0.19, "#FFF5EA")
+    label(ax, 0.545, 0.764, "y · คำตอบที่ต้องการทำนาย", size=22, color=ORANGE, weight="bold")
+    label(ax, 0.545, 0.701, "target หรือชื่อสายพันธุ์", size=22)
+    label(ax, 0.545, 0.651, "เก็บแยกไว้สอนตอนฝึกและตรวจผล", size=18, color=ORANGE)
+
+    card(ax, 0.05, 0.415, 0.90, 0.13)
+    label(ax, 0.5, 0.506, "ถ้าเพิ่มชื่อสายพันธุ์ลง X ก่อนแบ่งชุด",
+          size=24, color=ORANGE, weight="bold", ha="center")
+    label(ax, 0.5, 0.452,
+          f'เช่น X มีทั้งขนาดกลีบและคำว่า "{ns["data"].target_names[0]}" ซึ่งบอกคำตอบอยู่แล้ว',
+          size=19, ha="center")
+    arrow(ax, (0.265, 0.405), (0.265, 0.35), ORANGE)
+    arrow(ax, (0.735, 0.405), (0.735, 0.35), ORANGE)
+
+    card(ax, 0.05, 0.15, 0.43, 0.18, "#FFF5EA")
+    label(ax, 0.075, 0.28, "X_train มีเฉลยติดไปด้วย", size=22, color=ORANGE, weight="bold")
+    label(ax, 0.075, 0.211, "โมเดลอาจเรียนจากชื่อสายพันธุ์", size=19)
+    card(ax, 0.52, 0.15, 0.43, 0.18, "#FFF5EA")
+    label(ax, 0.545, 0.28, "X_test ก็มีเฉลยให้ดู", size=22, color=ORANGE, weight="bold")
+    label(ax, 0.545, 0.211, "คะแนนอาจดูดีเกินการใช้งานจริง", size=19)
+
+    label(ax, 0.05, 0.065,
+          "โค้ดบทนี้เลือกเฉพาะขนาดกลีบเข้า X · เก็บคำตอบแยกใน y",
+          size=20, color=BLUE, weight="bold")
+    save(fig, "target-leakage")
+
+
 def schema(ns):
     cm = ns["X"].iloc[0].to_numpy()
     mm = cm * 10
@@ -167,6 +203,7 @@ def main():
     plt.rcParams.update({"font.family": thai_font(), "mathtext.fontset": "dejavusans"})
     feature_selection(ns)
     schema(ns)
+    target_leakage(ns)
 
 
 if __name__ == "__main__":
