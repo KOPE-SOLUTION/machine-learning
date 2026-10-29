@@ -185,10 +185,12 @@ baseline มี accuracy สูง แต่ F1 เป็นศูนย์ ใ�
 - **Macro average:** ให้น้ำหนักทุกคลาสเท่ากัน
 - **Weighted average:** ถ่วงน้ำหนักตามจำนวนตัวอย่างของคลาสนั้น (`support`)
 
-<details>
-<summary>ฝึกต่อพร้อมแนวคำตอบ</summary>
+## แบบฝึกท้ายบท
 
 **ลองคิด:** ถ้าต้องลด FN ควรดูอะไรและเลือก threshold จากชุดใด?
+
+<details>
+<summary>ดูเฉลย</summary>
 
 **เฉลย:** ดู recall พร้อมติดตาม precision
 

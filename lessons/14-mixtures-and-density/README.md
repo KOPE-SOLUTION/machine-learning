@@ -163,10 +163,12 @@ plt.close(fig)
 
 ![ผลการทดลอง 14-mixtures-and-density](../../assets/figures/14-mixtures-and-density-density.png)
 
-<details>
-<summary>ฝึกต่อพร้อมแนวคำตอบ</summary>
+## แบบฝึกท้ายบท
 
 **ลองคิด:** responsibilities รวมเป็น 1 แล้วความสูงกราฟ density ต้องเท่ากับ 1 ด้วยหรือไม่?
+
+<details>
+<summary>ดูเฉลย</summary>
 
 **เฉลย:** ความสูงกราฟไม่จำเป็นต้องเท่ากับ 1 เพราะเป็นคนละค่ากัน:
 

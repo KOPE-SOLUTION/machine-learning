@@ -177,10 +177,12 @@ if __name__ == "__main__":
 
 ![ผลการทดลอง 15-gradient-descent](../../assets/figures/15-gradient-descent-loss.png)
 
-<details>
-<summary>ฝึกต่อพร้อมแนวคำตอบ</summary>
+## แบบฝึกท้ายบท
 
 **ลองทำ:** ทดลอง learning rate 0.001, 0.1, 2.0 บนข้อมูลเดิม
+
+<details>
+<summary>ดูแนวคำตอบ</summary>
 
 **แนวคำตอบ:**
 

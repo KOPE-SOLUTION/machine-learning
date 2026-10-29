@@ -123,10 +123,12 @@ plt.close(fig)
 
 ![ผลการทดลอง 13-kmeans-clustering](../../assets/figures/13-kmeans-clustering-clusters.png)
 
-<details>
-<summary>ฝึกต่อพร้อมแนวคำตอบ</summary>
+## แบบฝึกท้ายบท
 
 **ลองทำ:** เปลี่ยนข้อมูลเป็น `make_moons` แล้วอ่านรูปร่างกลุ่ม
+
+<details>
+<summary>ดูแนวคำตอบ</summary>
 
 **แนวคำตอบ:** K-means อาจตัดกลุ่มโค้งตามระยะถึง centroid
 

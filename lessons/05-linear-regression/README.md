@@ -187,10 +187,12 @@ Linear Regression มี MAE ต่ำกว่า baseline บน test ชุ�
 
 ![ผลจาก Cell 3: กราฟซ้ายแสดงข้อมูล test และเส้นทำนาย กราฟขวาแสดง residual เทียบกับค่าทำนายและเส้นศูนย์](../../assets/figures/05-linear-regression-regression.png)
 
-<details>
-<summary>ฝึกต่อพร้อมแนวคำตอบ</summary>
+## แบบฝึกท้ายบท
 
 **ลองทำ:** เพิ่มส่วนโค้ง `0.8 * X[:, 0] ** 2` ในสมการข้อมูล แล้วดู residual
+
+<details>
+<summary>ดูแนวคำตอบ</summary>
 
 **แนวคำตอบ:** เส้นตรงอาจเหลือรูปโค้งในกราฟ residual
 

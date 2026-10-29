@@ -143,10 +143,12 @@ for fold, (train_idx, valid_idx) in enumerate(TimeSeriesSplit(n_splits=4, gap=1)
 
 อ่าน MAE ของโมเดลเทียบกับ persistence baseline ในแต่ละ time fold โดยค่าต่ำกว่าดีกว่า
 
-<details>
-<summary>ฝึกต่อพร้อมแนวคำตอบ</summary>
+## แบบฝึกท้ายบท
 
 **ลองคิด:** ทายเดือนหน้าสำหรับร้านเดิม กับร้านที่ไม่เคยเห็น ใช้การประเมินเดียวกันได้หรือไม่?
+
+<details>
+<summary>ดูเฉลย</summary>
 
 **เฉลย:** ต้องแยกการประเมินให้ตรงกับสองโจทย์:
 

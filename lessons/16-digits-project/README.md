@@ -223,10 +223,12 @@ if __name__ == "__main__":
 
 ![ผลการทดลอง 16-digits-project](../../assets/figures/16-digits-project-confusion-matrix.png)
 
-<details>
-<summary>ฝึกต่อพร้อมแนวคำตอบ</summary>
+## แบบฝึกท้ายบท
 
 **ลองทำ:** เขียน [model card](../../docs/model-card.md) หนึ่งหน้า: โจทย์ baseline วิธีแบ่ง metric ผล และข้อจำกัด
+
+<details>
+<summary>ดูแนวคำตอบ</summary>
 
 **แนวคำตอบ:** ระบุข้อจำกัดอย่างน้อยสามข้อ:
 

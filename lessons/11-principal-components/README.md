@@ -141,10 +141,12 @@ plt.close(fig)
 
 ![ผลการทดลอง 11-principal-components](../../assets/figures/11-principal-components-pca.png)
 
-<details>
-<summary>ฝึกต่อพร้อมแนวคำตอบ</summary>
+## แบบฝึกท้ายบท
 
 **ลองทำ:** เปรียบเทียบไม่มี PCA กับเก็บ variance 0.8, 0.9, 0.95
+
+<details>
+<summary>ดูแนวคำตอบ</summary>
 
 **แนวคำตอบ:** ใช้ CV บน train เพื่อเปรียบเทียบสองกรณี:
 

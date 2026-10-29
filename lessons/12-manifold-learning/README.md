@@ -125,10 +125,12 @@ plt.close(fig)
 
 ![ผลการทดลอง 12-manifold-learning](../../assets/figures/12-manifold-learning-embeddings.png)
 
-<details>
-<summary>ฝึกต่อพร้อมแนวคำตอบ</summary>
+## แบบฝึกท้ายบท
 
 **ลองทำ:** เปลี่ยน perplexity เป็น 10 และ 50 โดยใช้ 600 ภาพชุดเดิม
+
+<details>
+<summary>ดูแนวคำตอบ</summary>
 
 **แนวคำตอบ:** เปรียบเทียบสมาชิกเพื่อนบ้านและการปนของ label แล้วตรวจข้อมูลต้นฉบับประกอบ
 

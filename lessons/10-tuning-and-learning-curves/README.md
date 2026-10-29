@@ -145,10 +145,12 @@ print(f"Final test accuracy: {accuracy_score(y_test, search.predict(X_test)):.3f
 
 ![ผลการทดลอง 10-tuning-and-learning-curves](../../assets/figures/10-tuning-and-learning-curves-learning-curve.png)
 
-<details>
-<summary>ฝึกต่อพร้อมแนวคำตอบ</summary>
+## แบบฝึกท้ายบท
 
 **ลองคิด:** k ห้าค่า × weights สองค่า × CV สี่ fold ต้อง fit กี่ครั้ง?
+
+<details>
+<summary>ดูเฉลย</summary>
 
 **เฉลย:** ฝึก 40 ครั้งสำหรับ CV และ refit อีก 1 ครั้ง รวม 41 ครั้ง
 

@@ -190,10 +190,12 @@ print("New flower:", data.target_names[label])
 - ดูคำทำนายของดอกใหม่ ซึ่งได้ **setosa**
 - รายงาน precision, recall และ F1 จะอธิบายใน [บท 04](../04-validation-and-metrics/README.md)
 
-<details>
-<summary>ฝึกต่อพร้อมแนวคำตอบ</summary>
+## แบบฝึกท้ายบท
 
 **ลองคิด:** fit scaler ก่อนแบ่ง train/test ได้หรือไม่?
+
+<details>
+<summary>ดูเฉลย</summary>
 
 **เฉลย:** ไม่ได้ เพราะ scaler จะเรียนสถิติที่ปนข้อมูล test
 

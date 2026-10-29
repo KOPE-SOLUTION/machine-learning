@@ -135,10 +135,12 @@ plt.close(fig)
 
 ![ผลการทดลอง 08-support-vector-machines](../../assets/figures/08-support-vector-machines-boundary.png)
 
-<details>
-<summary>ฝึกต่อพร้อมแนวคำตอบ</summary>
+## แบบฝึกท้ายบท
 
 **ลองคิด:** scaler ควรเรียนจาก train 300 แถวก่อนทำ CV หรือไม่?
+
+<details>
+<summary>ดูเฉลย</summary>
 
 **เฉลย:** ไม่ควร เพราะ scaler จะเห็นข้อมูลของ validation fold ล่วงหน้า
 
