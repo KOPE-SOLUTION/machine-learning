@@ -31,7 +31,7 @@ print(f"New-user accuracy (random user labels): {model.score(X[test_idx], y[test
 # **อ่านโค้ด**
 #
 # - `np.repeat(np.arange(60), 5)` สร้างรหัสคน 0–59 โดยแต่ละคนมีห้าแถว รวมเป็น 300 แถว
-# - `user_signal[groups]` ใช้รหัสคนเลือก feature ตั้งต้นของคนนั้น แล้วเติม noise เล็กน้อย ส่วน `user_label[groups]` ทำให้ห้าแถวของคนเดียวกันได้ label เดียวกัน
+# - `user_signal[groups]` ใช้รหัสคนเลือกค่าข้อมูลนำเข้าตั้งต้นของคนนั้น แล้วเติม noise เล็กน้อย ส่วน `user_label[groups]` ทำให้ทั้งห้าแถวของคนเดียวกันมีคลาสที่กำกับไว้เหมือนกัน
 # - `set(groups[row_train]) & set(groups[row_test])` หารหัสคนที่อยู่ทั้ง train และ test หลังสุ่มแถว เพื่อแสดงปัญหาคนเดิมข้ามชุด
 # - `next(split.split(X, y, groups))` รับคู่ index จาก `GroupShuffleSplit` รอบแรก โดยตัวแบ่งใช้ groups กันคนออกทั้งกลุ่ม
 # - `isdisjoint` คืน True เมื่อไม่มีรหัสคนร่วมกันระหว่าง train กับ test และ `assert` จะหยุดพร้อมข้อผิดพลาดหากเงื่อนไขนี้ไม่จริง ส่วน `np.unique(groups[test_idx])` หารหัสคนที่ไม่ซ้ำกันใน test เพื่อนำไปนับจำนวนคน
@@ -57,7 +57,7 @@ for fold, (train_idx, valid_idx) in enumerate(TimeSeriesSplit(n_splits=4, gap=1)
 # %% [markdown]
 # **อ่านโค้ด**
 #
-# - `series[:-1].reshape(-1, 1)` เลือกค่าตั้งแต่ตัวแรกถึงก่อนตัวสุดท้ายเป็น feature หนึ่งคอลัมน์ ส่วน `series[1:]` เลื่อนคำตอบไปข้างหน้าหนึ่งตำแหน่ง
+# - `series[:-1].reshape(-1, 1)` เก็บค่าตั้งแต่ตัวแรกถึงก่อนตัวสุดท้ายไว้ใน `lag` เป็นข้อมูลนำเข้าหนึ่งคอลัมน์ (feature) ส่วน `series[1:]` เก็บค่าตั้งแต่ตัวที่สองถึงตัวสุดท้ายไว้ใน `target` เป็นค่าถัดไปที่ต้องการทำนาย
 # - แต่ละแถวจึงจับคู่ค่าก่อนหน้ากับค่าถัดไป โดย `lag` และ `target` มีจำนวนแถวเท่ากัน
 # - `TimeSeriesSplit(n_splits=4, gap=1).split(lag)` คืน index สี่รอบ ฝึกจากอดีตและเว้นหนึ่งแถวก่อนช่วง validation
 # - `train_idx.max() < valid_idx.min()` ตรวจว่าแถวฝึกอยู่ก่อนแถว validation
@@ -65,4 +65,4 @@ for fold, (train_idx, valid_idx) in enumerate(TimeSeriesSplit(n_splits=4, gap=1)
 #
 # การใช้ค่าจริงก่อนหน้าของทุกจุดเหมาะกับ one-step-ahead ตามโจทย์นี้ ไม่ใช่การทายหลายก้าวโดยยังไม่เห็นค่าจริงระหว่างทาง
 #
-# **การตั้งค่าใน cell นี้:** `gap=1` เว้นหนึ่งแถวระหว่าง train กับ validation ส่วน `Fold` ที่พิมพ์ระบุรอบประเมิน และ MAE ของโมเดลกับ last-value baseline ใช้คำตอบจริงของช่วง validation เดียวกัน
+# **การตั้งค่าใน cell นี้:** `gap=1` เว้นหนึ่งแถวระหว่าง train กับ validation ส่วน `Fold` ที่พิมพ์ระบุรอบประเมิน และ MAE ของโมเดลกับ last-value baseline เทียบกับค่าจริงของช่วง validation เดียวกัน

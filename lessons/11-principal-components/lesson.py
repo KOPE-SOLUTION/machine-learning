@@ -27,14 +27,14 @@ print(f"Test accuracy: {accuracy_score(y_test, model.predict(X_test)):.3f}")
 # %% [markdown]
 # **อ่านโค้ด**
 #
-# - `load_digits(return_X_y=True)` คืนภาพที่คลี่เป็น 64 feature ต่อแถว พร้อม label ตัวเลข 0–9
+# - `load_digits(return_X_y=True)` คืน `X` ซึ่งมีค่า pixel 64 ค่าต่อภาพ (features) และ `y` ซึ่งระบุว่าแต่ละภาพเป็นเลขใดตั้งแต่ 0–9 (class labels) เลขใน y ใช้ระบุประเภทของภาพ ไม่ใช่ค่าต่อเนื่องสำหรับงาน Regression
 # - Pipeline ทำ `scale → pca → classifier` ตามลำดับ โดย `fit` เรียนทุกขั้นจาก train เท่านั้น
 # - `PCA(n_components=0.9, svd_solver="full")` เพิ่มแกนตามลำดับจนสัดส่วนความแปรปรวนสะสมเกิน 90% ของข้อมูลฝึกที่ผ่าน scaler แล้ว ค่า 0.9 เป็นเกณฑ์สัดส่วน ไม่ใช่จำนวนแกน
 # - `model.named_steps["pca"]` ดึง PCA ที่ fit แล้วออกมาอ่านผล ส่วน `pca.n_components_` คือจำนวนแกนที่เลือกได้จริง
-# - `explained_variance_ratio_` บอกว่าแต่ละแกนเก็บความแปรปรวนไว้เป็นสัดส่วนเท่าไร และ `.sum()` รวมสัดส่วนของทุกแกนที่เก็บไว้ ส่วน accuracy ต้องเทียบเลขที่ Pipeline ทายกับคำตอบจริง
+# - `explained_variance_ratio_` บอกว่าแต่ละแกนเก็บความแปรปรวนไว้เป็นสัดส่วนเท่าไร และ `.sum()` รวมสัดส่วนของทุกแกนที่เก็บไว้ ส่วน accuracy ต้องเทียบเลขที่ Pipeline ทายกับเลขที่กำกับภาพไว้
 # - `max_iter=2000` ตั้งเพดานรอบให้ตัวแก้ปัญหาของ Logistic Regression ไม่ใช่จำนวน component ของ PCA
 #
-# **อ่านผลตามหน้าที่:** `Original features` กับ `Retained components` บอกจำนวนคอลัมน์ก่อนและหลัง PCA; `Retained variance` บอกสัดส่วนความแปรปรวนที่เก็บ ส่วน `Test accuracy` เทียบเลขที่ Logistic Regression ทายกับคำตอบจริง ไม่ใช้ variance แทน accuracy
+# **อ่านผลตามหน้าที่:** `Original features` กับ `Retained components` บอกจำนวนคอลัมน์ก่อนและหลัง PCA; `Retained variance` บอกสัดส่วนความแปรปรวนที่เก็บ ส่วน `Test accuracy` เทียบเลขที่ Logistic Regression ทายกับเลขที่กำกับภาพไว้ ไม่ใช้ variance แทน accuracy
 
 # %% Cell 2 — อ่านพิกัดใหม่และ variance สะสม
 Z_train = model[:-1].transform(X_train)
