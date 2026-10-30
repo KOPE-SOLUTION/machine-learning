@@ -6,6 +6,8 @@
 
 **ใช้สิ่งที่เรียนแล้ว:** Pipeline, train/test และ classification report จากบท 03–06 บทนี้เพิ่มวิธีแปลงข้อความและหลักการของ Naive Bayes
 
+ข้อความฝึกในบทนี้แต่งขึ้น 24 ข้อความ แบ่งเป็น train 18 ข้อความ (sport และ tech อย่างละ 9) และ test 6 ข้อความ ผลจำแนกเป็นชื่อ **sport หรือ tech หนึ่งค่าต่อข้อความ** ก่อนนำไปเทียบคำตอบจริง
+
 ## จากข้อความเป็นตัวเลข
 
 **CountVectorizer** เป็นเครื่องมือเตรียมข้อมูล: เรียนรายการคำจาก train เรียกว่า **vocabulary** แล้วแทนแต่ละข้อความด้วยจำนวนครั้งที่พบแต่ละคำ วิธีนี้เรียกว่า **Bag-of-words** เพราะนับคำโดยไม่เก็บลำดับคำ
@@ -14,7 +16,7 @@
 
 ![ข้อความใหม่ 3 ข้อความผ่าน vocabulary เดิม 49 คำ ตารางแสดงเฉพาะ 5 คำที่พบ โดย team มีจำนวน 2 และข้อความอาหารเป็นศูนย์ทุกคอลัมน์](../../assets/figures/07-naive-bayes-text-counts.png)
 
-*ผลจากข้อมูลและค่าตั้งต้นของ Cell 1–3; ตารางย่อเพื่อแสดงผล โมเดลยังใช้ 49 features* · [เปิดภาพ SVG](../../assets/figures/07-naive-bayes-text-counts.svg)
+*ตัวอย่างจากชุดข้อความของบทนี้: train ให้ vocabulary 49 คำ ตารางแสดงเฉพาะคำที่พบในข้อความใหม่สามข้อความ ไม่ใช่ตารางคะแนน test* · [เปิดภาพ SVG](../../assets/figures/07-naive-bayes-text-counts.svg)
 
 ค่าเริ่มต้นของ `CountVectorizer` เปลี่ยนตัวอักษรเป็นตัวเล็ก และเลือก token หรือหน่วยคำที่ยาวอย่างน้อย 2 อักขระ เช่น `Team` กลายเป็น `team` ส่วน `a` ไม่ถูกนับ สำหรับภาษาไทยที่ไม่ได้เว้นวรรคทุกคำ ต้องเลือกวิธีตัดคำหรือใช้ส่วนย่อยของตัวอักษรเพิ่มเติม
 
@@ -41,7 +43,7 @@
 
 ![สูตร smoothing เพิ่ม alpha ให้จำนวนคำทุกคำ ตัวอย่าง goal ใน tech มี 0 ครั้ง จากคำทั้งหมด 38 ครั้งและ vocabulary 49 คำ เมื่อ alpha เท่ากับ 1 จึงได้ 1 ส่วน 87 พร้อมการเปรียบเทียบคะแนน sport และ tech ของข้อความ team team goal](../../assets/figures/07-naive-bayes-text-smoothing.png)
 
-*จำนวนคำและผลทำนายตรงกับ train และ Cell 3 ของบทนี้; คะแนนก่อนปรับให้รวมเป็น 1 ยังไม่ใช่ความน่าจะเป็นของคลาส* · [เปิดภาพ SVG](../../assets/figures/07-naive-bayes-text-smoothing.svg)
+*ตัวอย่างคำ goal ใน train และการทำนายข้อความ team team goal; คะแนนก่อนปรับให้รวมเป็น 1 ยังไม่ใช่ความน่าจะเป็นของคลาส* · [เปิดภาพ SVG](../../assets/figures/07-naive-bayes-text-smoothing.svg)
 
 อ่านสูตร: **(จำนวนครั้งของคำนั้นในคลาส + alpha) ÷ (จำนวนคำทั้งหมดในคลาส + alpha × ขนาด vocabulary)** โดยจำนวนคำทั้งหมดนับคำซ้ำด้วย
 
@@ -55,7 +57,7 @@
 
 สร้าง Notebook ใหม่แล้วรัน **Cell 1–3 ตามลำดับ** หรือเปิด [Notebook ของบทนี้](lesson.ipynb) ใช้ kernel เดิมที่ติดตั้ง scikit-learn แล้ว ไม่ต้องติดตั้งเพิ่ม
 
-ข้อความภาษาอังกฤษทั้ง 24 ข้อความแต่งขึ้นสำหรับฝึก: train 18 และ test 6 ข้อความ ใช้ดูขั้นตอนและอ่านผล ไม่ใช่ชุดประเมินระบบจริง
+การทดลองชุดเล็กนี้ใช้ฝึกขั้นตอนและอ่านผล ไม่ใช่ชุดประเมินระบบจำแนกข้อความจริง
 
 <!-- CODE:CELLS -->
 
@@ -104,6 +106,7 @@ model = make_pipeline(CountVectorizer(), MultinomialNB(alpha=1.0))
 model.fit(X_train, y_train)
 
 y_pred = model.predict(X_test)
+display(pd.DataFrame({"text": X_test, "actual": y_test, "prediction": y_pred}))
 print(classification_report(y_test, y_pred, zero_division=0))
 
 vectorizer = model.named_steps["countvectorizer"]
@@ -119,6 +122,8 @@ print("Vocabulary size:", len(words))
 - `model.named_steps["countvectorizer"]` หยิบตัวนับคำที่ฝึกแล้วออกมาตรวจ และ `get_feature_names_out()` คืนชื่อคำตามลำดับคอลัมน์
 
 **ผลที่ได้:** vocabulary มี 49 คำ และทาย test ถูกทั้ง 6 ข้อความ จึงได้ accuracy 1.00 ผลนี้เป็นเพียงชุดตัวอย่างเล็กที่แต่งขึ้น ไม่ใช่หลักฐานว่าระบบจริงจะถูก 100%
+
+**อ่านผลก่อนคะแนน:** ตารางแสดงข้อความ test ทั้ง 6 ข้อความพร้อม `actual` (คลาสจริง) และ `prediction` (คลาสที่ทาย) จึงนับแถวที่ตรงกันได้ก่อนอ่าน classification report ซึ่งคำนวณจากคำตอบชุดเดียวกัน
 
 ### Cell 3 — ดูจำนวนคำและทำนายข้อความใหม่
 

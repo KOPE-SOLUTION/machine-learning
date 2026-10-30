@@ -30,6 +30,8 @@ X_train, X_test, y_train, y_test = train_test_split(
 baseline = DummyRegressor(strategy="mean").fit(X_train, y_train)
 model = LinearRegression().fit(X_train, y_train)
 pred = model.predict(X_test)
+print("Actual y (first 5):", y_test[:5].round(2))
+print("Predicted y (first 5):", pred[:5].round(2))
 print(f"Baseline MAE: {mean_absolute_error(y_test, baseline.predict(X_test)):.3f}")
 print(f"Linear MAE: {mean_absolute_error(y_test, pred):.3f}")
 print(f"Linear RMSE: {root_mean_squared_error(y_test, pred):.3f}")
@@ -43,6 +45,8 @@ print(f"Learned intercept={model.intercept_:.3f}, slope={model.coef_[0]:.3f}")
 # - `LinearRegression().fit(...)` สร้างโมเดลและฝึกในบรรทัดเดียว จากนั้น `predict(X_test)` คืนตัวเลขทำนายหนึ่งค่าต่อแถว
 # - ฟังก์ชัน MAE, RMSE และ R² รับ `y_test` กับ `pred` เพื่อเทียบคำตอบจริงกับคำทำนายชุดเดียวกัน
 # - `model.intercept_` คือ b ที่เรียนได้ ส่วน `model.coef_[0]` คือ w ของ feature แรก ควรใกล้ 12 และ 3.5 ตามสมการจำลอง
+#
+# **อ่านผลตามลำดับ:** สองบรรทัดแรกให้เทียบค่าจริงกับคำทำนายห้าแถวแรกในตำแหน่งเดียวกัน ส่วน MAE, RMSE และ R² ถัดมาคำนวณจาก test ทั้ง 60 แถว การปัดเลขด้วย `round(2)` ใช้แสดงผลเท่านั้น
 
 # %% Cell 3 — วาดเส้นทำนายและ residual
 fig, axes = plt.subplots(1, 2, figsize=(10, 4))

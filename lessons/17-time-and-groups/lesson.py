@@ -36,6 +36,8 @@ print(f"New-user accuracy (random user labels): {model.score(X[test_idx], y[test
 # - `next(split.split(X, y, groups))` รับคู่ index จาก `GroupShuffleSplit` รอบแรก โดยตัวแบ่งใช้ groups กันคนออกทั้งกลุ่ม
 # - `isdisjoint` ตรวจว่ารหัสคนไม่ซ้ำสองฝั่ง ส่วน `np.unique(groups[test_idx])` ใช้นับจำนวนคนที่กันไว้
 # - สำหรับ KNN classifier ในบทนี้ `model.score(...)` คืน accuracy ของข้อมูลที่ส่งให้ประเมิน จึงต้องอ่านพร้อมจำนวนคนที่ซ้ำ ไม่เลือกวิธีแบ่งจากคะแนนสูงสุด
+#
+# **การตั้งค่าและจำนวนแถว:** `GroupShuffleSplit(test_size=0.2)` กัน 20% ของ 60 คน จึงเป็น 12 คน × 5 แถว = test 60 แถว ไม่ได้สุ่มกันเพียงบางแถวของคนเดิม ค่า `Group split - shared users` ต้องเป็น 0
 
 # %% Cell 2 — แบ่งข้อมูลตามเวลาและเทียบค่าล่าสุด
 t = np.arange(180)
@@ -62,3 +64,5 @@ for fold, (train_idx, valid_idx) in enumerate(TimeSeriesSplit(n_splits=4, gap=1)
 # - `persistence = lag[valid_idx, 0]` ใช้ค่าล่าสุดเป็นคำทำนาย baseline แล้ววัด MAE กับ target ชุดเดียวกับโมเดล
 #
 # การใช้ค่าจริงก่อนหน้าของทุกจุดเหมาะกับ one-step-ahead ตามโจทย์นี้ ไม่ใช่การทายหลายก้าวโดยยังไม่เห็นค่าจริงระหว่างทาง
+#
+# **การตั้งค่าใน cell นี้:** `gap=1` เว้นหนึ่งแถวระหว่าง train กับ validation ส่วน `Fold` ที่พิมพ์ระบุรอบประเมิน และ MAE ของโมเดลกับ last-value baseline ใช้คำตอบจริงของช่วง validation เดียวกัน

@@ -2,7 +2,7 @@
 
 [กลับสารบัญ](../../README.md) · [Notebook](lesson.ipynb) · [Python](lesson.py)
 
-บทนี้ประมาณ **ความหนาแน่นของข้อมูล** ด้วย Gaussian Mixture Model (GMM) และ Kernel Density Estimation (KDE)
+บทนี้รับข้อมูลตัวเลขหนึ่งคอลัมน์ แล้วให้ **Gaussian Mixture Model (GMM)** และ **Kernel Density Estimation (KDE)** ประมาณว่าบริเวณใดมีข้อมูลหนาแน่น ผลหลักเป็นค่าความหนาแน่นสำหรับวาดเส้น ไม่ใช่คำตอบคลาสหรือเปอร์เซ็นต์ทายถูก
 
 **ใช้สิ่งที่เรียนแล้ว:** clustering จากบท 13, CV จากบท 08–10 และ histogram แบบ density จาก Matplotlib
 
@@ -54,11 +54,9 @@ GMM จึงต่างจาก K-means ที่เลือกกลุ่�
 
 จึงอ่านความสูงของกราฟเป็นเปอร์เซ็นต์ตรง ๆ ไม่ได้
 
-**`score_samples`:** คืน log density ต่อแถว ใช้ `np.exp` แปลงกลับเป็น density เพื่อวาดกราฟ
+**Log density:** ค่าลอการิทึมของความหนาแน่น ใช้ประเมินว่าข้อมูลทดสอบสอดคล้องกับการกระจายที่โมเดลเรียนเพียงใด
 
 ค่าเฉลี่ย test log density ยิ่งมากยิ่งดีเมื่อเทียบบนข้อมูล หน่วย และมิติเดียวกัน ไม่ควรเทียบข้ามสเกลโดยตรง
-
-KDE ใช้ KFold เพราะไม่มี label ให้ stratify คะแนนค้นหาเป็นผลรวม log density ของแต่ละ validation fold ซึ่งมีจำนวนแถวเท่ากันในบทนี้
 
 ## ลงมือทำ
 
@@ -127,6 +125,8 @@ print(f"KDE test mean log density: {kde.score_samples(X_test).mean():.3f}")
 - เมื่อไม่กำหนด `scoring` การค้นหาจะใช้ `KernelDensity.score` ซึ่งคืนผลรวม log density บน validation ของแต่ละ fold
 - `best_estimator_` คือ KDE ที่เลือกและ refit บน train แล้ว
 - `score_samples(X_test).mean()` เฉลี่ย log density ต่อแถวบน test เพื่อเปรียบเทียบ GMM กับ KDE
+
+**อ่านคะแนน CV กับ test แยกกัน:** KDE ใช้ KFold เพราะไม่มี label ให้ stratify คะแนนค้นหาเป็นผลรวม log density ของ validation fold ที่มี 90 แถวเท่ากันทุกรอบ ส่วนสองบรรทัดท้ายเป็นค่าเฉลี่ยต่อแถวบน test 150 แถว จึงไม่ใช้ตัวเลขสองรูปแบบนี้เทียบกันตรง ๆ
 
 ### Cell 4 — วาดความหนาแน่นของสองโมเดล
 

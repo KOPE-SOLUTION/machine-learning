@@ -36,6 +36,12 @@ print(f"Test accuracy: {accuracy_score(y_test, model.predict(X_test)):.3f}")
 # - dictionary `models` สร้าง Pipeline สองตัวจากค่า kernel `linear` และ `rbf` โดยใช้ scaler และ C แบบเดียวกัน
 # - `cross_val_score(..., cv=cv, scoring="accuracy")` คืนคะแนนห้าค่า ใช้ `mean()` สรุปคะแนนเฉลี่ย และ `std()` ดูการกระจายระหว่าง fold
 # - `max(scores, key=scores.get)` เลือกชื่อ kernel ที่มีค่าเฉลี่ยสูงสุด แล้ว `fit(X_train, y_train)` ฝึกตัวที่เลือกบน train ทั้งหมดก่อนวัด test
+#
+# **การตั้งค่าใน cell นี้**
+#
+# - `kernel="linear"` ใช้แนวแบ่งตรง ส่วน `kernel="rbf"` ใช้ความคล้ายตามระยะทางเพื่อสร้างแนวแบ่งโค้ง
+# - ทั้งสองแบบตรึง `C=1.0`; ฝั่ง RBF ใช้ `gamma="scale"` ซึ่งเป็นค่าเริ่มต้น จึงเปรียบเทียบเฉพาะ kernel
+# - ค่า `+/-` ใน output คือส่วนเบี่ยงเบนมาตรฐานของ accuracy ระหว่าง fold ไม่ใช่ช่วงความเชื่อมั่น
 
 # %% Cell 2 — วาดขอบเขตของโมเดลที่เลือก
 fig, ax = plt.subplots(figsize=(6, 4))

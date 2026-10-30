@@ -35,6 +35,10 @@ print(f"Best CV accuracy: {search.best_score_:.3f}")
 # - `search.fit(X_train, y_train)` ทดลองหกชุดค่าด้วยห้า fold แล้ว refit ชุดที่ชนะบน train ทั้งหมดตามค่าเริ่มต้น
 # - `pd.DataFrame(search.cv_results_)` ทำผลค้นหาเป็นตาราง แล้วเรียงด้วย `rank_test_score` เพื่ออ่านลำดับจากคะแนน CV
 # - `best_params_` บอกชุดค่าที่เลือก และ `best_score_` เป็นคะแนน CV เฉลี่ยของชุดนั้น ไม่ใช่ final test
+#
+# **ชื่อที่ใช้ในตารางผล:** `mean_test_score` คือ accuracy เฉลี่ยของ validation ใน CV และ `std_test_score` คือส่วนเบี่ยงเบนมาตรฐานระหว่าง fold ไม่ใช่คะแนน final test
+#
+# `weights="uniform"` ให้เพื่อนบ้านลงคะแนนเท่ากัน ส่วน `"distance"` ให้จุดใกล้มีน้ำหนักมากกว่า
 
 # %% Cell 2 — ดูผลของจำนวนข้อมูลฝึก
 sizes, train_scores, valid_scores = learning_curve(
@@ -62,3 +66,5 @@ print(f"Final test accuracy: {accuracy_score(y_test, search.predict(X_test)):.3f
 # - `sizes` คืนจำนวนแถวจริง ส่วน `train_scores` และ `valid_scores` มีหนึ่งแถวต่อขนาดข้อมูล และหนึ่งคอลัมน์ต่อ fold
 # - `mean(axis=1)` เฉลี่ยคะแนนข้าม fold เพื่อวาดหนึ่งจุดต่อขนาดข้อมูล
 # - `search.predict(X_test)` ใช้โมเดลที่ GridSearchCV refit ไว้ประเมิน test หลังเลือกค่าเสร็จแล้ว
+#
+# **ที่มาของ 96 แถวบนแกนนอน:** train ทั้งหมดมี 120 แถว แต่แต่ละรอบของ 5-fold CV ใช้ฝึกเพียง 4 ส่วน จึงมีสูงสุด `120 × 4/5 = 96` แถว ส่วนอีก 24 แถวใช้ validation

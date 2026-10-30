@@ -66,6 +66,10 @@ print("First three transformed rows:\n",
 # - `get_feature_names_out()` ให้ชื่อ 4 คอลัมน์ตามลำดับจริง: ตัวเลข 2 คอลัมน์ และ service ที่แยกเป็น express/standard อีก 2 คอลัมน์
 # - `preprocess.transform(X_train.iloc[:3])` แปลงสามแถวเดิมใน Cell 1 โดยไม่ fit ซ้ำ ตัวเลขอาจติดลบหลัง scale; คอลัมน์ one-hot ยังคงเป็น 0/1 เพราะไม่ผ่าน StandardScaler
 # - `DummyRegressor(strategy="median")` ทายมัธยฐานของ y_train ทุกแถว เป็น baseline สำหรับเทียบ MAE ไม่ใช่ median ของน้ำหนักที่ใช้เติม feature
+#
+# **การตั้งค่าใน cell นี้:** `handle_unknown="ignore"` ทำให้บริการที่ไม่เคยพบมีค่า one-hot เป็น 0 ทุกคอลัมน์เดิม ส่วน `Ridge(alpha=1.0)` กำหนดความเข้มของ L2 ไว้ล่วงหน้า หากจะเลือกค่า alpha ให้ใช้ validation/CV ตาม [บท 04](../04-validation-and-metrics/README.md) และเก็บ test ไว้ประเมินท้ายสุด
+#
+# **อ่านคะแนน:** คำทำนายเป็นค่าบริการหนึ่งตัวเลขต่อแถว MAE เทียบค่านั้นกับค่าบริการจริงใน test ทั้ง 100 แถว ส่วนตารางสามแถวที่แสดงเป็น feature หลังเตรียมข้อมูล ไม่ใช่คำทำนาย
 
 # %% Cell 3 — ลองข้อมูลใหม่ที่มีหมวดหมู่ไม่เคยพบ
 new_order = pd.DataFrame({

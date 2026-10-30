@@ -50,6 +50,8 @@ def build_search():
 # - `svc__C` สองค่า × `svc__gamma` สองค่า รวมสี่ชุดตัวเลือก โดยชื่อก่อน `__` ต้องตรงกับชื่อขั้น `svc`
 # - `scoring="f1_macro"` ใช้ F1 ที่เฉลี่ยทุกคลาสเท่ากันเลือกโมเดล และ `StratifiedKFold(3, ...)` กำหนดสาม fold
 # - `n_jobs=1` จำกัดจำนวนงานที่ทำพร้อมกัน ส่วนการฝึกจริงจะเกิดเมื่อเรียก `.fit(...)` ใน main
+#
+# **การตั้งค่าใน cell นี้:** `SVC()` ใช้ RBF เป็นค่าเริ่มต้น เราลอง `C` ที่ 1 และ 10 เพื่อควบคุมการละเมิด margin และ `gamma` ที่ `"scale"` กับ 0.01 เพื่อเปลี่ยนขอบเขตอิทธิพลของจุด ยังไม่ได้เปิดการคำนวณ probability
 
 # %% Cell 3 — ประกาศขั้นตอนฝึก บันทึก และตรวจผล
 def main():
@@ -90,6 +92,7 @@ def main():
     csv_pixels = validate_pixels(np.loadtxt(out / "example-input.csv", delimiter=",", ndmin=2))
     print("Predictions from saved CSV:", restored.predict(csv_pixels).tolist())
     print("True labels for these examples:", y_test[:3].tolist())
+    print("Confusion matrix uses all test images:", len(y_test))
     errors = np.flatnonzero(pred != y_test)
     print("Misclassified held-out examples:", len(errors))
     fig, ax = plt.subplots(figsize=(6, 5))
@@ -135,3 +138,7 @@ if __name__ == "__main__":
 # **อ่านโค้ด:** เงื่อนไข `__name__ == "__main__"` เรียก `main()` เพื่อรันตั้งแต่โหลดข้อมูลจนบันทึกผล ต้องรัน Cell 1–3 ก่อนให้มีฟังก์ชันครบ
 #
 # เมื่อทำงานเสร็จจะได้รายงานคะแนน คำทำนายจาก CSV และกราฟ หากไม่มีตัวอย่างทายผิด เงื่อนไข `if len(errors):` จะข้ามการสร้าง errors.png
+#
+# **ก่อนอ่าน confusion matrix:** คำทำนายจาก CSV ใช้ตัวอย่าง 3 ภาพแรกเพื่อทดสอบการโหลดโมเดล ส่วน confusion matrix นับคำตอบจริงกับคำทำนายของ test ทั้ง 360 ภาพ ช่องแนวทแยงคือเลขที่ทายถูก; ผลรวมแนวทแยงหาร 360 จึงเป็น test accuracy
+#
+# เมื่อไฟล์อื่น import ฟังก์ชันไปใช้ เงื่อนไข `__name__ == "__main__"` จะไม่เรียกโครงงานซ้ำ

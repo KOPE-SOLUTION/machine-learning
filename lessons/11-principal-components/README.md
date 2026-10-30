@@ -2,7 +2,7 @@
 
 [กลับสารบัญ](../../README.md) · [Notebook](lesson.ipynb) · [Python](lesson.py)
 
-บทนี้ใช้ **PCA** ลดจำนวน feature ก่อนจำแนกภาพตัวเลข 8×8
+บทนี้รับภาพตัวเลข 8×8 ซึ่งมีค่า pixel 64 ค่า ใช้ **PCA** ลดจำนวน feature แล้วให้ **Logistic Regression ทายเลข 0–9** หนึ่งคำตอบต่อภาพ จึงมีทั้งผลการลดมิติและคะแนนการจำแนกที่ต้องอ่านแยกกัน
 
 **ใช้สิ่งที่เรียนแล้ว:** variance จาก NumPy, scaling/Pipeline และการเลือกค่าด้วย CV
 
@@ -36,11 +36,11 @@ PCA หาแกนจาก X โดยไม่ใช้ y ดังนั้�
 โค้ดใช้ `StandardScaler → PCA → LogisticRegression` โดยมีรายละเอียดดังนี้:
 
 - **ข้อมูลเข้า:** ภาพ 8×8 มี 64 pixel จึงเริ่มด้วย 64 feature
-- **`n_components=0.9`:** เลือกจำนวนแกนให้เก็บ variance สะสมตามเกณฑ์ 90% ของ train
+- **การเลือกจำนวนแกน:** กำหนดสัดส่วน variance ที่ต้องการเก็บ แล้วให้ PCA หาจำนวนแกนที่เพียงพอจาก train
 - **การปรับสเกล:** PCA center ข้อมูล แต่ไม่ scale ให้เอง การใส่ scaler เป็นทางเลือกของตัวอย่างนี้
 - **ข้อมูลใหม่:** ใช้ scaler และแกน PCA ที่ fit ไว้แล้ว ห้าม fit แกนใหม่บน test
 
-**`explained_variance_ratio_`:** สัดส่วน variance ของแต่ละแกน เช่น 0.5, 0.3 และ 0.1 รวมกันเป็น 0.9
+**ตัวอย่างสมมติ:** หากสามแกนเก็บ variance ได้สัดส่วน 0.5, 0.3 และ 0.1 จะรวมเป็น 0.9 หรือ 90% นี่คือสัดส่วนความแปรปรวนที่เก็บได้ ไม่ใช่จำนวนภาพที่ทายถูก
 
 หากจะเปรียบเทียบหลายระดับของ variance ที่เก็บ ให้เลือกด้วย CV
 
@@ -102,6 +102,8 @@ print(f"Test accuracy: {accuracy_score(y_test, model.predict(X_test)):.3f}")
 - `model.named_steps["pca"]` ดึง PCA ที่ fit แล้วออกมาอ่านผล ส่วน `pca.n_components_` คือจำนวนแกนที่เลือกได้จริง
 - `explained_variance_ratio_.sum()` รวมสัดส่วน variance ที่เก็บไว้ ขณะที่ accuracy คำนวณจากคำทำนายของ Pipeline ทั้งชุด
 - `max_iter=2000` ตั้งเพดานรอบให้ตัวแก้ปัญหาของ Logistic Regression ไม่ใช่จำนวน component ของ PCA
+
+**อ่านผลตามหน้าที่:** `Original features` กับ `Retained components` บอกจำนวนคอลัมน์ก่อนและหลัง PCA; `Retained variance` บอกสัดส่วนความแปรปรวนที่เก็บ ส่วน `Test accuracy` เทียบเลขที่ Logistic Regression ทายกับคำตอบจริง ไม่ใช้ variance แทน accuracy
 
 ### Cell 2 — อ่านพิกัดใหม่และ variance สะสม
 

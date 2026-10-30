@@ -33,6 +33,8 @@ print(f"Test accuracy: {accuracy_score(y_test, model.predict(X_test)):.3f}")
 # - `model.named_steps["pca"]` ดึง PCA ที่ fit แล้วออกมาอ่านผล ส่วน `pca.n_components_` คือจำนวนแกนที่เลือกได้จริง
 # - `explained_variance_ratio_.sum()` รวมสัดส่วน variance ที่เก็บไว้ ขณะที่ accuracy คำนวณจากคำทำนายของ Pipeline ทั้งชุด
 # - `max_iter=2000` ตั้งเพดานรอบให้ตัวแก้ปัญหาของ Logistic Regression ไม่ใช่จำนวน component ของ PCA
+#
+# **อ่านผลตามหน้าที่:** `Original features` กับ `Retained components` บอกจำนวนคอลัมน์ก่อนและหลัง PCA; `Retained variance` บอกสัดส่วนความแปรปรวนที่เก็บ ส่วน `Test accuracy` เทียบเลขที่ Logistic Regression ทายกับคำตอบจริง ไม่ใช้ variance แทน accuracy
 
 # %% Cell 2 — อ่านพิกัดใหม่และ variance สะสม
 Z_train = model[:-1].transform(X_train)

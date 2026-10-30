@@ -52,6 +52,8 @@ print(f"KDE test mean log density: {kde.score_samples(X_test).mean():.3f}")
 # - เมื่อไม่กำหนด `scoring` การค้นหาจะใช้ `KernelDensity.score` ซึ่งคืนผลรวม log density บน validation ของแต่ละ fold
 # - `best_estimator_` คือ KDE ที่เลือกและ refit บน train แล้ว
 # - `score_samples(X_test).mean()` เฉลี่ย log density ต่อแถวบน test เพื่อเปรียบเทียบ GMM กับ KDE
+#
+# **อ่านคะแนน CV กับ test แยกกัน:** KDE ใช้ KFold เพราะไม่มี label ให้ stratify คะแนนค้นหาเป็นผลรวม log density ของ validation fold ที่มี 90 แถวเท่ากันทุกรอบ ส่วนสองบรรทัดท้ายเป็นค่าเฉลี่ยต่อแถวบน test 150 แถว จึงไม่ใช้ตัวเลขสองรูปแบบนี้เทียบกันตรง ๆ
 
 # %% Cell 4 — วาดความหนาแน่นของสองโมเดล
 grid = np.linspace(-5, 6, 400).reshape(-1, 1)

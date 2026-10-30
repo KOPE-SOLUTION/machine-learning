@@ -38,6 +38,7 @@ model = make_pipeline(CountVectorizer(), MultinomialNB(alpha=1.0))
 model.fit(X_train, y_train)
 
 y_pred = model.predict(X_test)
+display(pd.DataFrame({"text": X_test, "actual": y_test, "prediction": y_pred}))
 print(classification_report(y_test, y_pred, zero_division=0))
 
 vectorizer = model.named_steps["countvectorizer"]
@@ -53,6 +54,8 @@ print("Vocabulary size:", len(words))
 # - `model.named_steps["countvectorizer"]` หยิบตัวนับคำที่ฝึกแล้วออกมาตรวจ และ `get_feature_names_out()` คืนชื่อคำตามลำดับคอลัมน์
 #
 # **ผลที่ได้:** vocabulary มี 49 คำ และทาย test ถูกทั้ง 6 ข้อความ จึงได้ accuracy 1.00 ผลนี้เป็นเพียงชุดตัวอย่างเล็กที่แต่งขึ้น ไม่ใช่หลักฐานว่าระบบจริงจะถูก 100%
+#
+# **อ่านผลก่อนคะแนน:** ตารางแสดงข้อความ test ทั้ง 6 ข้อความพร้อม `actual` (คลาสจริง) และ `prediction` (คลาสที่ทาย) จึงนับแถวที่ตรงกันได้ก่อนอ่าน classification report ซึ่งคำนวณจากคำตอบชุดเดียวกัน
 
 # %% Cell 3 — ดูจำนวนคำและทำนายข้อความใหม่
 examples = ["team team goal", "developer fixes software", "recipe with vegetables"]

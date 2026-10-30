@@ -32,6 +32,8 @@ for name, model in models.items():
 # - `cross_validate(..., return_train_score=True)` คืนทั้งคะแนนบนข้อมูลที่ใช้ฝึกและ validation ของแต่ละ fold
 # - `result["train_score"]` ใช้ดูผลบนชุดฝึก ส่วน `result["test_score"]` ในคำสั่งนี้หมายถึง validation fold ไม่ใช่ final test
 # - `scores[name]` เก็บค่าเฉลี่ย CV เพื่อให้ทุกโมเดลเลือกด้วยเกณฑ์เดียวกัน ส่วน `n_jobs=1` จำกัดการทำงานให้ใช้หนึ่งงานพร้อมกัน
+#
+# **การตั้งค่าใน cell นี้:** `max_depth=3` จำกัดความลึกของต้นแรก ส่วน Random Forest ใช้ `n_estimators=120` เป็นต้นไม้ 120 ต้น และ `min_samples_leaf=2` ให้แต่ละใบมีตัวอย่างอย่างน้อย 2 แถว
 
 # %% Cell 2 — ตรวจ feature ของโมเดลที่เลือก
 chosen = max(scores, key=scores.get)

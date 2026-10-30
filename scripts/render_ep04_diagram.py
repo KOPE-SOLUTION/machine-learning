@@ -48,11 +48,11 @@ def main():
             facecolor=color, edgecolor=border, linewidth=1.3,
         ))
 
-    text(0.055, 0.947, "อ่าน Confusion Matrix", size=30, weight="bold")
+    text(0.055, 0.947, "Confusion Matrix · กรณีที่ 2", size=30, weight="bold")
     text(0.055, 0.890,
-         "ตัวอย่างสมมติ 100 ข้อความ  ·  คลาส 1 = สแปม  ·  คลาส 0 = ข้อความปกติ",
+         "ค่าจริง 100 ข้อความ: ปกติ (0) = 90  ·  สแปม (1) = 10",
          size=17, color=muted)
-    text(0.055, 0.848, "Positive = คลาสที่เราสนใจตรวจหา ในตัวอย่างนี้คือสแปม",
+    text(0.055, 0.848, "ผลทำนาย: ปกติ 85  ·  สแปม 15  ·  ทายถูก 80 + 5 = 85 ข้อความ",
          size=15, color=muted)
     text(0.400, 0.790, "คำทำนายของโมเดล (Predicted)", size=18, weight="bold", ha="center")
     text(0.290, 0.744, "ทาย 0 · ปกติ", size=16, ha="center")
@@ -98,13 +98,13 @@ def main():
     text(0.682, 0.297, f"{TP} / ({TP} + {FN}) = {recall:.2f}", size=20, weight="bold")
 
     card(0.18, 0.092, 0.44, 0.099)
-    text(0.198, 0.158, f"Accuracy = {accuracy:.2f}", size=20, weight="bold")
+    text(0.198, 0.158, f"Accuracy = {accuracy:.2f} = {accuracy:.0%}", size=20, weight="bold")
     text(0.198, 0.115, f"ทายถูกทั้งหมด: ({TN} + {TP}) / 100", size=16)
     card(0.665, 0.092, 0.28, 0.099)
     text(0.682, 0.158, f"F1 = {f1:.2f}", size=20, weight="bold")
     text(0.682, 0.115, "2TP / (2TP + FP + FN)", size=16)
 
-    text(0.055, 0.038, "EP04 · ตัวอย่างสำหรับอ่านตารางและคำนวณคะแนน ไม่ใช่ผล test จาก Cell 3",
+    text(0.055, 0.038, "EP04 · ตัวอย่างสมมติกรณีที่ 2 ได้ 85% · กรณีที่ 1 ทายปกติทั้งหมดได้ 90%",
          size=13, color=muted)
     OUTPUT.parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(OUTPUT.with_suffix(".png"), dpi=150)
