@@ -113,7 +113,7 @@ def render_least_squares():
     np.testing.assert_allclose(fitted, [22, 42, 62])
     np.testing.assert_allclose(residual, [1, -2, 1])
     np.testing.assert_allclose([raw_sse, fitted_sse], [18, 6])
-    fig = base("Least Squares: เลือกเส้นที่มีผลรวม residual² ต่ำที่สุด",
+    fig = base("Least Squares: โมเดลหาเส้นที่เหมาะกับข้อมูลอย่างไร",
                "ตัวอย่างชุดฝึกสมมติ 3 คู่ • ค่าอ้างอิง y = [23, 40, 63]")
     ax = fig.add_axes([.075, .235, .425, .545], facecolor="white")
     grid = np.linspace(15, 65, 150)

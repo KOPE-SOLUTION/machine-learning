@@ -34,7 +34,7 @@ print(f"Test accuracy: {accuracy_score(y_test, model.predict(X_test)):.3f}")
 # - `make_moons(n_samples=400, noise=0.25, ...)` สร้างข้อมูลสองคลาสรูปโค้ง แล้วแบ่งเป็น train 300 แถวและ test 100 แถว
 # - `StratifiedKFold(n_splits=5, shuffle=True, ...)` กำหนดการแบ่ง train เป็นห้าส่วน โดยสลับแถวและรักษาสัดส่วนคลาส
 # - dictionary `models` สร้าง Pipeline สองตัวจากค่า kernel `linear` และ `rbf` โดยใช้ scaler และ C แบบเดียวกัน
-# - `cross_val_score(..., cv=cv, scoring="accuracy")` คืนคะแนนห้าค่า ใช้ `mean()` สรุปคะแนนเฉลี่ย และ `std()` ดูการกระจายระหว่าง fold
+# - `cross_val_score(..., cv=cv, scoring="accuracy")` คืน accuracy ของ validation ห้ารอบ ใช้ `mean()` หาคะแนนเฉลี่ย และ `std()` ดูว่าคะแนนต่างกันระหว่างรอบมากเพียงใด
 # - `max(scores, key=scores.get)` เลือกชื่อ kernel ที่มีค่าเฉลี่ยสูงสุด แล้ว `fit(X_train, y_train)` ฝึกตัวที่เลือกบน train ทั้งหมดก่อนวัด test
 #
 # **การตั้งค่าใน cell นี้**

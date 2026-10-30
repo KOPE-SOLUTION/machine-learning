@@ -34,7 +34,7 @@ print(f"New-user accuracy (random user labels): {model.score(X[test_idx], y[test
 # - `user_signal[groups]` ใช้รหัสคนเลือก feature ตั้งต้นของคนนั้น แล้วเติม noise เล็กน้อย ส่วน `user_label[groups]` ทำให้ห้าแถวของคนเดียวกันได้ label เดียวกัน
 # - `set(groups[row_train]) & set(groups[row_test])` หารหัสคนที่อยู่ทั้ง train และ test หลังสุ่มแถว เพื่อแสดงปัญหาคนเดิมข้ามชุด
 # - `next(split.split(X, y, groups))` รับคู่ index จาก `GroupShuffleSplit` รอบแรก โดยตัวแบ่งใช้ groups กันคนออกทั้งกลุ่ม
-# - `isdisjoint` ตรวจว่ารหัสคนไม่ซ้ำสองฝั่ง ส่วน `np.unique(groups[test_idx])` ใช้นับจำนวนคนที่กันไว้
+# - `isdisjoint` คืน True เมื่อไม่มีรหัสคนร่วมกันระหว่าง train กับ test และ `assert` จะหยุดพร้อมข้อผิดพลาดหากเงื่อนไขนี้ไม่จริง ส่วน `np.unique(groups[test_idx])` หารหัสคนที่ไม่ซ้ำกันใน test เพื่อนำไปนับจำนวนคน
 # - สำหรับ KNN classifier ในบทนี้ `model.score(...)` คืน accuracy ของข้อมูลที่ส่งให้ประเมิน จึงต้องอ่านพร้อมจำนวนคนที่ซ้ำ ไม่เลือกวิธีแบ่งจากคะแนนสูงสุด
 #
 # **การตั้งค่าและจำนวนแถว:** `GroupShuffleSplit(test_size=0.2)` กัน 20% ของ 60 คน จึงเป็น 12 คน × 5 แถว = test 60 แถว ไม่ได้สุ่มกันเพียงบางแถวของคนเดิม ค่า `Group split - shared users` ต้องเป็น 0

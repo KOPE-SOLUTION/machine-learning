@@ -49,7 +49,7 @@ print("Vocabulary size:", len(words))
 # **อ่านโค้ด**
 #
 # - `make_pipeline(CountVectorizer(), MultinomialNB(alpha=1.0))` ต่อ **ตัวนับคำ → โมเดลจำแนกประเภท** โดย `alpha=1.0` เพิ่มจำนวนสมมติ 1 ให้ทุกคำในแต่ละคลาสตอนคำนวณความน่าจะเป็น
-# - `fit(X_train, y_train)` เรียน vocabulary จากข้อความ train แล้วใช้จำนวนคำกับคำตอบฝึก Naive Bayes ส่วน `predict(X_test)` ใช้ vocabulary และโมเดลที่เรียนไว้ โดยไม่ fit ใหม่
+# - `fit(X_train, y_train)` สร้างรายการคำที่รู้จักจากข้อความ train นับแต่ละคำ แล้วใช้จำนวนคำพร้อมคำตอบ sport/tech ฝึก Naive Bayes ส่วน `predict(X_test)` นับคำจากรายการเดิมและใช้โมเดลเดิมทำนาย
 # - `classification_report` อ่านเหมือนบท 04; `zero_division=0` ให้ค่า 0 แทนกรณีที่ตัวหารของ metric เป็นศูนย์ ไม่ได้เปลี่ยนคำทำนาย
 # - `model.named_steps["countvectorizer"]` หยิบตัวนับคำที่ฝึกแล้วออกมาตรวจ และ `get_feature_names_out()` คืนชื่อคำตามลำดับคอลัมน์
 #

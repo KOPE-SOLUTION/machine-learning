@@ -27,7 +27,7 @@ for name, model in models.items():
 # %% [markdown]
 # **อ่านโค้ด**
 #
-# - `make_classification` สร้าง 10 feature โดย 4 ตัวใช้สร้างสัญญาณ และ 2 ตัวเป็นค่าผสมจาก informative features ส่วน `flip_y=0.08` เติมความผิดพลาดของ label
+# - `make_classification` สร้าง 10 feature: 4 คอลัมน์มีข้อมูลสำหรับแยกคลาส และ 2 คอลัมน์เป็นค่าผสมจากสี่คอลัมน์นั้น ส่วน `flip_y=0.08` สุ่มกำหนด label ใหม่ให้บางแถวเพื่อจำลองคำตอบที่มีความคลาดเคลื่อน
 # - `models` เก็บต้นไม้จำกัดความลึก 3 ชั้น ต้นไม้ไม่กำหนดเพดานความลึก และ Random Forest 120 ต้น
 # - `cross_validate(..., return_train_score=True)` คืนทั้งคะแนนบนข้อมูลที่ใช้ฝึกและ validation ของแต่ละ fold
 # - `result["train_score"]` ใช้ดูผลบนชุดฝึก ส่วน `result["test_score"]` ในคำสั่งนี้หมายถึง validation fold ไม่ใช่ final test
@@ -48,7 +48,7 @@ for i in order:
 # **อ่านโค้ด**
 #
 # - เลือกโมเดลจาก `scores` แล้ว fit บน train ทั้งหมดก่อนประเมิน test ตามวิธีในบท 08
-# - `permutation_importance(..., n_repeats=8)` สลับค่าของ feature แต่ละตัวซ้ำแปดครั้ง แล้ววัดว่า accuracy ลดลงเท่าไร
+# - `permutation_importance(..., n_repeats=8)` สุ่มสลับค่าภายในคอลัมน์ทีละคอลัมน์ แล้ววัด accuracy ของโมเดลเดิม ทำแปดรอบต่อคอลัมน์เพื่อลดผลจากการสุ่มครั้งเดียว โดยไม่ฝึกโมเดลใหม่
 # - `importances_mean` และ `importances_std` คือค่าเฉลี่ยและส่วนเบี่ยงเบนมาตรฐานของคะแนนที่ลดลงจากการสลับ
 # - `np.argsort(...)[::-1][:5]` เรียง index ของ feature จาก importance มากไปน้อย แล้วเลือกห้าอันดับแรก
 # - ผลนี้ใช้รายงานโมเดลที่เลือกแล้ว หากจะนำไปเลือก feature ต้องทำขั้นตอนนั้นบน validation

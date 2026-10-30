@@ -29,7 +29,7 @@ print("Responsibilities for x=0:", gmm.predict_proba([[0.0]]).round(3))
 # **อ่านโค้ด**
 #
 # - list comprehension สร้างและ fit GMM ที่มี `n_components` ตั้งแต่ 1 ถึง 4 บน train ชุดเดียวกัน
-# - `n_init=5` ให้แต่ละโมเดลลองห้าการเริ่มต้น เพื่อเลือกผลฝึกที่ดีที่สุดของจำนวน component นั้น
+# - `n_init=5` ให้ GMM จำนวนองค์ประกอบเดียวกันลองเริ่มฝึกห้าครั้ง แล้วเก็บผลที่ได้ค่าเป้าหมายการฝึกสูงที่สุด เพื่อลดโอกาสได้ผลไม่ดีเพราะตำแหน่งเริ่มต้น
 # - `min(mixtures, key=lambda model: model.bic(X_train))` เลือก **ตัวโมเดล** ที่มี BIC ต่ำสุด โดย `lambda` ระบุค่าที่นำมาเทียบ
 # - `gmm.predict_proba([[0.0]])` คืน responsibility ของ x=0 ต่อแต่ละ component ผลในแถวนี้รวมกันเป็น 1 โดยประมาณ
 

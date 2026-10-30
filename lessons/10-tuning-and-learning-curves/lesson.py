@@ -32,7 +32,7 @@ print(f"Best CV accuracy: {search.best_score_:.3f}")
 # - `load_iris(return_X_y=True)` คืน X และ y โดยตรง แทนการคืนชุดข้อมูลพร้อมรายละเอียดแบบบท 02
 # - `Pipeline([("scale", ...), ("knn", ...)])` ตั้งชื่อแต่ละขั้นเอง เพื่ออ้างชื่อในการค้นพารามิเตอร์
 # - `knn__n_neighbors` และ `knn__weights` ใช้รูปแบบ `ชื่อขั้น__ชื่อพารามิเตอร์` ให้ GridSearchCV รู้ว่าต้องปรับค่าของ KNN
-# - `search.fit(X_train, y_train)` ทดลองหกชุดค่าด้วยห้า fold แล้ว refit ชุดที่ชนะบน train ทั้งหมดตามค่าเริ่มต้น
+# - `search.fit(X_train, y_train)` ลองหกชุดค่า แต่ละชุดฝึกและวัด validation ห้ารอบ แล้วเลือกชุดที่มีคะแนนเฉลี่ยสูงสุด จากนั้นฝึกใหม่ด้วย train ทั้งหมดโดยอัตโนมัติ ขั้นตอนฝึกใหม่นี้เรียกว่า refit
 # - `pd.DataFrame(search.cv_results_)` ทำผลค้นหาเป็นตาราง แล้วเรียงด้วย `rank_test_score` เพื่ออ่านลำดับจากคะแนน CV
 # - `best_params_` บอกชุดค่าที่เลือก และ `best_score_` เป็นคะแนน CV เฉลี่ยของชุดนั้น ไม่ใช่ final test
 #
