@@ -12,7 +12,7 @@
 
 **GMM:** ใช้เส้นความหนาแน่นรูประฆังหลายเส้นมารวมกัน แต่ละเส้นเรียกว่า **Gaussian component หรือองค์ประกอบ Gaussian** โมเดลเรียนจุดกึ่งกลาง ความกว้าง และสัดส่วนของแต่ละองค์ประกอบจากข้อมูล
 
-วิธีฝึกเรียกว่า **EM — Expectation-Maximization** ทำสลับกันสองขั้น: ประเมินว่าแต่ละจุดมีโอกาสมาจากองค์ประกอบใดเท่าไร แล้วใช้โอกาสเหล่านั้นเป็นน้ำหนักในการปรับจุดกึ่งกลาง ความกว้าง และสัดส่วนขององค์ประกอบ ทำซ้ำจนถึงเกณฑ์หยุด
+วิธีฝึกเรียกว่า **EM — Expectation-Maximization** ทำสลับกันสองขั้น: ประเมินว่าแต่ละจุดมีโอกาสมาจากองค์ประกอบใดเท่าไร แล้วใช้โอกาสเหล่านั้นเป็นน้ำหนักในการปรับจุดกึ่งกลาง ความกว้าง และสัดส่วนขององค์ประกอบ ทำซ้ำจนค่าเฉลี่ย log density บน train เปลี่ยนระหว่างรอบน้อยกว่าค่า `tol` หรือครบจำนวนรอบสูงสุด `max_iter`
 
 **KDE:** วางเส้นรูประฆังรอบข้อมูลแต่ละจุด แล้วนำค่าจากทุกเส้นมาเฉลี่ยเป็นเส้นความหนาแน่นรวม ฟังก์ชันที่วางรอบแต่ละจุดเรียกว่า **kernel** บทนี้ใช้ Gaussian kernel และใช้ **bandwidth** กำหนดความกว้างของแต่ละเส้น
 
@@ -38,7 +38,7 @@
 
 **Responsibility:** สำหรับจุดหนึ่ง โมเดล GMM ประเมินว่าจุดนั้นมีโอกาสมาจากองค์ประกอบแต่ละตัวเท่าไร จึงได้ความน่าจะเป็นหลายค่า รวมกันเป็น 1
 
-ตัวอย่าง: `[0.2, 0.8]` หมายถึงโอกาสเป็นสมาชิก 20% และ 80% ตามลำดับ การให้สัดส่วนแบบนี้เรียกว่า **soft assignment**
+ตัวอย่าง GMM ที่มีสององค์ประกอบ: `[0.2, 0.8]` หมายถึงโมเดลประเมินว่าจุดนั้นมีโอกาสมาจากองค์ประกอบแรก 20% และองค์ประกอบที่สอง 80% การระบุความน่าจะเป็นของแต่ละองค์ประกอบแทนการเลือกเพียงองค์ประกอบเดียวเรียกว่า **soft assignment**
 
 ผลจาก `GMM.predict_proba` จึงบอกความเป็นสมาชิกได้หลายองค์ประกอบ ส่วน K-means เลือกกลุ่มเดียวให้แต่ละจุด หากต้องการเลือกองค์ประกอบเดียวจาก GMM ก็ใช้ `predict` ได้ แต่ชื่อองค์ประกอบยังไม่จำเป็นต้องตรงกับกลุ่มจริง
 
@@ -102,7 +102,7 @@ print("Responsibilities for x=0:", gmm.predict_proba([[0.0]]).round(3))
 **อ่านโค้ด**
 
 - list comprehension สร้างและ fit GMM ที่มี `n_components` ตั้งแต่ 1 ถึง 4 บน train ชุดเดียวกัน
-- `n_init=5` ให้ GMM จำนวนองค์ประกอบเดียวกันลองเริ่มฝึกห้าครั้ง แล้วเก็บผลที่ได้ค่าเป้าหมายการฝึกสูงที่สุด เพื่อลดโอกาสได้ผลไม่ดีเพราะตำแหน่งเริ่มต้น
+- `n_init=5` ให้ GMM ที่มีจำนวนองค์ประกอบเท่ากันลองเริ่มฝึกห้าครั้ง แล้วเก็บผลที่มีค่าเฉลี่ย log density บน train ระหว่างฝึกสูงที่สุด ค่าเฉลี่ย log density ใช้เปรียบเทียบว่าผลการฝึกครั้งใดอธิบายการกระจายของ train ได้ดีกว่า
 - `min(mixtures, key=lambda model: model.bic(X_train))` เลือก **ตัวโมเดล** ที่มี BIC ต่ำสุด โดย `lambda` ระบุค่าที่นำมาเทียบ
 - `gmm.predict_proba([[0.0]])` คืน responsibility ของ x=0 ต่อแต่ละ component ผลในแถวนี้รวมกันเป็น 1 โดยประมาณ
 
@@ -128,7 +128,7 @@ print(f"KDE test mean log density: {kde.score_samples(X_test).mean():.3f}")
 - `best_estimator_` คือ KDE ที่เลือกและ refit บน train แล้ว
 - `score_samples(X_test).mean()` เฉลี่ย log density ต่อแถวบน test เพื่อเปรียบเทียบ GMM กับ KDE
 
-**อ่านคะแนน CV กับ test แยกกัน:** KDE ใช้ KFold เพราะไม่มี label ให้ stratify คะแนนค้นหาเป็นผลรวม log density ของ validation fold ที่มี 90 แถวเท่ากันทุกรอบ ส่วนสองบรรทัดท้ายเป็นค่าเฉลี่ยต่อแถวบน test 150 แถว จึงไม่ใช้ตัวเลขสองรูปแบบนี้เทียบกันตรง ๆ
+**อ่านคะแนน CV กับ test แยกกัน:** KDE ใช้ KFold เพราะไม่มี label ให้ stratify คะแนนค้นหาเป็นผลรวม log density ของ validation fold ที่มี 90 แถวเท่ากันทุกรอบ ส่วน `GMM test mean log density` และ `KDE test mean log density` เป็นค่าเฉลี่ย log density ต่อแถวบน test 150 แถว จึงไม่เทียบผลรวมจาก CV กับค่าเฉลี่ยบน test โดยตรง
 
 ### Cell 4 — วาดความหนาแน่นของสองโมเดล
 
@@ -153,7 +153,7 @@ plt.close(fig)
 - `grid` เป็นตำแหน่ง x ที่ต้องการคำนวณความหนาแน่น จัดเป็นสองมิติตามรูปข้อมูลที่โมเดลรับ
 - `score_samples(grid)` คืน log density จึงใช้ `np.exp(...)` แปลงเป็น density ก่อนวาดเส้น
 - `hist(..., density=True)` ปรับ histogram ให้พื้นที่รวมเป็น 1 เพื่อเทียบกับเส้น density ได้
-- กราฟใช้ train ส่วนผล test log density แสดงแยกใน Cell ก่อนหน้า
+- histogram แสดงข้อมูล train ส่วนการประเมินกับ test อ่านจาก `GMM test mean log density` และ `KDE test mean log density` ใน Cell 3
 <!-- CODE:END -->
 
 ## อ่านผล
@@ -186,4 +186,5 @@ plt.close(fig)
 - [Handbook: Gaussian Mixture Models](https://jakevdp.github.io/PythonDataScienceHandbook/05.12-gaussian-mixtures.html)
 - [Handbook: KDE](https://jakevdp.github.io/PythonDataScienceHandbook/05.13-kernel-density-estimation.html)
 - [Gaussian mixtures](https://scikit-learn.org/1.7/modules/mixture.html)
+- [GaussianMixture: เกณฑ์เลือกผลจากการเริ่มฝึกหลายครั้ง](https://scikit-learn.org/1.7/modules/generated/sklearn.mixture.GaussianMixture.html)
 - [Density estimation](https://scikit-learn.org/1.7/modules/density.html)

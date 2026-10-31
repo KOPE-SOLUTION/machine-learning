@@ -31,7 +31,7 @@ for name, model in models.items():
 # - `models` เก็บต้นไม้จำกัดความลึก 3 ชั้น ต้นไม้ไม่กำหนดเพดานความลึก และ Random Forest 120 ต้น
 # - `cross_validate(..., return_train_score=True)` คืนทั้งคะแนนบนข้อมูลที่ใช้ฝึกและ validation ของแต่ละ fold
 # - `result["train_score"]` ใช้ดูผลบนชุดฝึก ส่วน `result["test_score"]` ในคำสั่งนี้หมายถึง validation fold ไม่ใช่ final test
-# - `scores[name]` เก็บค่าเฉลี่ย CV เพื่อให้ทุกโมเดลเลือกด้วยเกณฑ์เดียวกัน ส่วน `n_jobs=1` จำกัดการทำงานให้ใช้หนึ่งงานพร้อมกัน
+# - `scores[name]` เก็บ accuracy เฉลี่ยจาก CV แล้วเลือกโมเดลที่ได้ค่าเฉลี่ยสูงที่สุด ส่วน `n_jobs=1` จำกัดการทำงานให้ใช้หนึ่งงานพร้อมกัน
 #
 # **การตั้งค่าใน cell นี้:** `max_depth=3` จำกัดความลึกของต้นแรก ส่วน Random Forest ใช้ `n_estimators=120` เป็นต้นไม้ 120 ต้น และ `min_samples_leaf=2` ให้แต่ละใบมีตัวอย่างอย่างน้อย 2 แถว
 
@@ -51,4 +51,4 @@ for i in order:
 # - `permutation_importance(..., n_repeats=8)` สุ่มสลับค่าภายในคอลัมน์ทีละคอลัมน์ แล้ววัด accuracy ของโมเดลเดิม ทำแปดรอบต่อคอลัมน์เพื่อลดผลจากการสุ่มครั้งเดียว โดยไม่ฝึกโมเดลใหม่
 # - `importances_mean` และ `importances_std` คือค่าเฉลี่ยและส่วนเบี่ยงเบนมาตรฐานของคะแนนที่ลดลงจากการสลับ
 # - `np.argsort(...)[::-1][:5]` เรียง index ของ feature จาก importance มากไปน้อย แล้วเลือกห้าอันดับแรก
-# - ผลนี้ใช้รายงานโมเดลที่เลือกแล้ว หากจะนำไปเลือก feature ต้องทำขั้นตอนนั้นบน validation
+# - ค่า permutation importance บน test ใช้รายงานการพึ่งพาแต่ละ feature ของโมเดลที่เลือกแล้ว หากต้องการใช้ importance เลือก feature ให้คำนวณและเลือกบน validation

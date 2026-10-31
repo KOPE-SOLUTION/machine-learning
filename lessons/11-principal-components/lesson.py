@@ -55,7 +55,7 @@ plt.close(fig)
 # **อ่านโค้ด**
 #
 # - `model[:-1]` เลือกทุกขั้นก่อน classifier จึงเหลือ scaler กับ PCA
-# - `transform(X_train)` ใช้สถิติและแกนเดิมแปลงข้อมูลเป็น `Z_train` โดยไม่ fit ใหม่
+# - `transform(X_train)` ใช้ค่าเฉลี่ย ส่วนเบี่ยงเบนมาตรฐาน และแกน PCA ที่เรียนจาก train แล้ว เพื่อแปลงข้อมูลเป็น `Z_train` โดยไม่ fit ใหม่
 # - `Z_train[:, 0]` และ `Z_train[:, 1]` เลือกเพียงสอง component แรกมาวาด แต่ classifier ใช้ทุก component ที่เก็บไว้
 # - `np.cumsum(pca.explained_variance_ratio_)` หาผลรวมสะสมทีละแกน เพื่อดูว่าเพิ่มแกนแล้วเก็บ variance ได้เท่าไร
 # - `np.arange(1, pca.n_components_ + 1)` สร้างแกนนอนให้เริ่มนับ component จาก 1

@@ -47,7 +47,7 @@
 
 **Trustworthiness:** ตรวจว่าจุดที่ดูใกล้กันในกราฟใหม่เคยใกล้กันในข้อมูลเดิมด้วยหรือไม่ หากจุดที่เดิมอยู่ไกลถูกดึงมาเป็นเพื่อนบ้านใกล้ คะแนนจะลดลง
 
-ค่าสูงใกล้ 1 ดีกว่าตามเกณฑ์นี้ แต่ไม่ใช่ accuracy และไม่รับรองระยะไกลทั้งหมด
+ค่า **trustworthiness** ยิ่งใกล้ 1 ยิ่งแสดงว่าเพื่อนบ้านในกราฟใหม่สอดคล้องกับข้อมูลเดิมได้ดี คะแนน trustworthiness ไม่ใช่ accuracy ของการจำแนกประเภท และไม่ได้ยืนยันว่าระยะระหว่างจุดที่อยู่ไกลกันในกราฟถูกต้องทั้งหมด
 
 **ข้อจำกัดของโค้ด:** `TSNE` ใน scikit-learn ไม่มี `transform` สำหรับจุดใหม่แบบ PCA บทนี้จึงใช้สำรวจข้อมูล ไม่ใช่ทำนายภาพใหม่
 
@@ -144,3 +144,4 @@ plt.close(fig)
 
 - [Handbook: Manifold Learning](https://jakevdp.github.io/PythonDataScienceHandbook/05.10-manifold-learning.html)
 - [scikit-learn: Manifold learning](https://scikit-learn.org/1.7/modules/manifold.html#t-sne)
+- [scikit-learn: เกณฑ์คำนวณ trustworthiness](https://scikit-learn.org/1.7/modules/generated/sklearn.manifold.trustworthiness.html)

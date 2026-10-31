@@ -29,7 +29,7 @@ print("Responsibilities for x=0:", gmm.predict_proba([[0.0]]).round(3))
 # **อ่านโค้ด**
 #
 # - list comprehension สร้างและ fit GMM ที่มี `n_components` ตั้งแต่ 1 ถึง 4 บน train ชุดเดียวกัน
-# - `n_init=5` ให้ GMM จำนวนองค์ประกอบเดียวกันลองเริ่มฝึกห้าครั้ง แล้วเก็บผลที่ได้ค่าเป้าหมายการฝึกสูงที่สุด เพื่อลดโอกาสได้ผลไม่ดีเพราะตำแหน่งเริ่มต้น
+# - `n_init=5` ให้ GMM ที่มีจำนวนองค์ประกอบเท่ากันลองเริ่มฝึกห้าครั้ง แล้วเก็บผลที่มีค่าเฉลี่ย log density บน train ระหว่างฝึกสูงที่สุด ค่าเฉลี่ย log density ใช้เปรียบเทียบว่าผลการฝึกครั้งใดอธิบายการกระจายของ train ได้ดีกว่า
 # - `min(mixtures, key=lambda model: model.bic(X_train))` เลือก **ตัวโมเดล** ที่มี BIC ต่ำสุด โดย `lambda` ระบุค่าที่นำมาเทียบ
 # - `gmm.predict_proba([[0.0]])` คืน responsibility ของ x=0 ต่อแต่ละ component ผลในแถวนี้รวมกันเป็น 1 โดยประมาณ
 
@@ -53,7 +53,7 @@ print(f"KDE test mean log density: {kde.score_samples(X_test).mean():.3f}")
 # - `best_estimator_` คือ KDE ที่เลือกและ refit บน train แล้ว
 # - `score_samples(X_test).mean()` เฉลี่ย log density ต่อแถวบน test เพื่อเปรียบเทียบ GMM กับ KDE
 #
-# **อ่านคะแนน CV กับ test แยกกัน:** KDE ใช้ KFold เพราะไม่มี label ให้ stratify คะแนนค้นหาเป็นผลรวม log density ของ validation fold ที่มี 90 แถวเท่ากันทุกรอบ ส่วนสองบรรทัดท้ายเป็นค่าเฉลี่ยต่อแถวบน test 150 แถว จึงไม่ใช้ตัวเลขสองรูปแบบนี้เทียบกันตรง ๆ
+# **อ่านคะแนน CV กับ test แยกกัน:** KDE ใช้ KFold เพราะไม่มี label ให้ stratify คะแนนค้นหาเป็นผลรวม log density ของ validation fold ที่มี 90 แถวเท่ากันทุกรอบ ส่วน `GMM test mean log density` และ `KDE test mean log density` เป็นค่าเฉลี่ย log density ต่อแถวบน test 150 แถว จึงไม่เทียบผลรวมจาก CV กับค่าเฉลี่ยบน test โดยตรง
 
 # %% Cell 4 — วาดความหนาแน่นของสองโมเดล
 grid = np.linspace(-5, 6, 400).reshape(-1, 1)
@@ -76,4 +76,4 @@ plt.close(fig)
 # - `grid` เป็นตำแหน่ง x ที่ต้องการคำนวณความหนาแน่น จัดเป็นสองมิติตามรูปข้อมูลที่โมเดลรับ
 # - `score_samples(grid)` คืน log density จึงใช้ `np.exp(...)` แปลงเป็น density ก่อนวาดเส้น
 # - `hist(..., density=True)` ปรับ histogram ให้พื้นที่รวมเป็น 1 เพื่อเทียบกับเส้น density ได้
-# - กราฟใช้ train ส่วนผล test log density แสดงแยกใน Cell ก่อนหน้า
+# - histogram แสดงข้อมูล train ส่วนการประเมินกับ test อ่านจาก `GMM test mean log density` และ `KDE test mean log density` ใน Cell 3
