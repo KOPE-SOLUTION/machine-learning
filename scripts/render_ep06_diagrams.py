@@ -132,7 +132,7 @@ def ridge():
     )
     card(ax, 0.05, 0.62, 0.90, 0.20)
     label(ax, 0.50, 0.756,
-          r"$\sum_{i=1}^{n}(y_i-\hat{y}_i)^2\quad+\quad\alpha\sum_{j=1}^{p}w_j^2$",
+          r"$J=\sum_{i=1}^{n}(y_i-\hat{y}_i)^2\quad+\quad\alpha\sum_{j=1}^{p}w_j^2$",
           size=29, ha="center")
     label(ax, 0.50, 0.648, "เลือก intercept และน้ำหนัก ให้ค่ารวมนี้ต่ำที่สุดบน train", size=17, ha="center", color=MUTED)
 

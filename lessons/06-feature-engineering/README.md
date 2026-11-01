@@ -57,9 +57,9 @@ ColumnTransformer เตรียมข้อมูล ส่วน Ridge เร
 
 เมื่อต้องทำนายค่าบริการหนึ่งรายการ Ridge คำนวณ:
 
-$
-\hat y = b + w_1 z_{\text{distance}} + w_2 z_{\text{weight}} + w_3 I_{\text{express}} + w_4 I_{\text{standard}}
-$
+![ค่าทำนายเท่ากับ b บวก w1 คูณ z ของระยะทาง บวก w2 คูณ z ของน้ำหนัก บวก w3 คูณ I express บวก w4 คูณ I standard](../../assets/figures/06-feature-engineering-formula-prediction.png)
+
+[เปิดภาพ SVG](../../assets/figures/06-feature-engineering-formula-prediction.svg)
 
 **ตอน fit** เรียนน้ำหนักทั้ง 4 ค่าและ intercept ร่วมกันจาก train ส่วน **ตอน predict** ใช้ค่าที่เรียนไว้แล้วคำนวณสมการนี้ โมเดลไม่ได้รับสูตรที่เราใช้สร้างค่าบริการจำลอง
 
@@ -69,18 +69,14 @@ $
 
 ให้ `J` เป็นค่ารวมที่ Ridge ต้องลดระหว่างฝึก, `α` (อัลฟา หรือ `alpha` ในโค้ด) เป็นตัวกำหนดความเข้มของการควบคุม และ `Σ` (ซิกมา) หมายถึงนำค่ามาบวกกัน:
 
-$
-J = \underbrace{\sum_{i=1}^{n}(y_i-\hat y_i)^2}_{\text{SSE}}
-  + \underbrace{\alpha\sum_{j=1}^{p}w_j^2}_{\text{L2 penalty}}
-$
+![Ridge ลด SSE บน train บวกพจน์ลงโทษ ตัวอย่างน้ำหนัก 2 และลบ 1 เมื่อ alpha เท่ากับ 1 ได้พจน์ลงโทษ 5](../../assets/figures/06-feature-engineering-ridge.png)
+
+*ตัวเลขสมมติเพื่ออ่านสองส่วนของสูตร ไม่ใช่น้ำหนักจากข้อมูลค่าจัดส่ง* · [เปิดภาพ SVG](../../assets/figures/06-feature-engineering-ridge.svg)
 
 `yᵢ` คือค่าจริงของแถวที่ i, `ŷᵢ` คือค่าทำนาย, `n` คือจำนวนแถว train และ `p` คือจำนวน features หลังแปลง **intercept ไม่รวมในพจน์ลงโทษ** คำว่า L2 ใน Ridge หมายถึงใช้ผลรวมกำลังสองของน้ำหนักในสูตรนี้
 
 ตัวอย่างสมมติ: น้ำหนัก `[2, -1]` และ `alpha=1` ให้พจน์ลงโทษ `1 × (2² + (-1)²) = 5` ถ้า SSE เท่ากับ 100 ค่ารวมคือ `J = 100 + 5 = 105`
 
-![Ridge ลด SSE บน train บวกพจน์ลงโทษ ตัวอย่างน้ำหนัก 2 และลบ 1 เมื่อ alpha เท่ากับ 1 ได้พจน์ลงโทษ 5](../../assets/figures/06-feature-engineering-ridge.png)
-
-*ตัวเลขสมมติเพื่ออ่านสองส่วนของสูตร ไม่ใช่น้ำหนักจากข้อมูลค่าจัดส่ง* · [เปิดภาพ SVG](../../assets/figures/06-feature-engineering-ridge.svg)
 
 **แยกการฝึกกับการประเมินผล:** Ridge ลด `J` บน train เพื่อหาน้ำหนัก ส่วนบทนี้ใช้ **MAE บน test** ประเมินว่าค่าบริการที่ทำนายคลาดเคลื่อนเฉลี่ยเท่าไร พจน์ลงโทษไม่ได้ถูกบวกเข้า MAE และค่ารวม J ไม่ใช่คะแนนความแม่นยำ
 
@@ -111,11 +107,9 @@ $
 
 สำหรับ Ridge ที่มี feature เดียวและเรียน intercept สูตรหาน้ำหนักเปลี่ยนเป็น:
 
-$
-w = \frac{\sum_{i=1}^{n}(x_i-\bar{x})(y_i-\bar{y})}
-         {\sum_{i=1}^{n}(x_i-\bar{x})^2+\alpha},
-\qquad b=\bar{y}-w\bar{x}
-$
+![w เท่ากับผลรวม x ลบค่าเฉลี่ย x คูณ y ลบค่าเฉลี่ย y หารด้วยผลรวมกำลังสองของ x ลบค่าเฉลี่ย x บวก alpha ส่วน b เท่ากับค่าเฉลี่ย y ลบ w คูณค่าเฉลี่ย x](../../assets/figures/06-feature-engineering-formula-weights.png)
+
+[เปิดภาพ SVG](../../assets/figures/06-feature-engineering-formula-weights.svg)
 
 แทนค่าผลรวมที่เพิ่งคำนวณ: `w = 4 / (2 + 2) = 1` และ `b = 3 − 1(0) = 3` จึงได้ `ŷ = 3 + x` ที่มาของการบวก alpha ในตัวหารอยู่ในหัวข้อพิสูจน์แบบยุบด้านล่าง
 
@@ -143,9 +137,9 @@ Ridge ยอมให้ SSE เพิ่มจาก 0 เป็น 2 เพร
 
 แทน `ŷᵢ = b + wxᵢ` ลงใน SSE แล้วบวกพจน์ลงโทษของน้ำหนักหนึ่งค่า:
 
-$
-J(b,w)=\sum_{i=1}^{n}(y_i-b-wx_i)^2+\alpha w^2
-$
+![J ของ b และ w เท่ากับผลรวมกำลังสองของ y ลบ b ลบ wx บวก alpha คูณ w กำลังสอง](../../assets/figures/06-feature-engineering-formula-proof-objective.png)
+
+[เปิดภาพ SVG](../../assets/figures/06-feature-engineering-formula-proof-objective.svg)
 
 ให้ `rᵢ = yᵢ − b − wxᵢ` เป็น residual เพื่อเขียนขั้นตอนถัดไปให้สั้นลง
 
@@ -153,71 +147,65 @@ $
 
 อนุพันธ์ของ `rᵢ` เทียบกับ b คือ −1 จึงได้อนุพันธ์ของ `rᵢ²` เป็น `2rᵢ(−1)` ส่วน `alpha × w²` ไม่มี b จึงให้อนุพันธ์เทียบกับ b เป็น 0:
 
-$
-\frac{\partial J}{\partial b}=-2\sum_{i=1}^{n}(y_i-b-wx_i)=0
-$
+![อนุพันธ์ย่อยของ J เทียบกับ b เท่ากับลบสองคูณผลรวม y ลบ b ลบ wx แล้วตั้งเท่ากับศูนย์](../../assets/figures/06-feature-engineering-formula-proof-intercept-derivative.png)
+
+[เปิดภาพ SVG](../../assets/figures/06-feature-engineering-formula-proof-intercept-derivative.svg)
 
 หารทั้งสองข้างด้วย −2 เพื่อตัดตัวคูณร่วม แล้วแยกผลรวม โดย b ซ้ำ n ครั้ง:
 
-$
-\sum_i y_i-nb-w\sum_i x_i=0
-\quad\Longrightarrow\quad
-nb=\sum_i y_i-w\sum_i x_i
-$
+![ผลรวม y ลบ nb ลบ w คูณผลรวม x เท่ากับศูนย์ จัดรูปได้ nb เท่ากับผลรวม y ลบ w คูณผลรวม x](../../assets/figures/06-feature-engineering-formula-proof-intercept-isolate.png)
+
+[เปิดภาพ SVG](../../assets/figures/06-feature-engineering-formula-proof-intercept-isolate.svg)
 
 หารด้วย n เพื่อให้เหลือ b และเขียนผลรวมที่หารด้วยจำนวนแถวเป็นค่าเฉลี่ย:
 
-$
-b=\bar y-w\bar x
-$
+![b เท่ากับค่าเฉลี่ย y ลบ w คูณค่าเฉลี่ย x](../../assets/figures/06-feature-engineering-formula-proof-intercept-mean.png)
+
+[เปิดภาพ SVG](../../assets/figures/06-feature-engineering-formula-proof-intercept-mean.svg)
 
 **3. หา w โดยดูว่า J เปลี่ยนอย่างไรเมื่อขยับ w แต่ตรึง b ไว้**
 
 อนุพันธ์ของ `rᵢ` เทียบกับ w คือ `−xᵢ` ส่วนอนุพันธ์ของ `alpha × w²` คือ `2alpha × w` จึงได้:
 
-$
-\frac{\partial J}{\partial w}=-2\sum_i x_i(y_i-b-wx_i)+2\alpha w=0
-$
+![อนุพันธ์ย่อยของ J เทียบกับ w เท่ากับลบสองคูณผลรวม x คูณ residual บวกสอง alpha w แล้วตั้งเท่ากับศูนย์](../../assets/figures/06-feature-engineering-formula-proof-weight-derivative.png)
+
+[เปิดภาพ SVG](../../assets/figures/06-feature-engineering-formula-proof-weight-derivative.svg)
 
 ย้ายพจน์ผลรวมไปอีกข้าง แล้วหารด้วย 2 เพื่อลดตัวคูณร่วม:
 
-$
-\sum_i x_i(y_i-b-wx_i)=\alpha w
-$
+![ผลรวม x คูณ y ลบ b ลบ wx เท่ากับ alpha คูณ w](../../assets/figures/06-feature-engineering-formula-proof-weight-balance.png)
+
+[เปิดภาพ SVG](../../assets/figures/06-feature-engineering-formula-proof-weight-balance.svg)
 
 **4. แทน b เพื่อให้เหลือตัวแปรที่ต้องหาเพียง w**
 
 แทน `b = ȳ − wx̄` ทำให้ residual เขียนเป็น `(yᵢ − ȳ) − w(xᵢ − x̄)` แล้วกระจายผลรวม:
 
-$
-\sum_i x_i(y_i-\bar y)-w\sum_i x_i(x_i-\bar x)=\alpha w
-$
+![หลังแทน b ได้ผลรวม x คูณ y ลบค่าเฉลี่ย y ลบ w คูณผลรวม x คูณ x ลบค่าเฉลี่ย x เท่ากับ alpha w](../../assets/figures/06-feature-engineering-formula-proof-centered-residual.png)
+
+[เปิดภาพ SVG](../../assets/figures/06-feature-engineering-formula-proof-centered-residual.svg)
 
 ผลรวมของค่าที่ลบค่าเฉลี่ยแล้วเป็นศูนย์: `Σ(yᵢ − ȳ) = 0` และ `Σ(xᵢ − x̄) = 0` ดังนั้นการแทน `xᵢ = (xᵢ − x̄) + x̄` ทำให้พจน์ที่คูณ x̄ หายไป:
 
-$
-\sum_i x_i(y_i-\bar y)=\sum_i(x_i-\bar x)(y_i-\bar y)
-$
+![ผลรวม x คูณ y ลบค่าเฉลี่ย y เท่ากับผลรวม x ลบค่าเฉลี่ย x คูณ y ลบค่าเฉลี่ย y](../../assets/figures/06-feature-engineering-formula-proof-centered-xy.png)
 
-$
-\sum_i x_i(x_i-\bar x)=\sum_i(x_i-\bar x)^2
-$
+[เปิดภาพ SVG](../../assets/figures/06-feature-engineering-formula-proof-centered-xy.svg)
+
+![ผลรวม x คูณ x ลบค่าเฉลี่ย x เท่ากับผลรวมกำลังสองของ x ลบค่าเฉลี่ย x](../../assets/figures/06-feature-engineering-formula-proof-centered-xx.png)
+
+[เปิดภาพ SVG](../../assets/figures/06-feature-engineering-formula-proof-centered-xx.svg)
 
 **5. รวบพจน์ที่มี w แล้วหารเพื่อหาน้ำหนัก**
 
-$
-\sum_i(x_i-\bar x)(y_i-\bar y)
-=w\sum_i(x_i-\bar x)^2+\alpha w
-=w\left[\sum_i(x_i-\bar x)^2+\alpha\right]
-$
+![ผลรวมผลคูณของค่าที่ลบค่าเฉลี่ยแล้ว เท่ากับ w คูณผลรวมกำลังสองของ x ลบค่าเฉลี่ย x บวก alpha w ดึง w ออกได้ w คูณวงเล็บผลรวมกำลังสองบวก alpha](../../assets/figures/06-feature-engineering-formula-proof-factor-weight.png)
+
+[เปิดภาพ SVG](../../assets/figures/06-feature-engineering-formula-proof-factor-weight.svg)
 
 วงเล็บทางขวาเป็นบวกเมื่อ alpha > 0 จึงหารทั้งสองข้างด้วยวงเล็บนี้ได้:
 
-$
-w=\frac{\sum_i(x_i-\bar x)(y_i-\bar y)}
-        {\sum_i(x_i-\bar x)^2+\alpha},
-\qquad b=\bar y-w\bar x
-$
+![w เท่ากับผลรวม x ลบค่าเฉลี่ย x คูณ y ลบค่าเฉลี่ย y หารด้วยผลรวมกำลังสองของ x ลบค่าเฉลี่ย x บวก alpha ส่วน b เท่ากับค่าเฉลี่ย y ลบ w คูณค่าเฉลี่ย x](../../assets/figures/06-feature-engineering-formula-weights.png)
+
+[เปิดภาพ SVG](../../assets/figures/06-feature-engineering-formula-weights.svg)
 
 สำหรับสามแถวในตัวอย่าง: ตัวเศษ = 4, ผลรวมกำลังสองในตัวหาร = 2 และ alpha = 2 จึงได้ `w = 4 / 4 = 1` และ `b = 3`
 
@@ -227,10 +215,9 @@ $
 
 ตรวจด้วยตัวเลขชุดเดิมได้อีกทาง: ให้ `b = 3 + u` และ `w = 1 + v` โดย u และ v คือการขยับจากคำตอบที่หาได้ จะมี residual เป็น `[−1 − u + v, −u, 1 − u − v]` จึงได้:
 
-$
-J=( -1-u+v)^2+(-u)^2+(1-u-v)^2+2(1+v)^2
- =4+3u^2+4v^2\geq4
-$
+![เมื่อขยับ b เป็น 3 บวก u และ w เป็น 1 บวก v จะได้ J เท่ากับ 4 บวก 3u กำลังสอง บวก 4v กำลังสอง จึงไม่น้อยกว่า 4](../../assets/figures/06-feature-engineering-formula-proof-minimum.png)
+
+[เปิดภาพ SVG](../../assets/figures/06-feature-engineering-formula-proof-minimum.svg)
 
 ค่ารวมเท่ากับ 4 เมื่อ `u = v = 0` เท่านั้น ยืนยันว่า `b = 3, w = 1` ให้ค่าต่ำสุด **อนุพันธ์เป็นศูนย์อย่างเดียวไม่พอ ต้องตรวจลักษณะฟังก์ชันด้วย**
 
@@ -402,11 +389,9 @@ MAE ของ Ridge ต่ำกว่า baseline บน test ชุดนี�
 
 สำหรับข้อมูลใหม่ใน Cell 3 ระยะทาง 20 กิโลเมตรและน้ำหนักที่เติมแล้ว กลายเป็น z ประมาณ `−1.042254` และ `0.019219` ส่วน same_day ให้ one-hot เป็น `[0, 0]` จึงคำนวณได้:
 
-$
-\hat y \approx 168.432 + 56.380(-1.042254) + 11.288(0.019219)
-             + 20.473(0) - 20.473(0)
-          \approx 109.89
-$
+![แทนค่า 168.432 บวก 56.380 คูณลบ 1.042254 บวก 11.288 คูณ 0.019219 บวก 20.473 คูณศูนย์ ลบ 20.473 คูณศูนย์ ได้ค่าบริการประมาณ 109.89](../../assets/figures/06-feature-engineering-formula-fitted-prediction.png)
+
+[เปิดภาพ SVG](../../assets/figures/06-feature-engineering-formula-fitted-prediction.svg)
 
 **ไม่ต้อง fit ซ้ำหลังได้ค่า z:** ส่งค่าที่แปลงแล้วให้สมการใช้น้ำหนักเดิมต่อได้เลย โค้ด `manual_prediction` คำนวณด้วยค่าจริงที่ยังไม่ปัดเศษ และได้ 109.89 ตรงกับ Pipeline การคำนวณตรงกันยืนยันขั้นตอน predict แต่ยังไม่ยืนยันคุณภาพคำทำนายสำหรับบริการใหม่
 
