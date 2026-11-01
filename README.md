@@ -59,7 +59,7 @@ flowchart LR
 | 02 | [ตรวจข้อมูลสำหรับ ML: leakage, schema และ EDA](lessons/02-data-and-plots/README.md) | แยก X/y ตรวจชุดฝึก และอ่านกราฟใน 5 cell |
 | 03 | [โมเดลแรกด้วย scikit-learn และ KNN](lessons/03-first-classifier/README.md) | Pipeline จำแนกดอกไม้ |
 | 04 | [Logistic Regression และการวัดผล: accuracy, precision, recall และ F1](lessons/04-validation-and-metrics/README.md) | รายงาน confusion matrix และ metrics |
-| 05 | [Linear Regression และการอ่านความผิดพลาด](lessons/05-linear-regression/README.md) | เส้นทำนายและ residual plot |
+| 05 | [Linear Regression: ประเมินผลโมเดลและวิเคราะห์ความผิดพลาด (Residual, MAE, RMSE และ R²)](lessons/05-linear-regression/README.md) | คะแนน MAE, RMSE และ R² บน test พร้อมเส้นทำนายและ residual plot |
 | 06 | [Ridge Regression กับการเตรียมตัวเลข หมวดหมู่ และค่าที่หาย](lessons/06-feature-engineering/README.md) | Pipeline จัดการค่าที่หาย/หมวดหมู่ |
 | 07 | [จำแนกข้อความด้วย Multinomial Naive Bayes](lessons/07-naive-bayes-text/README.md) | ตัวจำแนกข้อความสั้น |
 | 08 | [Support Vector Machines และขอบเขตไม่เป็นเส้นตรง](lessons/08-support-vector-machines/README.md) | ขอบเขต linear/RBF SVM |
