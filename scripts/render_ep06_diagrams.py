@@ -154,9 +154,79 @@ def ridge():
           "n = จำนวนแถว train  •  p = จำนวน features หลังแปลง  •  w = น้ำหนัก  •  intercept ไม่รวมในพจน์ลงโทษ",
           size=15, color=MUTED)
     label(ax, 0.05, 0.044,
-          "EP06 · สูตรสำหรับ fit ไม่ใช่ MAE ที่ใช้ประเมิน  •  ตัวอย่างนี้ไม่ใช่ค่าน้ำหนักที่ได้จาก Cell 2",
+          "EP06 · สูตรสำหรับ fit ไม่ใช่ MAE ที่ใช้ประเมิน  •  ตัวเลขสมมติ ไม่ใช่น้ำหนักจากข้อมูลค่าจัดส่ง",
           size=15, color=MUTED)
     save(fig, "ridge")
+
+
+
+def ridge_tradeoff():
+    """Original numerical example: same data, common alpha=2 objective."""
+    import numpy as np
+    from sklearn.linear_model import LinearRegression, Ridge
+
+    x = np.array([-1., 0., 1.])
+    y = np.array([1., 3., 5.])
+    ols = LinearRegression().fit(x[:, None], y)
+    fitted = Ridge(alpha=2).fit(x[:, None], y)
+    assert np.allclose([ols.intercept_, ols.coef_[0]], [3, 2])
+    assert np.allclose([fitted.intercept_, fitted.coef_[0]], [3, 1])
+
+    fig, ax = canvas(
+        "OLS กับ Ridge · น้ำหนักต่างกันเพราะอะไร",
+        "ข้อมูลสมมติ x = [−1, 0, 1], y = [1, 3, 5]  •  ใช้ x ตามตาราง ไม่ผ่าน StandardScaler",
+    )
+    card(ax, 0.05, 0.20, 0.42, 0.62)
+    card(ax, 0.51, 0.20, 0.44, 0.62)
+    label(ax, 0.075, 0.766, "เส้นที่ได้จาก train 3 จุด", size=22, weight="bold")
+    label(ax, 0.535, 0.766, "เทียบด้วยสูตร Ridge เดียวกัน", size=22, weight="bold")
+    label(ax, 0.535, 0.716, "กำหนด alpha = 2 ทั้งสองเส้น", size=17, color=MUTED)
+
+    plot = fig.add_axes([0.10, 0.33, 0.32, 0.35])
+    grid = np.linspace(-1.2, 1.2, 100)
+    plot.plot(grid, ols.predict(grid[:, None]), color=BLUE, lw=2.7, label="OLS")
+    plot.plot(grid, fitted.predict(grid[:, None]), color=ORANGE, lw=2.7, label="Ridge")
+    plot.vlines(x, fitted.predict(x[:, None]), y, color=ORANGE, lw=2, ls="--")
+    plot.scatter(x, y, s=70, color=NAVY, zorder=4, label="Train")
+    plot.set(xlim=(-1.35, 1.35), ylim=(0.2, 5.8), xticks=[-1, 0, 1],
+             yticks=[1, 2, 3, 4, 5], xlabel="x", ylabel="y")
+    plot.tick_params(labelsize=13)
+    plot.grid(alpha=.18)
+    plot.spines[["right", "top"]].set_visible(False)
+    plot.legend(loc="upper left", fontsize=12, frameon=False)
+    label(ax, 0.075, 0.257, r"OLS: $\hat y=3+2x$", size=20, color=BLUE)
+    label(ax, 0.280, 0.257, r"Ridge: $\hat y=3+x$", size=20, color=ORANGE)
+
+    compare = fig.add_axes([0.59, 0.36, 0.31, 0.27])
+    # Remove floating-point noise around the exact values 0 and 2 for this diagram.
+    sses = [round(float(((y-m.predict(x[:, None]))**2).sum()), 12) for m in (ols, fitted)]
+    penalties = [round(float(2*(m.coef_**2).sum()), 12) for m in (ols, fitted)]
+    assert np.allclose(sses, [0, 2]) and np.allclose(penalties, [8, 2])
+    compare.barh([1, 0], sses, height=.48, color=BLUE, label="SSE")
+    compare.barh([1, 0], penalties, left=sses, height=.48, color=ORANGE, label="L2 penalty")
+    compare.set(xlim=(0, 9.3), ylim=(-.55, 1.55), yticks=[1, 0],
+                yticklabels=["OLS\nw = 2", "Ridge\nw = 1"], xticks=[0, 2, 4, 6, 8])
+    compare.tick_params(labelsize=13)
+    compare.spines[["top", "right", "left"]].set_visible(False)
+    compare.set_axisbelow(True)
+    compare.grid(axis="x", alpha=.18)
+    compare.legend(loc="upper center", bbox_to_anchor=(.50, 1.34), ncol=2,
+                   fontsize=13, frameon=False)
+    for ybar, sse, penalty in zip([1, 0], sses, penalties):
+        if sse:
+            compare.text(sse/2, ybar, f"{sse:g}", ha="center", va="center",
+                         fontsize=17, color="white", weight="bold")
+        compare.text(sse+penalty/2, ybar, f"{penalty:g}", ha="center", va="center",
+                     fontsize=17, color="white", weight="bold")
+        compare.text(sse+penalty+.15, ybar, f"J = {sse+penalty:g}", va="center",
+                     fontsize=15, color=NAVY, weight="bold")
+    label(ax, 0.535, 0.282, "OLS: SSE 0 + พจน์ลงโทษ 8 = 8", size=18)
+    label(ax, 0.535, 0.235, "Ridge: SSE 2 + พจน์ลงโทษ 2 = 4", size=18, color=ORANGE)
+    label(ax, 0.05, 0.132,
+          "Ridge ยอมให้ SSE เพิ่มจาก 0 เป็น 2 เพราะพจน์ลงโทษลดลงมากกว่า", size=21, weight="bold")
+    label(ax, 0.05, 0.065,
+          "ตัวอย่างนี้อธิบายการฝึกเท่านั้น  •  ยังสรุปไม่ได้ว่า Ridge ทำนายข้อมูลใหม่ดีกว่า OLS", size=18, color=MUTED)
+    save(fig, "ridge-tradeoff")
 
 
 def main():
@@ -168,6 +238,7 @@ def main():
     OUTPUT.mkdir(parents=True, exist_ok=True)
     preprocessing()
     ridge()
+    ridge_tradeoff()
 
 
 if __name__ == "__main__":

@@ -35,7 +35,7 @@ print("First three training rows:\n", X_train.iloc[:3].round(3).to_string(index=
 # - `test_size=0.25` กัน 100 แถวไว้ทดสอบ อีก 300 แถวใช้ฝึก โดยยังไม่คำนวณค่าทดแทนหรือ fit ตัวแปลงใด
 # - ผลท้าย cell แสดงจำนวนแถว ค่าหายของ train และข้อมูล 3 แถวก่อนแปลง เพื่อเทียบกับ Cell 2
 
-# %% Cell 2 — เตรียมแต่ละชนิดข้อมูลแล้วฝึก Ridge
+# %% Cell 2 — เตรียมข้อมูล ฝึก Ridge และดูน้ำหนักที่เรียนได้
 numeric = make_pipeline(SimpleImputer(strategy="median"), StandardScaler())
 categorical = make_pipeline(
     SimpleImputer(strategy="most_frequent"),
@@ -56,6 +56,11 @@ preview = preprocess.transform(X_train.iloc[:3])
 print("First three transformed rows:\n",
       pd.DataFrame(preview, columns=feature_names).round(3).to_string(index=False))
 
+ridge = model.named_steps["ridge"]
+coefficients = pd.DataFrame({"feature": feature_names, "coefficient": ridge.coef_})
+print(f"Learned intercept: {ridge.intercept_:.3f}")
+print("Learned coefficients:\n", coefficients.round(3).to_string(index=False))
+
 # %% [markdown]
 # **อ่านโค้ด**
 #
@@ -66,8 +71,10 @@ print("First three transformed rows:\n",
 # - `get_feature_names_out()` ให้ชื่อ 4 คอลัมน์ตามลำดับจริง: ตัวเลข 2 คอลัมน์ และ service ที่แยกเป็น express/standard อีก 2 คอลัมน์
 # - `preprocess.transform(X_train.iloc[:3])` แปลงสามแถวเดิมใน Cell 1 โดยไม่ fit ซ้ำ ตัวเลขอาจติดลบหลัง scale; คอลัมน์ one-hot ยังคงเป็น 0/1 เพราะไม่ผ่าน StandardScaler
 # - `DummyRegressor(strategy="median")` ใช้มัธยฐานของค่าบริการใน `y_train` ทายทุกแถว เป็น baseline สำหรับเทียบ MAE ส่วนมัธยฐานของน้ำหนักพัสดุใช้เติมค่าน้ำหนักที่หาย จึงเป็นคนละค่าและคนละหน้าที่
+# - `model.named_steps["ridge"]` เข้าถึง Ridge ที่ฝึกแล้วใน Pipeline ไม่ได้สร้างโมเดลใหม่ ชื่อ `"ridge"` มาจาก `make_pipeline` ที่ตั้งชื่อขั้นตอนตามชื่อคลาส
+# - `ridge.coef_` เก็บน้ำหนักทั้ง 4 ค่าตามลำดับเดียวกับ `feature_names` ส่วน `ridge.intercept_` คือค่าคงที่ b ตารางนี้ช่วยจับคู่ได้ว่าน้ำหนักใดใช้กับคอลัมน์ไหน
 #
-# **การตั้งค่าใน cell นี้:** `handle_unknown="ignore"` ทำให้บริการที่ไม่เคยพบมีค่า one-hot เป็น 0 ทุกคอลัมน์เดิม ส่วน `Ridge(alpha=1.0)` กำหนดความเข้มของ L2 ไว้ล่วงหน้า หากจะเลือกค่า alpha ให้ใช้ validation/CV ตาม [บท 04](../04-validation-and-metrics/README.md) และเก็บ test ไว้ประเมินท้ายสุด
+# **การตั้งค่าใน cell นี้:** `handle_unknown="ignore"` ทำให้บริการที่ไม่เคยพบมีค่า one-hot เป็น 0 ทุกคอลัมน์เดิม ส่วน `Ridge(alpha=1.0)` กำหนดความเข้มของ L2 ไว้ล่วงหน้า หากจะเลือกค่า alpha ให้ใช้ validation/CV ตาม [บท 04](../04-validation-and-metrics/README.md) โดยนำ Pipeline ทั้งชุดเข้า CV และเก็บ test ไว้ประเมินท้ายสุด ค่า alpha เป็นค่าตั้ง ส่วน `coef_` กับ `intercept_` เป็นค่าที่เรียนจาก train
 #
 # **อ่านคะแนน:** คำทำนายเป็นค่าบริการหนึ่งตัวเลขต่อแถว MAE เปรียบเทียบค่าบริการที่ทำนายกับค่าบริการจริงใน test ทั้ง 100 แถว ส่วนตารางสามแถวที่แสดงเป็นข้อมูลนำเข้าหลังแปลง ไม่ใช่ค่าบริการที่โมเดลทำนาย
 
@@ -82,6 +89,8 @@ new_features = pd.DataFrame(
 )
 print("New order after preprocessing:\n", new_features.round(3).to_string(index=False))
 print("Unseen-category prediction:", model.predict(new_order).round(2))
+manual_prediction = ridge.intercept_ + new_features.to_numpy() @ ridge.coef_
+print("Prediction from coefficients:", manual_prediction.round(2))
 
 # %% [markdown]
 # **อ่านโค้ด**
@@ -90,4 +99,5 @@ print("Unseen-category prediction:", model.predict(new_order).round(2))
 # - `preprocess.transform(new_order)` เติมน้ำหนักที่หายด้วยมัธยฐานจาก train แล้วปรับสเกลด้วยค่าเฉลี่ยและส่วนเบี่ยงเบนมาตรฐานเดิม ส่วน service_express และ service_standard เป็น 0 ทั้งคู่ เพราะ same_day ไม่อยู่ในรายการที่เรียนไว้
 # - ค่าศูนย์ทั้งคู่หมายถึงหมวดหมู่ที่ encoder ไม่เคยพบในตัวอย่างนี้ ไม่ได้หมายถึงบริการฟรี และไม่มีการเรียนค่าน้ำหนักของ same_day ขึ้นมาใหม่
 # - `model.predict(new_order)` รับตารางดิบ แล้วเตรียมข้อมูลด้วย Pipeline เดิมก่อนทำนาย ไม่ต้องส่ง `new_features` เข้าไปอีก
+# - `new_features.to_numpy() @ ridge.coef_` นำ features ที่แปลงแล้วมาคูณน้ำหนักทีละคอลัมน์แล้วรวมกัน จากนั้นบวก `ridge.intercept_` จึงเป็นการแทนค่าสมการ Ridge โดยตรง ผลต้องตรงกับ `model.predict(new_order)` เมื่อใช้ตัวเลขเต็มความละเอียด
 # - `round(2)` ปัดเฉพาะการแสดงคำทำนาย การรันผ่านยังไม่ยืนยันว่าคำทำนายสำหรับบริการใหม่น่าเชื่อถือ
