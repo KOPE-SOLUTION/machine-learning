@@ -45,6 +45,10 @@
 
 **Ridge Regression — การถดถอยแบบริดจ์** เป็นโมเดล Supervised Learning สำหรับงาน Regression หรือทำนายตัวเลข เช่น ค่าบริการส่งสินค้า โมเดลเรียนจากข้อมูลนำเข้า (features) คู่กับค่าที่ต้องการทำนาย (target)
 
+**คำอ่าน:** Ridge อ่านว่า **ริดจ์** `/rɪdʒ/` หนึ่งพยางค์ ส่วน Ridge Regression อ่านว่า **ริดจ์ รีเกรสชัน** คำว่า ridge แปลตรงตัวว่า **สันเขา** หรือ **แนวสันนูน** ในชื่อโมเดลใช้ทับศัพท์ว่า **ริดจ์** · [ฟังเสียงและดูความหมายจาก Cambridge](https://dictionary.cambridge.org/dictionary/learner-english/ridge)
+
+**ที่มาของชื่อ:** ชื่อนี้สืบมาจาก **Ridge Analysis** ซึ่งเป็นวิธีวิเคราะห์พื้นผิวทางคณิตศาสตร์เพื่อหาค่าสูงสุดหรือต่ำสุดภายใต้ข้อจำกัด งานของ Hoerl และ Kennard (1970) อธิบายว่าการประมาณค่าของ Ridge Regression มีความคล้ายคลึงทางคณิตศาสตร์กับการวิเคราะห์พื้นผิวของฟังก์ชันกำลังสอง จึงใช้ชื่อ Ridge Regression ตามมา · [อ่านบทความต้นฉบับ หน้า 57](https://papers.baulab.info/papers/also/Hoerl-1970.pdf#page=3)
+
 Ridge ใช้สมการเส้นตรงเช่นเดียวกับ Linear Regression แต่เปลี่ยนวิธีเลือก **coefficient (สัมประสิทธิ์ หรือน้ำหนักที่คูณกับ feature)** ระหว่างฝึก: นอกจากลดความผิดพลาดแล้ว ยังควบคุมขนาดน้ำหนักด้วย **L2 regularization**
 
 ### จากข้อมูลที่เตรียมแล้ว ไปเป็นคำทำนาย
@@ -412,6 +416,9 @@ MAE ของ Ridge ต่ำกว่า baseline บน test ชุดนี�
 
 ## อ้างอิง
 
+- [Cambridge: คำอ่านและความหมายของ ridge](https://dictionary.cambridge.org/dictionary/learner-english/ridge)
+- [NIST: Ridge Analysis และการหาค่าสูงสุดหรือต่ำสุดภายใต้ข้อจำกัด](https://www.itl.nist.gov/div898/handbook/pri/section5/pri5516.htm)
+- [Hoerl & Kennard (1970): Ridge Regression: Biased Estimation for Nonorthogonal Problems — ที่มาของชื่อในหน้า 57](https://papers.baulab.info/papers/also/Hoerl-1970.pdf#page=3)
 - [Handbook: Feature Engineering](https://jakevdp.github.io/PythonDataScienceHandbook/05.04-feature-engineering.html)
 - [Pipelines and composite estimators](https://scikit-learn.org/1.7/modules/compose.html)
 - [SimpleImputer](https://scikit-learn.org/1.7/modules/generated/sklearn.impute.SimpleImputer.html)
