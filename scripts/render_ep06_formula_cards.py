@@ -17,6 +17,18 @@ NAVY, BLUE, MUTED = "#142A43", "#1558D6", "#4C6078"
 PREFIX = "06-feature-engineering-formula-"
 
 FORMULAS = [
+    dict(blocks=[], slug="ols-weights", title="OLS · สูตรหาน้ำหนักและ intercept ก่อนแทนค่า",
+         size=32, positions=[.54, .28],
+         rows=[r"w=\frac{\sum_{i=1}^{n}(x_i-\bar x)(y_i-\bar y)}{\sum_{i=1}^{n}(x_i-\bar x)^2}",
+               r"b=\bar y-w\bar x"],
+         note="หนึ่ง feature และมี intercept  •  ค่า x ต้องมีอย่างน้อยสองค่าที่ต่างกัน",
+         alt="สูตร OLS: w คือผลรวมผลคูณส่วนต่างจากค่าเฉลี่ย หารผลรวมกำลังสองของส่วนต่าง x ส่วน b คือค่าเฉลี่ย y ลบ w คูณค่าเฉลี่ย x"),
+    dict(blocks=[], slug="ols-substitution", title="OLS · แทนค่าจากข้อมูล 3 แถวเพื่อหา w และ b",
+         size=32, positions=[.57, .30],
+         rows=[r"w=\frac{(-1)(-2)+(0)(0)+(1)(2)}{(-1)^2+0^2+1^2}=\frac{4}{2}=2",
+               r"b=\bar y-w\bar x=3-2(0)=3"],
+         note="x = [−1, 0, 1], y = [1, 3, 5]  •  x̄ = 0, ȳ = 3  •  จึงได้เส้น ŷ = 3 + 2x",
+         alt="แทนค่าได้ตัวเศษ 4 ตัวส่วน 2 จึงมี w เท่ากับ 2 และ b เท่ากับ 3"),
     dict(blocks=[1], slug="prediction", title="Ridge · คูณแต่ละ feature ด้วยน้ำหนัก แล้วบวก intercept",
          rows=[r"\hat y=b+w_1z_{\mathrm{distance}}+w_2z_{\mathrm{weight}}+w_3I_{\mathrm{express}}+w_4I_{\mathrm{standard}}"],
          note="z คือค่าหลังปรับสเกล  •  I คือคอลัมน์ 0/1  •  w และ b เรียนจาก train",
