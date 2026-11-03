@@ -127,6 +127,7 @@ for fold, (train_idx, valid_idx) in enumerate(TimeSeriesSplit(n_splits=4, gap=1)
 - แต่ละแถวจึงจับคู่ค่าก่อนหน้ากับค่าถัดไป โดย `lag` และ `target` มีจำนวนแถวเท่ากัน
 - `TimeSeriesSplit(n_splits=4, gap=1).split(lag)` คืน index สี่รอบ ฝึกจากอดีตและเว้นหนึ่งแถวก่อนช่วง validation
 - `train_idx.max() < valid_idx.min()` ตรวจว่าแถวฝึกอยู่ก่อนแถว validation
+- `LinearRegression().fit(lag[train_idx], target[train_idx])` เรียน w และ b จากคู่ค่าก่อนหน้าและค่าถัดไปในช่วงฝึกของแต่ละ fold ส่วน `model.predict(lag[valid_idx])` ใช้ w และ b ที่เรียนได้คำนวณค่าถัดไปของช่วง validation โดยไม่ fit จากค่าจริงในช่วง validation
 - `persistence = lag[valid_idx, 0]` ใช้ค่าล่าสุดเป็นคำทำนาย baseline แล้ววัด MAE กับ target ชุดเดียวกับโมเดล
 
 การใช้ค่าจริงก่อนหน้าของทุกจุดเหมาะกับ one-step-ahead ตามโจทย์นี้ ไม่ใช่การทายหลายก้าวโดยยังไม่เห็นค่าจริงระหว่างทาง

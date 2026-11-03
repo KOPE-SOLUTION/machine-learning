@@ -31,7 +31,7 @@ print("Responsibilities for x=0:", gmm.predict_proba([[0.0]]).round(3))
 # - list comprehension สร้างและ fit GMM ที่มี `n_components` ตั้งแต่ 1 ถึง 4 บน train ชุดเดียวกัน
 # - `n_init=5` ให้ GMM ที่มีจำนวนองค์ประกอบเท่ากันลองเริ่มฝึกห้าครั้ง แล้วเก็บผลที่มีค่าเฉลี่ย log density บน train ระหว่างฝึกสูงที่สุด ค่าเฉลี่ย log density ใช้เปรียบเทียบว่าผลการฝึกครั้งใดอธิบายการกระจายของ train ได้ดีกว่า
 # - `min(mixtures, key=lambda model: model.bic(X_train))` เลือก **ตัวโมเดล** ที่มี BIC ต่ำสุด โดย `lambda` ระบุค่าที่นำมาเทียบ
-# - `gmm.predict_proba([[0.0]])` คืน responsibility ของ x=0 ต่อแต่ละ component ผลในแถวนี้รวมกันเป็น 1 โดยประมาณ
+# - `gmm.predict_proba([[0.0]])` ใช้จุดกึ่งกลาง ความกว้าง และน้ำหนักของ Gaussian แต่ละ component ที่เรียนจาก train มาประเมินว่า x=0 มีโอกาสมาจากแต่ละ component เท่าไร โดยไม่ fit ใหม่ ความน่าจะเป็นที่คืนมาสำหรับ x=0 รวมกันเป็น 1 โดยประมาณ
 
 # %% Cell 3 — เลือก KDE ด้วย CV
 kde_search = GridSearchCV(
@@ -74,6 +74,6 @@ plt.close(fig)
 # **อ่านโค้ด**
 #
 # - `grid` เป็นตำแหน่ง x ที่ต้องการคำนวณความหนาแน่น จัดเป็นสองมิติตามรูปข้อมูลที่โมเดลรับ
-# - `score_samples(grid)` คืน log density จึงใช้ `np.exp(...)` แปลงเป็น density ก่อนวาดเส้น
+# - `score_samples(grid)` ใช้ GMM หรือ KDE ที่ฝึกจาก train แล้วคำนวณ log density ณ ตำแหน่ง x แต่ละค่าของ `grid` จากนั้น `np.exp(...)` แปลง log density กลับเป็น density สำหรับความสูงของเส้นกราฟ
 # - `hist(..., density=True)` ปรับ histogram ให้พื้นที่รวมเป็น 1 เพื่อเทียบกับเส้น density ได้
 # - histogram แสดงข้อมูล train ส่วนการประเมินกับ test อ่านจาก `GMM test mean log density` และ `KDE test mean log density` ใน Cell 3

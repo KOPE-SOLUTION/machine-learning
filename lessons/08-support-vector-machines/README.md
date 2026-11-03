@@ -44,7 +44,7 @@
 2. แต่ละรอบฝึก 240 แถว และตรวจด้วยอีก 60 แถว
 3. หมุนส่วนที่ใช้ตรวจให้ครบ 5 รอบ แล้วหาคะแนนเฉลี่ย
 
-`cross_val_score` ฝึก Pipeline ใหม่ทุกรอบ ดังนั้น scaler จะเรียนเฉพาะ 240 แถวที่ใช้ฝึกในรอบนั้น
+`cross_val_score` ฝึก Pipeline ใหม่ทุกรอบ โดย StandardScaler คำนวณค่าเฉลี่ยและส่วนเบี่ยงเบนมาตรฐานจาก 240 แถวที่ใช้ฝึก แล้วใช้สถิติชุดเดียวกันแปลง validation อีก 60 แถวก่อนให้ SVM ทำนาย
 
 เลือก kernel จากคะแนน CV เฉลี่ย แล้ว fit บน train ทั้ง 300 แถว ก่อนประเมิน test
 
@@ -94,7 +94,7 @@ print(f"Test accuracy: {accuracy_score(y_test, model.predict(X_test)):.3f}")
 - `StratifiedKFold(n_splits=5, shuffle=True, ...)` กำหนดการแบ่ง train เป็นห้าส่วน โดยสลับแถวและรักษาสัดส่วนคลาส
 - dictionary `models` สร้าง Pipeline สองตัวจากค่า kernel `linear` และ `rbf` โดยใช้ scaler และ C แบบเดียวกัน
 - `cross_val_score(..., cv=cv, scoring="accuracy")` คืน accuracy ของ validation ห้ารอบ ใช้ `mean()` หาคะแนนเฉลี่ย และ `std()` ดูว่าคะแนนต่างกันระหว่างรอบมากเพียงใด
-- `max(scores, key=scores.get)` เลือกชื่อ kernel ที่มีค่าเฉลี่ยสูงสุด แล้ว `fit(X_train, y_train)` ฝึกตัวที่เลือกบน train ทั้งหมดก่อนวัด test
+- `max(scores, key=scores.get)` เลือกชื่อ kernel ที่มี accuracy เฉลี่ยจาก CV สูงสุด แล้ว `fit(X_train, y_train)` ฝึก Pipeline ของ kernel ที่เลือกบน train ทั้ง 300 แถว ก่อนวัด accuracy บน test
 
 **การตั้งค่าใน cell นี้**
 
@@ -144,7 +144,7 @@ plt.close(fig)
 
 **เฉลย:** ไม่ควร เพราะ scaler จะเห็นข้อมูลของ validation fold ล่วงหน้า
 
-ให้ scaler อยู่ใน Pipeline ที่ fit ใหม่ด้วย 240 แถวของแต่ละรอบ ส่วนการค้นหลายค่า C และ gamma จะเรียนในบท 10
+ให้ scaler อยู่ใน Pipeline ที่ fit ใหม่ด้วย 240 แถวของแต่ละรอบ วิธีค้น hyperparameter หลายชุดด้วย GridSearchCV จะเรียนผ่าน KNN ใน [บท 10](../10-tuning-and-learning-curves/README.md) และนำมาเลือก C กับ gamma ของ SVM ใน [บท 16](../16-digits-project/README.md)
 
 </details>
 

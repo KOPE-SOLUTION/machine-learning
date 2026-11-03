@@ -61,10 +61,10 @@ print(f"Final test accuracy: {accuracy_score(y_test, search.predict(X_test)):.3f
 # %% [markdown]
 # **อ่านโค้ด**
 #
-# - `learning_curve(search.best_estimator_, ...)` ใช้การตั้งค่าที่เลือกแล้ว ฝึกซ้ำด้วยขนาด train หลายระดับ
+# - `learning_curve(search.best_estimator_, ...)` ใช้ค่า k และ weights ที่ GridSearchCV เลือก แล้วสร้าง Pipeline แยกเพื่อ fit ใหม่สำหรับแต่ละขนาดข้อมูลฝึกและแต่ละ fold กราฟจึงแสดงผลของจำนวนข้อมูลที่ใช้ฝึกจริง
 # - `train_sizes=[0.4, 0.6, 0.8, 1.0]` เป็นสัดส่วนของข้อมูลฝึกที่ใช้ได้ในแต่ละ fold ระดับ 1.0 จึงเท่ากับ 96 แถวในบทนี้
 # - `sizes` คืนจำนวนแถวจริง ส่วน `train_scores` และ `valid_scores` มีหนึ่งแถวต่อขนาดข้อมูล และหนึ่งคอลัมน์ต่อ fold
 # - `mean(axis=1)` เฉลี่ยคะแนนข้าม fold เพื่อวาดหนึ่งจุดต่อขนาดข้อมูล
-# - `search.predict(X_test)` ใช้โมเดลที่ GridSearchCV refit ไว้ประเมิน test หลังเลือกค่าเสร็จแล้ว
+# - `search.predict(X_test)` ใช้ Pipeline ที่ GridSearchCV ฝึกด้วยค่าที่เลือกบน train ทั้ง 120 แถว เพื่อทำนาย test ส่วน Pipeline ที่ฝึกด้วยข้อมูลขนาดต่าง ๆ สำหรับ learning curve ใช้สร้างกราฟเท่านั้น
 #
 # **ที่มาของ 96 แถวบนแกนนอน:** train ทั้งหมดมี 120 แถว แต่แต่ละรอบของ 5-fold CV ใช้ฝึกเพียง 4 ส่วน จึงมีสูงสุด `120 × 4/5 = 96` แถว ส่วนอีก 24 แถวใช้ validation

@@ -118,7 +118,8 @@ def main():
 #
 # - `validate_pixels(data.data)` ใช้เงื่อนไขเดียวกับตอนรับข้อมูลใหม่ ส่วนการแบ่ง `np.arange(len(X))` เก็บ index ไว้ให้ตรวจย้อนกลับได้ว่าแถวใดอยู่ชุดไหน
 # - `X[train_idx]` เลือกค่า pixel ของภาพ (features) ส่วน `data.target[train_idx]` เลือกเลขที่กำกับภาพไว้ (class labels) โดยใช้ index ชุดเดียวกันเพื่อให้จับคู่ตรงภาพ เช่นเดียวกับฝั่ง test
-# - `build_search().fit(X_train, y_train)` สร้างตัวค้นหาแล้วฝึก ส่วน `search.predict(X_test)` ใช้ Pipeline ที่เลือกและ refit แล้ว
+# - `build_search().fit(X_train, y_train)` เปรียบเทียบ C/gamma สี่คู่ด้วย CV เลือกคู่ที่ได้ macro F1 เฉลี่ยสูงสุด แล้วฝึก Pipeline ด้วยคู่ค่าที่เลือกบน train ทั้งหมดอีกครั้ง
+# - `search.predict(X_test)` ปรับสเกลภาพ test ด้วยค่าเฉลี่ยและส่วนเบี่ยงเบนมาตรฐานที่เรียนจาก train แล้วให้ SVC ที่ฝึกไว้ทายเลข โดยไม่ fit ใหม่บน test
 # - `report` เก็บคะแนน วิธีแบ่ง รุ่น Python และ scikit-learn ส่วน `output_dict=True` ให้ classification report เป็น dictionary ที่เขียนเป็น JSON ได้
 #
 # **อ่านโค้ด: บันทึกและนำกลับมาใช้**
