@@ -18,7 +18,28 @@
 
 *ตัวอย่างจากชุดข้อความของบทนี้: train ให้ vocabulary 49 คำ ตารางแสดงเฉพาะคำที่พบในข้อความใหม่สามข้อความ ไม่ใช่ตารางคะแนน test* · [เปิดภาพ SVG](../../assets/figures/07-naive-bayes-text-counts.svg)
 
-ค่าเริ่มต้นของ `CountVectorizer` เปลี่ยนตัวอักษรเป็นตัวเล็ก และเลือก token หรือหน่วยคำที่ยาวอย่างน้อย 2 อักขระ เช่น `Team` กลายเป็น `team` ส่วน `a` ไม่ถูกนับ สำหรับภาษาไทยที่ไม่ได้เว้นวรรคทุกคำ ต้องเลือกวิธีตัดคำหรือใช้ส่วนย่อยของตัวอักษรเพิ่มเติม
+ค่าเริ่มต้นของ `CountVectorizer` เปลี่ยนตัวอักษรเป็นตัวเล็ก และเลือก token หรือหน่วยคำที่ยาวอย่างน้อย 2 อักขระ เช่น `Team` กลายเป็น `team` ส่วน `a` ไม่ถูกนับ
+
+### หากนำไปใช้กับข้อความภาษาไทย
+
+**บทนี้ใช้ข้อความภาษาอังกฤษ** จึงรัน Cell 1–3 ตามเดิมได้ เรื่องภาษาไทยเป็นแนวทางเพิ่มเติมสำหรับเปลี่ยนชนิดข้อความภายหลัง
+
+ภาษาอังกฤษอย่าง `team wins` มีช่องว่างระหว่างคำ แต่ภาษาไทยอย่าง `ฉันชอบฟุตบอล` เขียนหลายคำติดกัน `CountVectorizer` แบบค่าเริ่มต้นไม่ได้ตัดคำไทยตามความหมายให้เอง จึงเลือกได้สองแนวทาง:
+
+**1. ตัดคำภาษาไทยก่อน แล้วนับคำ**
+
+ตัวอย่างการแบ่งคำ: `ฉันชอบฟุตบอล` → `ฉัน | ชอบ | ฟุตบอล` จากนั้นนับได้คำว่า `ฉัน`, `ชอบ` และ `ฟุตบอล` อย่างละ 1 ครั้ง เมื่อนำไปใช้จริงต้องเลือกเครื่องมือตัดคำภาษาไทย และตั้งตัวนับคำให้รับผลจากเครื่องมือตัดคำ เช่น [PyThaiNLP](https://pythainlp.org/docs/5.1/api/tokenize.html#word-level)
+
+**2. นับกลุ่มตัวอักษรที่ติดกัน หรือ character n-grams**
+
+ให้ n เป็นจำนวนตัวอักษรในแต่ละกลุ่ม แล้วเลื่อนไปครั้งละหนึ่งตัวอักษร เช่น ข้อความ `แมว`:
+
+- **n = 2:** ได้ `แม` และ `มว` อย่างละ 1 ครั้ง โดยสองกลุ่มมีตัว `ม` ร่วมกัน
+- **n = 3:** ได้ `แมว` จำนวน 1 ครั้ง
+
+`แม` และ `มว` เป็นกลุ่มตัวอักษรสำหรับนับ ไม่จำเป็นต้องเป็นคำที่มีความหมาย จึงนับได้โดยไม่ต้องตัดคำให้เป็นคำสมบูรณ์ก่อน
+
+ทั้งสองแนวทางนำจำนวนครั้งมาเป็น features ให้โมเดลเหมือนกัน แต่เลือกสิ่งที่จะนับต่างกัน: แนวทางแรกนับคำที่ตัดแล้ว ส่วนแนวทางที่สองนับกลุ่มตัวอักษร
 
 ## Naive Bayes จำแนกข้อความอย่างไร
 
@@ -194,7 +215,11 @@ display(pd.concat([results, probabilities], axis=1).round(3))
 
 **แนวคำตอบ:** จำนวนคำและผลทำนายเหมือนเดิม เพราะ Bag-of-words ในบทนี้ไม่เก็บลำดับคำ
 
-หากทดลองกับภาษาไทย ให้เตรียมข้อความที่ระบุประเภท (class label) แล้วลอง `CountVectorizer(analyzer="char", ngram_range=(2, 4))` ซึ่งนับชุดตัวอักษรที่ติดกันยาว 2–4 ตัว ต้องฝึก Pipeline ใหม่และประเมินกับข้อความที่แยกจาก train รวมถึงกันข้อความใกล้ซ้ำไม่ให้ข้ามชุด
+หากทดลองกับภาษาไทย ให้เตรียมข้อความที่ระบุประเภท (class label) แล้วลอง `CountVectorizer(analyzer="char", ngram_range=(2, 4))` โดย `analyzer="char"` เลือกนับกลุ่มตัวอักษร และ `ngram_range=(2, 4)` ใช้กลุ่มขนาด 2, 3 และ 4 ตัวรวมกัน
+
+ตัวอย่าง `แมว` จะได้ `แม`, `มว` และ `แมว` แต่ไม่มีกลุ่มขนาด 4 เพราะข้อความมีเพียง 3 ตัวอักษร
+
+เมื่อเปลี่ยนจากนับคำเป็นนับกลุ่มตัวอักษร ต้องฝึก Pipeline ใหม่และประเมินกับข้อความที่แยกจาก train รวมถึงกันข้อความใกล้ซ้ำไม่ให้ข้ามชุด
 
 </details>
 
@@ -202,6 +227,7 @@ display(pd.concat([results, probabilities], axis=1).round(3))
 
 - [scikit-learn: Naive Bayes — สมมติฐานและข้อจำกัดของความน่าจะเป็น](https://scikit-learn.org/1.7/modules/naive_bayes.html)
 - [scikit-learn: MultinomialNB — alpha และ smoothing](https://scikit-learn.org/1.7/modules/generated/sklearn.naive_bayes.MultinomialNB.html)
-- [scikit-learn: CountVectorizer — vocabulary และการนับคำ](https://scikit-learn.org/1.7/modules/generated/sklearn.feature_extraction.text.CountVectorizer.html)
+- [scikit-learn: CountVectorizer — vocabulary, analyzer และ ngram_range](https://scikit-learn.org/1.7/modules/generated/sklearn.feature_extraction.text.CountVectorizer.html)
+- [PyThaiNLP: เครื่องมือตัดคำภาษาไทย](https://pythainlp.org/docs/5.1/api/tokenize.html#word-level)
 - [scikit-learn: Text feature extraction — Bag-of-words](https://scikit-learn.org/1.7/modules/feature_extraction.html#text-feature-extraction)
 - [Handbook: Naive Bayes — อ่านเพิ่มเติม](https://jakevdp.github.io/PythonDataScienceHandbook/05.05-naive-bayes.html)
