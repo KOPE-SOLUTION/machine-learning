@@ -32,7 +32,7 @@
 
 ![GMM รวม Gaussian สององค์ประกอบด้วยน้ำหนัก 0.6 และ 0.4 ส่วน KDE รวม Gaussian kernel จากข้อมูลหกจุดโดยหารแต่ละ kernel ด้วยหก](../../assets/figures/14-mixtures-and-density-models.png)
 
-**อ่านภาพ:** เส้นเข้มเกิดจากการรวมเส้นประ ฝั่ง GMM มี Gaussian สององค์ประกอบ ส่วน KDE มี kernel หนึ่งเส้นต่อข้อมูลหนึ่งจุด ตัวเลขเป็นตัวอย่างสมมติ; ความสูงของเส้นคือ density ส่วนพื้นที่ใต้เส้นในช่วงหนึ่งคือ probability · [เปิดภาพ SVG](../../assets/figures/14-mixtures-and-density-models.svg)
+**อ่านภาพตัวอย่าง:** เส้นเข้มเกิดจากการรวมเส้นประ ฝั่ง GMM มี Gaussian สององค์ประกอบ ส่วน KDE มี kernel หนึ่งเส้นต่อข้อมูลหนึ่งจุด ความสูงของเส้นคือ density ส่วนพื้นที่ใต้เส้นในช่วงหนึ่งคือ probability · [เปิดภาพ SVG](../../assets/figures/14-mixtures-and-density-models.svg)
 
 ### อ่านผลจาก GMM และ KDE
 
@@ -62,7 +62,7 @@
 
 ## ลงมือทำ
 
-สร้าง Notebook ใหม่แล้วรัน **Cell 1–4 ตามลำดับ** หรือเปิด [Notebook ของบทนี้](lesson.ipynb) ใช้ kernel เดิมได้เลย อ่านคำอธิบายใต้โค้ดแต่ละช่วงประกอบผลที่ได้
+สร้าง Notebook ใหม่แล้วรัน **Cell 1–4 ตามลำดับ** หรือเปิด [Notebook ของบทนี้](lesson.ipynb)
 
 <!-- CODE:CELLS -->
 

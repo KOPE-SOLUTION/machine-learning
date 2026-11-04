@@ -28,7 +28,7 @@ print(f"t-SNE neighborhood trustworthiness: {trustworthiness(X, Z_tsne, n_neighb
 # - `learning_rate="auto"` ให้ t-SNE เลือกขนาดก้าวตามวิธีของไลบรารี ส่วน `random_state=42` ช่วยให้ทำซ้ำได้
 # - `trustworthiness(X, Z, n_neighbors=10)` เทียบเพื่อนบ้านสิบตัวในข้อมูลเดิมกับพิกัดใหม่ โดยไม่ได้ใช้ y คำนวณ
 #
-# **รูปของผลลัพธ์:** `Z_pca` และ `Z_tsne` มีขนาด `(600, 2)` คือพิกัดสองค่าของ 600 ภาพ ค่า trustworthiness ที่พิมพ์ประเมินความสอดคล้องของเพื่อนบ้าน ไม่ใช่สัดส่วนภาพที่จำแนกถูก
+# **รูปของผลลัพธ์:** `Z_pca` และ `Z_tsne` มีขนาด `(600, 2)` คือพิกัดสองค่าของ 600 ภาพ ค่า trustworthiness ประเมินความสอดคล้องของเพื่อนบ้าน
 
 # %% Cell 2 — เปรียบเทียบภาพสองวิธี
 fig, axes = plt.subplots(1, 2, figsize=(10, 4))

@@ -51,7 +51,7 @@ print("Vocabulary size:", len(words))
 # - `make_pipeline(CountVectorizer(), MultinomialNB(alpha=1.0))` ต่อ **ตัวนับคำ → โมเดลจำแนกประเภท** โดย `alpha=1.0` เพิ่มจำนวนสมมติ 1 ให้ทุกคำในแต่ละคลาสตอนคำนวณความน่าจะเป็น
 # - `model.fit(X_train, y_train)` ให้ CountVectorizer สร้าง vocabulary และนับคำจากข้อความ train จากนั้น Naive Bayes เรียน prior และความน่าจะเป็นของคำในแต่ละคลาสจากจำนวนคำคู่กับประเภท sport/tech ใน `y_train`
 # - `model.predict(X_test)` นับเฉพาะคำใน vocabulary ที่เรียนจาก train แล้วใช้ prior และความน่าจะเป็นของคำที่เก็บไว้คำนวณคลาสของข้อความ test โดยไม่ fit ใหม่
-# - `classification_report` อ่านเหมือนบท 04; `zero_division=0` ให้ค่า 0 แทนกรณีที่ตัวหารของ metric เป็นศูนย์ ไม่ได้เปลี่ยนคำทำนาย
+# - `classification_report` อ่านเหมือนบท 04; `zero_division=0` ให้ค่า 0 แทนกรณีที่ตัวหารของ metric เป็นศูนย์
 # - `model.named_steps["countvectorizer"]` หยิบตัวนับคำที่ฝึกแล้วออกมาตรวจ และ `get_feature_names_out()` คืนชื่อคำตามลำดับคอลัมน์
 #
 # **ผลที่ได้:** vocabulary มี 49 คำ และทาย test ถูกทั้ง 6 ข้อความ จึงได้ accuracy 1.00 คะแนน accuracy 1.00 มาจากข้อความทดสอบที่แต่งขึ้นเพียง 6 ข้อความ จึงยังไม่ยืนยันว่าระบบจริงจะทายถูก 100%
@@ -90,4 +90,4 @@ display(pd.concat([results, probabilities], axis=1).round(3))
 # - `vectors[:, used_columns].toarray()` แปลงเฉพาะตารางเล็กเป็น array แล้วใช้ชื่อข้อความและคำกำกับแถว/คอลัมน์ การเลือกแสดงเฉพาะคอลัมน์ที่มีจำนวนคำมากกว่าศูนย์ช่วยให้ตารางอ่านง่าย โมเดลยังรับจำนวนคำครบ 49 features
 # - `vectors.sum(axis=1)` รวมตามแถว ได้ `known_tokens` หรือจำนวนคำที่รู้จักต่อข้อความ **นับคำซ้ำด้วย**: `[3, 3, 0]`
 # - `predict` คืนชื่อคลาส ส่วน `predict_proba` คืนความน่าจะเป็นตามโมเดล ใช้ `model.classes_` ตั้งชื่อคอลัมน์ให้ถูกลำดับ: `sport, tech`
-# - `pd.concat(..., axis=1)` ต่อผลสองตารางตามแนวนอน และ `round(3)` ปัดเลขเพื่อแสดงผล ไม่ได้เปลี่ยนโมเดล
+# - `pd.concat(..., axis=1)` ต่อผลสองตารางตามแนวนอน และ `round(3)` ปัดเลขเพื่อแสดงผล
