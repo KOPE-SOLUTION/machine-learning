@@ -25,20 +25,22 @@
 
 **Grid Search with Cross-validation** คือการค้นหาค่า hyperparameter โดยลองทุกชุดค่าที่กำหนด และประเมินแต่ละชุดด้วย CV เครื่องมือนี้ช่วยเลือกการตั้งค่าให้โมเดล เช่น KNN ที่เรียนแล้ว
 
-**หลักการในบทนี้:** กำหนดรายการค่าที่จะลอง → ฝึกและวัดผลแต่ละชุดด้วยการแบ่ง fold แบบเดียวกัน → เปรียบเทียบ accuracy เฉลี่ยจาก CV → เลือกชุดค่าที่ได้ accuracy เฉลี่ยสูงสุด
+![KNN สามค่า k คูณ weights สองแบบเป็นหกชุด ทำ CV ห้า fold รวมสามสิบครั้ง เลือก accuracy เฉลี่ยสูงสุดแล้ว refit train 120 แถวก่อนตรวจ test 30 แถว](../../assets/figures/10-tuning-and-learning-curves-grid-search.png)
 
-ตัวอย่าง: k=3, 5, 9 × weights สองแบบ = 6 ชุด หากใช้ 5-fold CV จะฝึก 30 ครั้ง แล้วฝึกชุดที่ชนะบน train ทั้งหมดอีกครั้ง เรียกว่า **refit**
+[เปิดภาพ SVG](../../assets/figures/10-tuning-and-learning-curves-grid-search.svg)
+
+**Refit** คือฝึก Pipeline ด้วยชุดค่าที่เลือกบน train ทั้งหมด หลังเปรียบเทียบ CV เสร็จแล้ว
 
 - **จุดเด่น:** เปรียบเทียบชุดค่าตามกระบวนการเดียวกัน และตรวจย้อนกลับได้ว่าแต่ละชุดได้คะแนนเท่าไร
 - **ข้อจำกัด:** จำนวนการฝึกเพิ่มตามจำนวนชุดค่าและ fold อีกทั้งคำว่า “ดีที่สุด” หมายถึงดีที่สุดในรายการที่ลอง ตามข้อมูลและ metric ที่ใช้เท่านั้น
 
-ใส่ StandardScaler ไว้ใน Pipeline เพื่อให้แต่ละรอบของ CV คำนวณค่าเฉลี่ยและส่วนเบี่ยงเบนมาตรฐานจากข้อมูลฝึกของรอบนั้นเท่านั้น
-
-เมื่อทดลองหลายชุดค่า ชุดที่ชนะอาจได้ประโยชน์จากความบังเอิญในชุด validation ด้วย คะแนน CV ที่สูงที่สุดจึงอาจสูงกว่าผลกับข้อมูลใหม่ ต้องตรวจ test อีกครั้งหลังเลือกการตั้งค่าเสร็จ
+ชุดค่าที่ชนะอาจได้ประโยชน์จากความบังเอิญใน validation จึงเก็บ test ไว้ประเมินหลังเลือกเสร็จ
 
 ## อ่าน learning curve
 
 **Learning curve — เส้นโค้งการเรียนรู้** แสดงคะแนน train และ validation เมื่อเปลี่ยนจำนวนตัวอย่างฝึก ใช้ตรวจว่าข้อมูลเพิ่มอาจช่วยหรือควรปรับโมเดล โดยฝึกใหม่ที่แต่ละขนาดข้อมูล
+
+![Learning curve เปรียบเทียบ accuracy บน train และ validation เมื่อเพิ่มจำนวนตัวอย่างฝึกต่อ fold](../../assets/figures/10-tuning-and-learning-curves-learning-curve.png)
 
 | รูปแบบคะแนนเมื่อเพิ่มข้อมูลฝึก | สิ่งที่ควรตรวจ |
 |---|---|
@@ -138,8 +140,6 @@ print(f"Final test accuracy: {accuracy_score(y_test, search.predict(X_test)):.3f
 อ่านผลตามลำดับ: ตารางหกทางเลือก → best parameters → learning curve → test accuracy
 
 ไฟล์ภาพ: `outputs/10-tuning-and-learning-curves/learning-curve.png`
-
-![ผลการทดลอง 10-tuning-and-learning-curves](../../assets/figures/10-tuning-and-learning-curves-learning-curve.png)
 
 ## แบบฝึกท้ายบท
 

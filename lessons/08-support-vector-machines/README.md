@@ -38,15 +38,13 @@
 
 ## Cross-validation (CV)
 
-กัน test 100 แถวไว้ก่อน แล้วนำ train 300 แถวมาทำ CV:
+**Fold** คือส่วนของข้อมูลที่สลับมาใช้ตรวจสอบในการทำ CV โดย `StratifiedKFold` ช่วยรักษาสัดส่วนคลาส:
 
-1. แบ่งเป็น 5 ส่วน เรียกว่า **fold** โดย `StratifiedKFold` ช่วยรักษาสัดส่วนคลาส
-2. แต่ละรอบฝึก 240 แถว และตรวจด้วยอีก 60 แถว
-3. หมุนส่วนที่ใช้ตรวจให้ครบ 5 รอบ แล้วหาคะแนนเฉลี่ย
+![กัน test 100 แถวไว้ แล้วแบ่ง train 300 แถวเป็นห้า fold แต่ละรอบฝึก 240 ตรวจ 60 เลือก kernel ด้วย CV ก่อน refit train ทั้งหมดและตรวจ test](../../assets/figures/08-support-vector-machines-cross-validation.png)
 
-`cross_val_score` ฝึก Pipeline ใหม่ทุกรอบ โดย StandardScaler คำนวณค่าเฉลี่ยและส่วนเบี่ยงเบนมาตรฐานจาก 240 แถวที่ใช้ฝึก แล้วใช้สถิติชุดเดียวกันแปลง validation อีก 60 แถวก่อนให้ SVM ทำนาย
+[เปิดภาพ SVG](../../assets/figures/08-support-vector-machines-cross-validation.svg)
 
-เลือก kernel จากคะแนน CV เฉลี่ย แล้ว fit บน train ทั้ง 300 แถว ก่อนประเมิน test
+แต่ละรอบฝึก Pipeline ใหม่: **StandardScaler fit เฉพาะส่วนฝึกของรอบนั้น** แล้วใช้สถิติที่เก็บไว้ transform ส่วน validation จึงไม่ใช้ข้อมูล validation มาช่วยกำหนดสเกล
 
 ## ลงมือทำ
 
