@@ -76,7 +76,8 @@ print("Learned coefficients:\n", coefficients.round(3).to_string(index=False))
 # - `preprocess.transform(X_train.iloc[:3])` แปลงสามแถวเดิมใน Cell 1 โดยไม่ fit ซ้ำ ตัวเลขอาจติดลบหลัง scale; คอลัมน์ one-hot ยังคงเป็น 0/1 เพราะไม่ผ่าน StandardScaler
 # - `DummyRegressor(strategy="median")` ใช้มัธยฐานของค่าบริการใน `y_train` ทายทุกแถว เป็น baseline สำหรับเทียบ MAE ส่วนมัธยฐานของน้ำหนักพัสดุใช้เติมค่าน้ำหนักที่หาย จึงเป็นคนละค่าและคนละหน้าที่
 # - `model.named_steps["ridge"]` เข้าถึง Ridge ที่ฝึกแล้วใน Pipeline ชื่อ `"ridge"` มาจาก `make_pipeline` ที่ตั้งชื่อขั้นตอนตามชื่อคลาส
-# - `ridge.coef_` เก็บน้ำหนักทั้ง 4 ค่าตามลำดับเดียวกับ `feature_names` ส่วน `ridge.intercept_` คือค่าคงที่ b ตารางนี้ช่วยจับคู่ได้ว่าน้ำหนักใดใช้กับคอลัมน์ไหน
+# - `ridge.coef_` เก็บน้ำหนักทั้ง 4 ค่าตามลำดับเดียวกับ `feature_names`: ตำแหน่ง `[0]` คือ w₁ ของระยะทางหลังปรับสเกล ส่วน `[3]` คือ w₄ ของ service_standard; Python เริ่มนับ index ที่ 0 ส่วน `ridge.intercept_` คือค่าคงที่ b
+# - อ่านน้ำหนักตัวเลขเป็นความชันต่อค่า z โดยคง feature อื่นไว้ ส่วนการเปลี่ยน express เป็น standard ใช้ผลต่าง `ridge.coef_[3] - ridge.coef_[2]` เพราะคอลัมน์ express เปลี่ยนจาก 1 เป็น 0 พร้อมกับ standard เปลี่ยนจาก 0 เป็น 1
 #
 # **การตั้งค่าใน cell นี้:** `handle_unknown="ignore"` ทำให้บริการที่ OneHotEncoder ไม่เคยพบตอน fit มีค่าเป็น 0 เฉพาะคอลัมน์ one-hot ของ service ส่วนคอลัมน์ตัวเลขยังแปลงตามปกติ `Ridge(alpha=1.0)` กำหนดความเข้มของ L2 ไว้ล่วงหน้า หากจะเลือกค่า alpha ให้ใช้ validation/CV ตาม [บท 04](../04-validation-and-metrics/README.md) โดยนำ Pipeline ทั้งชุดเข้า CV และเก็บ test ไว้ประเมินท้ายสุด ค่า alpha เป็นค่าตั้ง ส่วน `coef_` กับ `intercept_` เป็นค่าที่เรียนจาก train
 #
