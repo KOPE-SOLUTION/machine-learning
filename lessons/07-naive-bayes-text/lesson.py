@@ -48,15 +48,13 @@ print("Vocabulary size:", len(words))
 # %% [markdown]
 # **อ่านโค้ด**
 #
-# - `make_pipeline(CountVectorizer(), MultinomialNB(alpha=1.0))` ต่อ **ตัวนับคำ → โมเดลจำแนกประเภท** โดย `alpha=1.0` เพิ่มจำนวนสมมติ 1 ให้ทุกคำในแต่ละคลาสตอนคำนวณความน่าจะเป็น
-# - `model.fit(X_train, y_train)` ให้ CountVectorizer สร้าง vocabulary และนับคำจากข้อความ train จากนั้น Naive Bayes เรียน prior และความน่าจะเป็นของคำในแต่ละคลาสจากจำนวนคำคู่กับประเภท sport/tech ใน `y_train`
-# - `model.predict(X_test)` นับเฉพาะคำใน vocabulary ที่เรียนจาก train แล้วใช้ prior และความน่าจะเป็นของคำที่เก็บไว้คำนวณคลาสของข้อความ test โดยไม่ fit ใหม่
-# - `classification_report` อ่านเหมือนบท 04; `zero_division=0` ให้ค่า 0 แทนกรณีที่ตัวหารของ metric เป็นศูนย์
-# - `model.named_steps["countvectorizer"]` หยิบตัวนับคำที่ฝึกแล้วออกมาตรวจ และ `get_feature_names_out()` คืนชื่อคำตามลำดับคอลัมน์
+# - `make_pipeline(...)` ต่อ **CountVectorizer → MultinomialNB** ส่วน `alpha=1.0` เพิ่มจำนวนสมมติ 1 ให้ทุกคำในแต่ละคลาสตามวิธี smoothing
+# - `model.fit(X_train, y_train)` เริ่มจากให้ CountVectorizer **fit สร้าง vocabulary แล้ว transform ข้อความเป็นตารางจำนวนคำ** จากนั้นจึงให้ Naive Bayes **fit ตารางจำนวนคำคู่กับ labels ใน y_train** เพื่อเรียน prior และความน่าจะเป็นของคำในแต่ละคลาส
+# - `model.predict(X_test)` ให้ตัวนับคำใช้ vocabulary เดิมแปลงข้อความ test ก่อนให้โมเดลเลือก sport หรือ tech โดยไม่ fit ใหม่
+# - ตาราง `actual` กับ `prediction` ให้ดูว่าแต่ละข้อความทายตรงกับคลาสจริงหรือไม่ ก่อนอ่าน `classification_report` ตามบท 04; `zero_division=0` ให้ค่า 0 ในกรณีที่ตัวหารของ metric เป็นศูนย์
+# - `model.named_steps["countvectorizer"]` เข้าถึงตัวนับคำที่ fit แล้ว ส่วน `get_feature_names_out()` คืนชื่อคำตามลำดับคอลัมน์ เก็บใน `words` เพื่อใช้กำกับตารางใน Cell 3
 #
-# **ผลที่ได้:** vocabulary มี 49 คำ และทาย test ถูกทั้ง 6 ข้อความ จึงได้ accuracy 1.00 คะแนน accuracy 1.00 มาจากข้อความทดสอบที่แต่งขึ้นเพียง 6 ข้อความ จึงยังไม่ยืนยันว่าระบบจริงจะทายถูก 100%
-#
-# **อ่านผลก่อนคะแนน:** ตารางแสดงข้อความ test ทั้ง 6 ข้อความพร้อม `actual` (คลาสจริง) และ `prediction` (คลาสที่ทาย) จึงนับแถวที่ตรงกันได้ก่อนอ่าน classification report ซึ่งคำนวณจากคลาสจริงและคลาสที่ทำนายของข้อความทั้ง 6 ข้อความนี้
+# **ผลที่ได้:** `Vocabulary size: 49` หมายถึงคำไม่ซ้ำ 49 คำ จึงมี 49 features ส่วน test ทายถูกทั้ง 6 ข้อความ ได้ accuracy `6/6 = 1.00` คะแนนนี้มาจากข้อความที่แต่งขึ้นเพียง 6 ข้อความ จึงยังไม่ยืนยันผลกับข้อความจริงที่หลากหลาย
 
 # %% Cell 3 — ดูจำนวนคำและทำนายข้อความใหม่
 examples = ["team team goal", "developer fixes software", "recipe with vegetables"]
@@ -85,9 +83,10 @@ display(pd.concat([results, probabilities], axis=1).round(3))
 # %% [markdown]
 # **อ่านโค้ด**
 #
-# - `vectorizer.transform(examples)` นับคำด้วย vocabulary เดิม ได้ sparse matrix ขนาด `(3, 49)`: 3 ข้อความ × 49 คำ โดย sparse matrix เก็บข้อมูลแบบประหยัดพื้นที่เมื่อส่วนใหญ่เป็นศูนย์
-# - `vectors.sum(axis=0)` รวมตามคอลัมน์; `np.asarray(...).ravel() > 0` จัดเป็น array หนึ่งมิติแล้วเลือกคำที่ปรากฏอย่างน้อยหนึ่งครั้งใน 3 ตัวอย่าง ได้ 5 คอลัมน์สำหรับแสดงผล
-# - `vectors[:, used_columns].toarray()` แปลงเฉพาะตารางเล็กเป็น array แล้วใช้ชื่อข้อความและคำกำกับแถว/คอลัมน์ การเลือกแสดงเฉพาะคอลัมน์ที่มีจำนวนคำมากกว่าศูนย์ช่วยให้ตารางอ่านง่าย โมเดลยังรับจำนวนคำครบ 49 features
-# - `vectors.sum(axis=1)` รวมตามแถว ได้ `known_tokens` หรือจำนวนคำที่รู้จักต่อข้อความ **นับคำซ้ำด้วย**: `[3, 3, 0]`
-# - `predict` คืนชื่อคลาส ส่วน `predict_proba` คืนความน่าจะเป็นตามโมเดล ใช้ `model.classes_` ตั้งชื่อคอลัมน์ให้ถูกลำดับ: `sport, tech`
-# - `pd.concat(..., axis=1)` ต่อผลสองตารางตามแนวนอน และ `round(3)` ปัดเลขเพื่อแสดงผล
+# - `examples` มีข้อความกีฬา เทคโนโลยี และอาหาร เพื่อดูทั้งกรณีที่พบคำใน vocabulary และกรณีที่ไม่พบเลย
+# - `vectorizer.transform(examples)` นับคำลงคอลัมน์เดิม ได้ **Feature matrix หรือตาราง features** ขนาด `(3, 49)`: 3 ข้อความ × 49 คำ ใช้รูปแบบ sparse matrix เพื่อประหยัดพื้นที่สำหรับตารางที่ส่วนใหญ่เป็นศูนย์
+# - `used_columns` เลือกเฉพาะคำที่พบในตัวอย่างมาแสดง: `sum(axis=0)` รวมจำนวนตามคอลัมน์ และ `np.asarray(...).ravel() > 0` ทำเป็นรายการ True/False หนึ่งมิติ คำที่มีผลรวมมากกว่า 0 ได้ True
+# - `vectors[:, used_columns].toarray()` เลือก 5 คอลัมน์นั้นแล้วแปลงเป็น array สำหรับแสดงตาราง โมเดลยังใช้ features ครบ 49 คอลัมน์ ไม่ได้ฝึกใหม่ด้วย 5 คอลัมน์
+# - `known_tokens` มาจาก `vectors.sum(axis=1)` ซึ่งรวมจำนวนคำต่อข้อความ **นับคำซ้ำด้วย** จึงได้ `[3, 3, 0]` เช่น team สองครั้งกับ goal หนึ่งครั้งรวมเป็น 3; ค่า 0 หมายถึงไม่มีคำใดตรงกับ vocabulary
+# - `model.predict(examples)` รับข้อความดิบแล้วให้ Pipeline นับคำก่อนเลือกคลาส ส่วน `predict_proba` ให้ความน่าจะเป็นของแต่ละคลาส ใช้ `model.classes_` กำกับคอลัมน์ sport, tech ให้ตรงกับลำดับผลลัพธ์
+# - `pd.concat(..., axis=1)` ต่อข้อความ คำทำนาย และความน่าจะเป็นให้อยู่ในตารางเดียว ส่วน `round(3)` ปัดเลขเฉพาะการแสดงผล
