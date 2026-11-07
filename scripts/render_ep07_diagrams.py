@@ -66,9 +66,10 @@ def save(fig, suffix):
             assert box.x1 <= fig.bbox.width and box.y1 <= fig.bbox.height, item.get_text()
     fig.savefig(stem.with_suffix(".png"), dpi=150)
     svg = stem.with_suffix(".svg")
-    fig.savefig(svg, metadata={"Date": None})
-    svg.write_text("\n".join(line.rstrip() for line in svg.read_text(
-        encoding="utf-8").splitlines()) + "\n", encoding="utf-8", newline="\n")
+    svg_buffer = io.StringIO()
+    fig.savefig(svg_buffer, format="svg", metadata={"Date": None})
+    svg.write_text("\n".join(line.rstrip() for line in svg_buffer.getvalue().splitlines())
+                   + "\n", encoding="utf-8", newline="\n")
     plt.close(fig)
     print(stem.with_suffix(".png"))
 
@@ -114,7 +115,8 @@ def counts_diagram(ns):
     save(fig, "counts")
 
 
-def smoothing_diagram(ns):
+def prediction_values(ns):
+    """Read every displayed count from the fitted lesson pipeline."""
     model = ns["model"].named_steps["multinomialnb"]
     words = list(ns["words"])
     goal = model.feature_count_[:, words.index("goal")].astype(int)
@@ -125,53 +127,150 @@ def smoothing_diagram(ns):
     denominator = (totals + alpha * vocabulary).astype(int)
     goal_numerator = (goal + alpha).astype(int)
     team_numerator = (team + alpha).astype(int)
-    prior = np.exp(model.class_log_prior_)
+    class_counts = model.class_count_.astype(int)
+    prior = class_counts / class_counts.sum()
+    np.testing.assert_allclose(prior, np.exp(model.class_log_prior_))
     scores = prior * (team_numerator / denominator)**2 * (goal_numerator / denominator)
     probs = scores / scores.sum()
     np.testing.assert_allclose(probs, ns["model"].predict_proba(["team team goal"])[0])
+    np.testing.assert_allclose(
+        team_numerator / denominator,
+        np.exp(model.feature_log_prob_[:, words.index("team")]),
+    )
+    np.testing.assert_allclose(
+        goal_numerator / denominator,
+        np.exp(model.feature_log_prob_[:, words.index("goal")]),
+    )
+    return dict(
+        classes=model.classes_, class_counts=class_counts, prior=prior,
+        team=team, goal=goal, totals=totals, vocabulary=vocabulary,
+        alpha=alpha, denominator=denominator,
+        team_numerator=team_numerator, goal_numerator=goal_numerator,
+        scores=scores, probs=probs,
+    )
+
+
+def smoothing_diagram(ns):
+    data = prediction_values(ns)
+    tech = list(data["classes"]).index("tech")
+    goal, total = data["goal"][tech], data["totals"][tech]
+    vocabulary = data["vocabulary"]
+    numerator, denominator = data["goal_numerator"][tech], data["denominator"][tech]
 
     fig, ax = canvas(
-        "Naive Bayes · จากความถี่คำสู่คำทำนาย",
-        "Smoothing เพิ่มจำนวนสมมติให้ทุกคำในแต่ละคลาส  •  alpha = 1 เรียกว่า Laplace smoothing",
+        "Smoothing · ทำไมต้องเพิ่ม alpha",
+        "goal อยู่ใน vocabulary แต่ไม่เคยพบในข้อความ tech  •  ลองเทียบก่อนและหลังเพิ่ม alpha",
     )
-    card(ax, 0.05, 0.665, 0.90, 0.155)
-    label(ax, 0.50, 0.757,
-          r"$P(w\mid c)=\frac{N_{cw}+\alpha}{N_c+\alpha V}$", size=31, ha="center")
-    label(ax, 0.50, 0.691,
-          "(จำนวนครั้งของคำ w ในคลาส c + alpha) ÷ (จำนวนคำรวมในคลาส c + alpha × V)",
-          size=16, ha="center", color=MUTED)
+    card(ax, 0.05, 0.435, 0.40, 0.365, "#FFF5EA")
+    label(ax, 0.075, 0.746, "ไม่เพิ่ม alpha", size=25, color=ORANGE, weight="bold")
+    label(ax, 0.075, 0.678, f"goal พบ {goal} ครั้ง / คำรวม {total} ครั้ง", size=21)
+    label(ax, 0.25, 0.575, rf"$\frac{{{goal}}}{{{total}}}=0$",
+          size=38, color=ORANGE, ha="center")
+    label(ax, 0.25, 0.474, "เมื่อมี goal → คะแนน tech × 0 = 0", size=18, ha="center")
+
+    arrow(ax, (0.465, 0.615), (0.535, 0.615))
+    card(ax, 0.55, 0.435, 0.40, 0.365, "#EDF4FF")
+    label(ax, 0.575, 0.746, "เพิ่ม alpha = 1", size=25, color=BLUE, weight="bold")
+    label(ax, 0.575, 0.678, "เพิ่มจำนวนสมมติ 1 ให้ทุกคำในคลาส", size=20)
+    label(ax, 0.75, 0.575,
+          rf"$\frac{{{goal}+1}}{{{total}+{vocabulary}}}=\frac{{{numerator}}}{{{denominator}}}$",
+          size=35, color=BLUE, ha="center")
+    label(ax, 0.75, 0.474, f"โอกาสของ goal ใน tech ≈ {numerator / denominator:.4f}",
+          size=18, ha="center")
+
+    card(ax, 0.05, 0.10, 0.52, 0.265)
+    label(ax, 0.075, 0.311, f"ทำไมตัวส่วนเพิ่ม {vocabulary}?", size=23, weight="bold")
+    label(ax, 0.075, 0.245, f"vocabulary มี {vocabulary} คำ → เพิ่มคำละ 1", size=21)
+    label(ax, 0.075, 0.160, f"{total} + (1 × {vocabulary}) = {denominator}",
+          size=30, color=BLUE)
+    card(ax, 0.61, 0.10, 0.34, 0.265)
+    label(ax, 0.635, 0.311, "เพิ่มให้ทุกคำในสูตร", size=23, weight="bold")
+    label(ax, 0.635, 0.230, "พบ 0 ครั้ง  →  ใช้ 0 + 1", size=23, color=BLUE)
+    label(ax, 0.635, 0.155, "พบ 3 ครั้ง  →  ใช้ 3 + 1", size=23, color=BLUE)
+    label(ax, 0.05, 0.045,
+          "alpha = 1 เรียกว่า Laplace smoothing  •  เพิ่มเฉพาะจำนวนในสูตร ไม่ได้เพิ่มข้อความฝึก",
+          size=17, color=MUTED)
+    save(fig, "smoothing")
+
+
+def prediction_inputs_diagram(ns):
+    data = prediction_values(ns)
+    total_messages = data["class_counts"].sum()
+    fig, ax = canvas(
+        "1 · เตรียมค่าจากชุดฝึก",
+        "ข้อความที่จะทำนาย: team team goal  •  มี team 2 ครั้ง และ goal 1 ครั้ง",
+    )
+    card(ax, 0.05, 0.685, 0.90, 0.125)
+    label(ax, 0.50, 0.760,
+          f"ชุดฝึก {total_messages} ข้อความ  •  sport {data['class_counts'][0]}"
+          f" + tech {data['class_counts'][1]} ข้อความ",
+          size=23, weight="bold", ha="center")
+    label(ax, 0.50, 0.710,
+          f"vocabulary รวม {data['vocabulary']} คำไม่ซ้ำ  •  alpha = {data['alpha']:g}",
+          size=20, ha="center", color=MUTED)
 
     for i, x in enumerate((0.05, 0.52)):
         color = BLUE if i == 0 else ORANGE
-        card(ax, x, 0.395, 0.43, 0.215, "#EDF4FF" if i == 0 else "#FFF5EA")
-        label(ax, x + 0.025, 0.565,
-              f"{model.classes_[i]} · prior = 9/18 = {prior[i]:.1f}",
-              size=22, color=color, weight="bold")
-        label(ax, x + 0.025, 0.515,
-              f"คำรวม {totals[i]} ครั้ง  |  vocabulary V = {vocabulary}", size=18)
-        label(ax, x + 0.025, 0.466,
-              f"goal: ({goal[i]}+1)/({totals[i]}+{vocabulary})"
-              f" = {goal_numerator[i]}/{denominator[i]}", size=18, color=color)
-        label(ax, x + 0.025, 0.418,
-              f"team: ({team[i]}+1)/({totals[i]}+{vocabulary})"
-              f" = {team_numerator[i]}/{denominator[i]}", size=18, color=color)
+        card(ax, x, 0.125, 0.43, 0.505, "#EDF4FF" if i == 0 else "#FFF5EA")
+        label(ax, x + 0.025, 0.577,
+              f"{data['classes'][i]} · Prior = {data['class_counts'][i]}/{total_messages}"
+              f" = {data['prior'][i]:.1f}", size=23, color=color, weight="bold")
+        label(ax, x + 0.025, 0.517,
+              f"คำรวม {data['totals'][i]} ครั้ง · team {data['team'][i]} · goal {data['goal'][i]}",
+              size=20)
+        for word, y in (("team", 0.440), ("goal", 0.270)):
+            label(ax, x + 0.025, y, f"โอกาสพบ {word} ใน {data['classes'][i]}",
+                  size=20, color=MUTED)
+            equation = (rf"$\frac{{{data[word][i]}+1}}{{{data['totals'][i]}+{data['vocabulary']}}}"
+                        rf"=\frac{{{data[word + '_numerator'][i]}}}{{{data['denominator'][i]}}}$")
+            label(ax, x + 0.215, y - 0.076, equation, size=32, color=color, ha="center")
+    label(ax, 0.05, 0.052,
+          "Prior ใช้จำนวนข้อความ  •  โอกาสพบคำใช้จำนวนครั้งของคำ โดยนับคำซ้ำด้วย",
+          size=18, color=MUTED)
+    save(fig, "prediction-inputs")
 
-    card(ax, 0.05, 0.105, 0.90, 0.235)
-    label(ax, 0.075, 0.297,
-          'ข้อความ "team team goal" → prior × P(team | คลาส)² × P(goal | คลาส)',
-          size=20, weight="bold")
-    for i, y in enumerate((0.225, 0.153)):
+
+def prediction_scores_diagram(ns):
+    data = prediction_values(ns)
+    scores, probs = data["scores"], data["probs"]
+    score_strings = [f"{value:.8f}" if value >= 1e-5 else f"{value:.10f}" for value in scores]
+    total_string = f"{scores.sum():.8f}"
+    fig, ax = canvas(
+        "2–3 · จาก Prior ไปถึงคำทำนาย",
+        "team team goal → คูณโอกาสพบ team สองครั้ง และ goal หนึ่งครั้ง",
+    )
+    for i, x in enumerate((0.05, 0.52)):
         color = BLUE if i == 0 else ORANGE
-        equation = (rf"$0.5\times({team_numerator[i]}/{denominator[i]})^2"
-                    rf"\times({goal_numerator[i]}/{denominator[i]})$")
-        label(ax, 0.075, y, model.classes_[i], size=20, color=color, weight="bold")
-        label(ax, 0.17, y, equation, size=22, color=color)
-        label(ax, 0.53, y, f"คะแนน ≈ {scores[i]:.3g}", size=18, color=color)
-        label(ax, 0.755, y, f"→ P = {probs[i]:.3f}", size=23, color=color, weight="bold")
-    label(ax, 0.05, 0.049,
-          "ใช้ค่าจริงจาก train  •  P ด้านขวา = คะแนนคลาส ÷ ผลรวมคะแนนสองคลาส  •  คำซ้ำจึงมีผลต่อคะแนน",
-          size=15, color=MUTED)
-    save(fig, "smoothing")
+        card(ax, x, 0.470, 0.43, 0.345, "#EDF4FF" if i == 0 else "#FFF5EA")
+        label(ax, x + 0.025, 0.765, f"2 · คำนวณคะแนน {data['classes'][i]}",
+              size=23, color=color, weight="bold")
+        label(ax, x + 0.215, 0.701, "Prior  ×  team  ×  team  ×  goal",
+              size=21, ha="center", color=MUTED)
+        team = f"{data['team_numerator'][i]}/{data['denominator'][i]}"
+        goal = f"{data['goal_numerator'][i]}/{data['denominator'][i]}"
+        equation = f"{data['prior'][i]:.1f} × ({team}) × ({team}) × ({goal})"
+        label(ax, x + 0.215, 0.625, equation, size=22, color=color, ha="center")
+        label(ax, x + 0.215, 0.536, f"คะแนน ≈ {score_strings[i]}",
+              size=25, color=color, weight="bold", ha="center")
+        arrow(ax, (x + 0.215, 0.459), (x + 0.215, 0.414))
+
+    card(ax, 0.05, 0.325, 0.90, 0.080)
+    label(ax, 0.50, 0.365,
+          f"ผลรวมคะแนน ≈ {score_strings[0]} + {score_strings[1]} ≈ {total_string}",
+          size=21, ha="center", weight="bold")
+
+    for i, x in enumerate((0.05, 0.52)):
+        color = BLUE if i == 0 else ORANGE
+        arrow(ax, (x + 0.215, 0.316), (x + 0.215, 0.285))
+        card(ax, x, 0.085, 0.43, 0.19)
+        label(ax, x + 0.215, 0.240, f"3 · {data['classes'][i]}: คะแนน ÷ ผลรวม",
+              size=21, ha="center", color=MUTED)
+        equation = rf"$\frac{{{score_strings[i]}}}{{{total_string}}}\approx{probs[i]:.3f}$"
+        label(ax, x + 0.215, 0.156, equation, size=30, color=color, ha="center")
+    winner = data["classes"][scores.argmax()]
+    label(ax, 0.50, 0.035, f"{winner} ได้คะแนนสูงกว่า → predict เลือก {winner}",
+          size=20, color=BLUE, weight="bold", ha="center")
+    save(fig, "prediction-scores")
 
 
 def main():
@@ -185,6 +284,8 @@ def main():
         ns = runpy.run_path(str(ROOT / "lessons/07-naive-bayes-text/lesson.py"))
     counts_diagram(ns)
     smoothing_diagram(ns)
+    prediction_inputs_diagram(ns)
+    prediction_scores_diagram(ns)
 
 
 if __name__ == "__main__":
