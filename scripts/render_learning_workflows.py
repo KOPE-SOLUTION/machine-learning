@@ -128,7 +128,7 @@ def ep08():
             ax.add_patch(Rectangle((x,y),.072,.045,facecolor=WARM if c==r else PALE,edgecolor=ORANGE if c==r else BLUE))
             text(ax,x+.036,y+.022,"60",16,ORANGE if c==r else BLUE,ha="center")
     text(ax,.14,.352,"น้ำเงิน: ฝึก 240     ส้ม: validation 60",16,MUTED)
-    box(ax,.61,.55,.35,.25,"แต่ละรอบฝึก Pipeline ใหม่","240 แถว: scaler → SVM\n60 แถว: transform → predict",ts=21,bs=20)
+    box(ax,.61,.55,.35,.25,"แต่ละรอบฝึก Pipeline ใหม่","240: scaler fit/transform → SVC fit\n60: scaler transform → SVC predict",ts=21,bs=17)
     box(ax,.61,.36,.35,.14,"test 100 แถว","เก็บไว้ประเมินท้ายสุด",accent=ORANGE,fill=WARM,ts=20,bs=18)
     flow(ax,[("เทียบ linear กับ RBF","CV accuracy เฉลี่ย 5 รอบ"),
              ("เลือก kernel แล้ว refit","ใช้ train ทั้ง 300 แถว"),
