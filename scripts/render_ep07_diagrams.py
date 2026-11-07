@@ -110,7 +110,7 @@ def counts_diagram(ns):
     label(ax, 0.545, 0.216, "recipe with vegetables → รู้จัก 0 คำ", size=19, weight="bold", color=ORANGE)
     label(ax, 0.545, 0.151, "ไม่มีใน vocabulary → ทุกคอลัมน์เป็น 0", size=18)
     label(ax, 0.05, 0.049,
-          "ผลจาก Cell 1–3  •  แสดง 5 คอลัมน์ที่มีค่าในตัวอย่าง; อีก 44 คอลัมน์เป็น 0  •  โมเดลยังใช้ 49 features",
+          "ผลจาก Cell 1–5  •  แสดง 5 คอลัมน์ที่มีค่าในตัวอย่าง; อีก 44 คอลัมน์เป็น 0  •  โมเดลยังใช้ 49 features",
           size=15, color=MUTED)
     save(fig, "counts")
 

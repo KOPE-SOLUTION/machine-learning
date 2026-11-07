@@ -92,20 +92,10 @@
 
 **ตอนฝึกโมเดลเรียนสองอย่าง:**
 
-**1. Prior — อ่านว่า “ไพร-เออร์”** คือความน่าจะเป็นของแต่ละคลาส ก่อนนำคำในข้อความที่จะทำนายมาพิจารณา บทนี้คำนวณจาก **จำนวนข้อความของคลาสนั้น ÷ จำนวนข้อความใน train ทั้งหมด**
+1. **Prior — อ่านว่า ไพร-เออร์:** ความน่าจะเป็นของแต่ละคลาสก่อนพิจารณาคำในข้อความที่จะทำนาย คำนวณจากจำนวนข้อความของคลาสนั้นหารด้วยจำนวนข้อความฝึกทั้งหมด
+2. **ความน่าจะเป็นของคำภายในแต่ละคลาส:** ใช้จำนวนครั้งของคำแยกตาม sport/tech เพื่อดูว่ามีโอกาสพบแต่ละคำมากน้อยเพียงใด
 
-ชุดฝึกมี 18 ข้อความ แบ่งเป็น sport 9 ข้อความ และ tech 9 ข้อความ:
-
-| คลาส | จำนวนข้อความใน train | แทนค่า Prior |
-|---|---:|---:|
-| sport | 9 | 9 / 18 = 0.5 |
-| tech | 9 | 9 / 18 = 0.5 |
-
-ตัวหาร 18 มาจาก `9 + 9` ข้อความ ทั้งสองคลาสมีจำนวนเท่ากัน จึงเริ่มด้วย prior เท่ากันที่ 0.5 **ค่า 0.5 มาจากสัดส่วนข้อความฝึก ไม่ใช่ค่าคงที่ที่ทุกชุดข้อมูลต้องได้**
-
-**2. ความน่าจะเป็นของคำภายในแต่ละคลาส:** นับคำแยกตาม sport/tech เพื่อดูว่า เมื่อเป็นข้อความประเภทนั้น มีโอกาสพบแต่ละคำมากน้อยเพียงใด ดังนั้น prior ใช้ **จำนวนข้อความ** ส่วนความน่าจะเป็นของคำใช้ **จำนวนครั้งของคำ**
-
-**ตอนทำนาย** โมเดลใช้ prior เป็นตัวคูณตั้งต้นของคะแนนแต่ละคลาส แล้วคูณความน่าจะเป็นของคำที่พบ เช่น `team team goal` ใช้ team สองครั้งและ goal หนึ่งครั้ง จากนั้นเลือกคลาสที่ได้คะแนนสูงกว่า หากต้องการความน่าจะเป็นของคลาส ให้นำคะแนนแต่ละคลาสหารด้วยผลรวมคะแนนทุกคลาส
+**ตอนทำนาย** เริ่มคะแนนแต่ละคลาสด้วย prior แล้วคูณความน่าจะเป็นของคำที่พบ โดยคำซ้ำถูกนำมาคูณตามจำนวนครั้ง จากนั้นเลือกคลาสที่ได้คะแนนสูงกว่า
 
 Pipeline เรียงขั้นให้: **CountVectorizer สร้างตารางจำนวนคำก่อน → Naive Bayes ฝึกจากตารางนั้นพร้อม labels** ตอนทำนายใช้ vocabulary และค่าความน่าจะเป็นที่เก็บไว้จากชุดฝึก
 
@@ -116,9 +106,198 @@ Pipeline เรียงขั้นให้: **CountVectorizer สร้าง
 
 **Smoothing (สมูททิง)** เพิ่มจำนวนสมมติ `alpha` ให้ทุกคำในแต่ละคลาสก่อนคำนวณ เพื่อให้คำที่มีใน vocabulary แต่ยังไม่พบในคลาสหนึ่ง มีโอกาสมากกว่าศูนย์ เมื่อ `alpha=1` เรียกว่า **Laplace smoothing**
 
+เช่น หาก goal ไม่เคยพบในข้อความ tech ความน่าจะเป็นของคำนั้นจะเป็นศูนย์และทำให้คะแนน tech ถูกคูณด้วยศูนย์เมื่อข้อความใหม่มี goal การทำ smoothing ช่วยให้โอกาสของคำนั้นมากกว่าศูนย์ โดยเพิ่มเฉพาะจำนวนในสูตร ไม่ได้เพิ่มข้อความฝึก
+
+ส่วนคำที่ไม่มีใน vocabulary เลยจะถูก CountVectorizer ข้าม
+
+## ลงมือทำ
+
+สร้าง Notebook ใหม่แล้วรัน **Cell 1–5 ตามลำดับ** หรือเปิด [Notebook ของบทนี้](lesson.ipynb) หลังฝึก Pipeline จะเปิดดูข้อความฝึก ตารางนับคำ และ vocabulary ก่อนนำจำนวนเหล่านั้นไปแทนสูตร
+
+<!-- CODE:CELLS -->
+
+<!-- CODE:START -->
+### Cell 1 — เตรียมข้อความและประเภทที่กำกับไว้
+
+```python
+import numpy as np
+import pandas as pd
+from IPython.display import display
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.metrics import classification_report
+from sklearn.model_selection import train_test_split
+from sklearn.naive_bayes import MultinomialNB
+from sklearn.pipeline import make_pipeline
+
+texts = [
+    "team wins the football match", "player scores a goal", "coach trains the team",
+    "football fans celebrate victory", "the match ends in a draw", "goal keeper saves the team",
+    "basketball team wins tonight", "player joins the football club", "coach plans match tactics",
+    "fans watch the final game", "the club signs a player", "training helps the team win",
+    "software update fixes a bug", "python code runs on computer", "developer tests the software",
+    "new computer chip released", "database stores application data", "the code has a bug",
+    "software developer writes tests", "computer program processes data", "python library update released",
+    "database server runs software", "chip powers the new computer", "developer fixes python code",
+]
+y = np.array(["sport"] * 12 + ["tech"] * 12)
+X_train, X_test, y_train, y_test = train_test_split(
+    texts, y, test_size=0.25, stratify=y, random_state=42
+)
+print("Train:", len(X_train), "| Test:", len(X_test))
+```
+
+**อ่านโค้ด**
+
+- `texts` เก็บข้อความดิบ 24 ข้อความ: 12 ข้อความแรกเป็นกีฬา และ 12 ข้อความหลังเป็นเทคโนโลยี ส่วน `y` เก็บประเภทข้อความ (class labels) เป็น sport และ tech ให้ตรงกับลำดับข้อความ
+- `train_test_split` แบ่งข้อความกับประเภทที่กำกับไว้เป็นคู่ ๆ ก่อนสร้างรายการคำ (vocabulary): train 18 ข้อความ (คลาสละ 9) และ test 6 ข้อความ (คลาสละ 3) โดย `stratify=y` รักษาสัดส่วนคลาส
+- `random_state=42` ทำให้รันซ้ำแล้วได้ชุดแบ่งเดิม ส่วน `display` ใช้แสดงตารางใน Jupyter แม้มีคำสั่งอื่นตามท้าย cell
+
+**ผลที่ได้:** `Train: 18 | Test: 6`
+
+### Cell 2 — ฝึก Pipeline และประเมินกับ test
+
+```python
+model = make_pipeline(CountVectorizer(), MultinomialNB(alpha=1.0))
+model.fit(X_train, y_train)
+
+y_pred = model.predict(X_test)
+display(pd.DataFrame({"text": X_test, "actual": y_test, "prediction": y_pred}))
+print(classification_report(y_test, y_pred, zero_division=0))
+```
+
+**อ่านโค้ด**
+
+- `make_pipeline(...)` ต่อ **CountVectorizer → MultinomialNB** ส่วน `alpha=1.0` เพิ่มจำนวนสมมติ 1 ให้ทุกคำในแต่ละคลาสตามวิธี smoothing
+- `model.fit(X_train, y_train)` ให้ CountVectorizer สร้าง vocabulary และแปลงข้อความฝึกเป็นจำนวนคำก่อน จากนั้น Naive Bayes จึงเรียนจากจำนวนคำคู่กับ labels ใน `y_train`
+- `model.predict(X_test)` ใช้ vocabulary และโมเดลที่ฝึกไว้ โดยไม่ fit ใหม่ ตาราง `actual` กับ `prediction` ให้เทียบประเภทจริงกับคำทำนายก่อนอ่าน `classification_report` ตามบท 04
+- `zero_division=0` ให้ค่า 0 ในกรณีที่ตัวหารของ metric เป็นศูนย์
+
+**ผลที่ได้:** test ทายถูกทั้ง 6 ข้อความ ได้ accuracy `6/6 = 1.00` คะแนนนี้มาจากข้อความที่แต่งขึ้นเพียง 6 ข้อความ จึงยังไม่ยืนยันผลกับข้อความจริงที่หลากหลาย
+
+ต่อไปเปิดดูข้อความฝึกและจำนวนคำที่ตัวนับคำใช้ เพื่อให้เห็นที่มาของตัวเลขก่อนแทนสูตร
+
+### Cell 3 — นับคำในข้อความฝึกและสรุปแยกคลาส
+
+```python
+vectorizer = model.named_steps["countvectorizer"]
+words = vectorizer.get_feature_names_out()
+train_vectors = vectorizer.transform(X_train)
+train_word_counts = pd.DataFrame(train_vectors.toarray(), columns=words)
+
+train_counts = pd.DataFrame({
+    "text": X_train,
+    "label": y_train,
+    "token_count": train_word_counts.sum(axis=1),
+    "team": train_word_counts["team"],
+    "goal": train_word_counts["goal"],
+})
+for label in model.classes_:
+    print(label)
+    class_rows = train_counts.loc[
+        train_counts["label"] == label,
+        ["text", "token_count", "team", "goal"],
+    ].reset_index(drop=True)
+    class_rows.loc[len(class_rows)] = [
+        "รวม", *class_rows[["token_count", "team", "goal"]].sum()
+    ]
+    display(class_rows)
+
+class_summary = train_counts.groupby("label").agg(
+    messages=("text", "size"),
+    token_count=("token_count", "sum"),
+    team=("team", "sum"),
+    goal=("goal", "sum"),
+)
+class_summary["prior"] = class_summary["messages"] / len(X_train)
+display(class_summary)
+```
+
+**อ่านโค้ด**
+
+- `model.named_steps["countvectorizer"]` ดึงตัวนับคำที่ฝึกแล้วออกจาก Pipeline ส่วน `get_feature_names_out()` คืนชื่อคำตามลำดับคอลัมน์
+- `transform(X_train)` นับคำด้วย vocabulary เดิม แล้ว `train_word_counts` แสดงหนึ่งแถวต่อข้อความและหนึ่งคอลัมน์ต่อคำ
+- `token_count` รวมจำนวนคำทุกคอลัมน์ในแถวนั้น **นับคำซ้ำด้วย** ส่วน `team` และ `goal` แสดงจำนวนครั้งของสองคำที่จะใช้ในตัวอย่างคำนวณ
+- `class_rows` เลือกข้อความของแต่ละคลาสมาแสดง แล้วเพิ่มแถวรวมเพื่อให้เห็นจำนวนที่จะนำไปใช้ในสูตร
+- `groupby("label").agg(...)` แยก sport/tech แล้วนับจำนวนข้อความด้วย `size` และรวมจำนวนคำด้วย `sum` ส่วน `prior` คือจำนวนข้อความของคลาสนั้นหารด้วยจำนวนข้อความฝึกทั้งหมด
+
+**ผลการนับจากข้อความฝึก:** `player scores a goal` นับได้ 3 คำ คือ `player`, `scores`, `goal` เพราะค่าเริ่มต้นของ CountVectorizer ไม่นับคำหนึ่งตัวอักษรอย่าง `a`
+
+**sport — 9 ข้อความ**
+
+| text | token_count | team | goal |
+| --- | --- | --- | --- |
+| fans watch the final game | 5 | 0 | 0 |
+| coach trains the team | 4 | 1 | 0 |
+| goal keeper saves the team | 5 | 1 | 1 |
+| training helps the team win | 5 | 1 | 0 |
+| coach plans match tactics | 4 | 0 | 0 |
+| player scores a goal | 3 | 0 | 1 |
+| team wins the football match | 5 | 1 | 0 |
+| the club signs a player | 4 | 0 | 0 |
+| the match ends in a draw | 5 | 0 | 0 |
+| **รวม** | **40** | **4** | **2** |
+
+**tech — 9 ข้อความ**
+
+| text | token_count | team | goal |
+| --- | --- | --- | --- |
+| database stores application data | 4 | 0 | 0 |
+| python code runs on computer | 5 | 0 | 0 |
+| python library update released | 4 | 0 | 0 |
+| new computer chip released | 4 | 0 | 0 |
+| chip powers the new computer | 5 | 0 | 0 |
+| software developer writes tests | 4 | 0 | 0 |
+| database server runs software | 4 | 0 | 0 |
+| the code has a bug | 4 | 0 | 0 |
+| software update fixes a bug | 4 | 0 | 0 |
+| **รวม** | **38** | **0** | **0** |
+
+**ตารางสรุปแยกคลาส**
+
+| label | messages | token_count | team | goal | prior |
+| --- | --- | --- | --- | --- | --- |
+| sport | 9 | 40 | 4 | 2 | 0.5 |
+| tech | 9 | 38 | 0 | 0 | 0.5 |
+
+อ่านแถว sport: มี **9 ข้อความ** และคำปรากฏรวม **40 ครั้ง** โดยเป็น team **4 ครั้ง** และ goal **2 ครั้ง** ส่วน tech มีคำรวม **38 ครั้ง** และไม่พบทั้ง team กับ goal
+
+**Prior มาจากจำนวนข้อความ:** ทั้งสองคลาสมีคลาสละ `9 / (9 + 9) = 9/18 = 0.5` ส่วนการหาความน่าจะเป็นของคำใช้จำนวนครั้งของคำในคอลัมน์ `token_count`, `team` และ `goal`
+
+### Cell 4 — แสดง vocabulary และจำนวนคำไม่ซ้ำ
+
+```python
+print("Total counted tokens:", train_counts["token_count"].sum())
+print("Vocabulary size:", len(words))
+for start in range(0, len(words), 7):
+    print(", ".join(words[start:start + 7]))
+```
+
+**อ่านโค้ด**
+
+- ผลรวม `token_count` นับทุกครั้งที่คำปรากฏใน train ทั้งสองคลาส ส่วน `len(words)` นับคำไม่ซ้ำใน vocabulary ที่เรียนจาก train
+- ลูปแสดงรายการคำครั้งละ 7 คำ เพื่อให้อ่านรายการทั้งหมดได้ง่าย
+
+**ผลที่ได้:** คำปรากฏรวม `40 + 38 = 78` ครั้ง แต่เมื่อตัดคำซ้ำเหลือ **49 คำ** ตามรายการนี้:
+
+```text
+application, bug, chip, club, coach, code, computer
+data, database, developer, draw, ends, fans, final
+fixes, football, game, goal, has, helps, in
+keeper, library, match, new, on, plans, player
+powers, python, released, runs, saves, scores, server
+signs, software, stores, tactics, team, tests, the
+training, trains, update, watch, win, wins, writes
+```
+
+**เลข 49 ในสูตรมาจาก vocabulary นี้** ซึ่งรวมคำไม่ซ้ำจากทั้ง sport และ tech เมื่อใช้ `alpha=1` จึงเพิ่มจำนวนสมมติคำละ 1 ครบ 49 คำภายในแต่ละคลาส
+
+### จากตารางนับคำไปสู่ Smoothing
+
 ![เปรียบเทียบ goal ใน tech: ไม่เพิ่ม alpha ได้ 0/38 = 0 ทำให้คะแนน tech เป็นศูนย์เมื่อข้อความมี goal; เพิ่ม alpha เท่ากับ 1 ได้ (0+1)/(38+49) = 1/87 ประมาณ 0.0115 ตัวส่วนเพิ่ม 49 เพราะ vocabulary มี 49 คำและเพิ่มคำละ 1](../../assets/figures/07-naive-bayes-text-smoothing.png)
 
 [เปิดภาพ SVG](../../assets/figures/07-naive-bayes-text-smoothing.svg)
+
+**ที่มาของ `(0+1)/(38+49)`:** แถว `tech` ในตารางสรุปให้ `goal=0` และ `token_count=38` ส่วน vocabulary มี 49 คำ และเลข 1 คือ `alpha` ที่กำหนดตอนสร้างโมเดล
 
 **คำที่ไม่มีใน vocabulary เลย** เช่น `vegetables` จะถูก CountVectorizer ข้าม ส่วน smoothing ใช้กับคำที่มีอยู่ใน vocabulary
 
@@ -194,76 +373,7 @@ Pipeline เรียงขั้นให้: **CountVectorizer สร้าง
 
 </details>
 
-## ลงมือทำ
-
-สร้าง Notebook ใหม่แล้วรัน **Cell 1–3 ตามลำดับ** หรือเปิด [Notebook ของบทนี้](lesson.ipynb)
-
-<!-- CODE:CELLS -->
-
-<!-- CODE:START -->
-### Cell 1 — เตรียมข้อความและประเภทที่กำกับไว้
-
-```python
-import numpy as np
-import pandas as pd
-from IPython.display import display
-from sklearn.feature_extraction.text import CountVectorizer
-from sklearn.metrics import classification_report
-from sklearn.model_selection import train_test_split
-from sklearn.naive_bayes import MultinomialNB
-from sklearn.pipeline import make_pipeline
-
-texts = [
-    "team wins the football match", "player scores a goal", "coach trains the team",
-    "football fans celebrate victory", "the match ends in a draw", "goal keeper saves the team",
-    "basketball team wins tonight", "player joins the football club", "coach plans match tactics",
-    "fans watch the final game", "the club signs a player", "training helps the team win",
-    "software update fixes a bug", "python code runs on computer", "developer tests the software",
-    "new computer chip released", "database stores application data", "the code has a bug",
-    "software developer writes tests", "computer program processes data", "python library update released",
-    "database server runs software", "chip powers the new computer", "developer fixes python code",
-]
-y = np.array(["sport"] * 12 + ["tech"] * 12)
-X_train, X_test, y_train, y_test = train_test_split(
-    texts, y, test_size=0.25, stratify=y, random_state=42
-)
-print("Train:", len(X_train), "| Test:", len(X_test))
-```
-
-**อ่านโค้ด**
-
-- `texts` เก็บข้อความดิบ 24 ข้อความ: 12 ข้อความแรกเป็นกีฬา และ 12 ข้อความหลังเป็นเทคโนโลยี ส่วน `y` เก็บประเภทข้อความ (class labels) เป็น sport และ tech ให้ตรงกับลำดับข้อความ
-- `train_test_split` แบ่งข้อความกับประเภทที่กำกับไว้เป็นคู่ ๆ ก่อนสร้างรายการคำ (vocabulary): train 18 ข้อความ (คลาสละ 9) และ test 6 ข้อความ (คลาสละ 3) โดย `stratify=y` รักษาสัดส่วนคลาส
-- `random_state=42` ทำให้รันซ้ำแล้วได้ชุดแบ่งเดิม ส่วน `display` ใช้แสดงตารางใน Jupyter แม้มีคำสั่งอื่นตามท้าย cell
-
-**ผลที่ได้:** `Train: 18 | Test: 6`
-
-### Cell 2 — ฝึก Pipeline และประเมินกับ test
-
-```python
-model = make_pipeline(CountVectorizer(), MultinomialNB(alpha=1.0))
-model.fit(X_train, y_train)
-
-y_pred = model.predict(X_test)
-display(pd.DataFrame({"text": X_test, "actual": y_test, "prediction": y_pred}))
-print(classification_report(y_test, y_pred, zero_division=0))
-
-vectorizer = model.named_steps["countvectorizer"]
-words = vectorizer.get_feature_names_out()
-print("Vocabulary size:", len(words))
-```
-
-**อ่านโค้ด**
-
-- `make_pipeline(...)` ต่อ **CountVectorizer → MultinomialNB** ส่วน `alpha=1.0` เพิ่มจำนวนสมมติ 1 ให้ทุกคำในแต่ละคลาสตามวิธี smoothing
-- `model.fit(X_train, y_train)` เริ่มจากให้ CountVectorizer **fit สร้าง vocabulary แล้ว transform ข้อความเป็นตารางจำนวนคำ** จากนั้นจึงให้ Naive Bayes **fit ตารางจำนวนคำคู่กับ labels ใน y_train** เพื่อเรียน prior และความน่าจะเป็นของคำในแต่ละคลาส
-- `model.predict(X_test)` ให้ตัวนับคำใช้ vocabulary เดิมแปลงข้อความ test ก่อนให้โมเดลเลือก sport หรือ tech โดยไม่ fit ใหม่
-- ตาราง `actual` กับ `prediction` ให้ดูว่าแต่ละข้อความทายตรงกับคลาสจริงหรือไม่ ก่อนอ่าน `classification_report` ตามบท 04; `zero_division=0` ให้ค่า 0 ในกรณีที่ตัวหารของ metric เป็นศูนย์
-- `model.named_steps["countvectorizer"]` เข้าถึงตัวนับคำที่ fit แล้ว ส่วน `get_feature_names_out()` คืนชื่อคำตามลำดับคอลัมน์ เก็บใน `words` เพื่อใช้กำกับตารางใน Cell 3
-
-**ผลที่ได้:** `Vocabulary size: 49` หมายถึงคำไม่ซ้ำ 49 คำ จึงมี 49 features ส่วน test ทายถูกทั้ง 6 ข้อความ ได้ accuracy `6/6 = 1.00` คะแนนนี้มาจากข้อความที่แต่งขึ้นเพียง 6 ข้อความ จึงยังไม่ยืนยันผลกับข้อความจริงที่หลากหลาย
-
-### Cell 3 — ดูจำนวนคำและทำนายข้อความใหม่
+### Cell 5 — ดูจำนวนคำและทำนายข้อความใหม่
 
 ```python
 examples = ["team team goal", "developer fixes software", "recipe with vegetables"]
@@ -303,7 +413,7 @@ display(pd.concat([results, probabilities], axis=1).round(3))
 
 ## อ่านผล
 
-**อ่านตารางจำนวนคำจาก Cell 3:** vocabulary มี 49 คำ แต่ในข้อความใหม่สามข้อความพบเพียง 5 คำ จึงแสดงเฉพาะ 5 คอลัมน์ ส่วนอีก 44 คอลัมน์เป็นศูนย์
+**อ่านตารางจำนวนคำจาก Cell 5:** vocabulary มี 49 คำ แต่ในข้อความใหม่สามข้อความพบเพียง 5 คำ จึงแสดงเฉพาะ 5 คอลัมน์ ส่วนอีก 44 คอลัมน์เป็นศูนย์
 
 ![ข้อความใหม่ 3 ข้อความผ่าน vocabulary เดิม 49 คำ ตารางแสดงเฉพาะ 5 คำที่พบ โดย team มีจำนวน 2 และข้อความอาหารเป็นศูนย์ทุกคอลัมน์](../../assets/figures/07-naive-bayes-text-counts.png)
 
@@ -343,7 +453,7 @@ display(pd.concat([results, probabilities], axis=1).round(3))
 
 ## แบบฝึกท้ายบท
 
-1. เปลี่ยนข้อความแรกใน `examples` จาก `team team goal` เป็น `goal team team` แล้วรัน Cell 3 ใหม่ โดยไม่ฝึกโมเดลซ้ำ จำนวนคำและผลทำนายเปลี่ยนหรือไม่?
+1. เปลี่ยนข้อความแรกใน `examples` จาก `team team goal` เป็น `goal team team` แล้วรัน Cell 5 ใหม่ โดยไม่ฝึกโมเดลซ้ำ จำนวนคำและผลทำนายเปลี่ยนหรือไม่?
 2. ข้อความ `recipe with vegetables` ได้คำทำนาย sport ทั้งที่ `known_tokens=0` เราควรสรุปว่าโมเดลพบคำเกี่ยวกับกีฬาหรือไม่ เพราะอะไร?
 
 <details>
