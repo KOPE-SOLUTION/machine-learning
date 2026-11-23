@@ -48,7 +48,7 @@ python scripts/verify_mojo.py
 
 ## อ่านผลอย่างถูกต้อง
 
-การเรียก scikit-learn จาก Mojo ยังเรียก Python library ผ่าน CPython ไม่ได้แปลง training kernel เป็น Mojo อัตโนมัติ การใช้ typed loop ก็ไม่ได้รับประกันว่าเร็วกว่าการคำนวณ NumPy ที่ใช้ native kernels อยู่แล้ว
+การเรียก scikit-learn จาก Mojo ยังเรียก Python library ผ่าน CPython ไม่ได้แปลงโค้ดฝึกโมเดลของ scikit-learn เป็นภาษา Mojo อัตโนมัติ การใช้ typed loop ก็ไม่ได้รับประกันว่าเร็วกว่าการคำนวณ NumPy ที่ใช้ native kernels อยู่แล้ว
 
 หากทดลอง benchmark ให้ตรวจคำตอบเท่ากันก่อน ระบุ dtype/ขนาดข้อมูล แยก compile/startup ออกจากเวลาคำนวณ warm up รันซ้ำหลายครั้ง รายงาน median และรวมต้นทุนข้ามภาษาเมื่อสิ่งนั้นเกิดในการใช้งานจริง หลักสูตรนี้ยังไม่มีผล benchmark ที่ยืนยันว่า Mojo เร็วกว่า
 

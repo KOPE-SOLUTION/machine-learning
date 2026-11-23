@@ -2,7 +2,7 @@
 
 [กลับสารบัญ](../../README.md) · [Notebook](lesson.ipynb) · [Python](lesson.py)
 
-บทนี้รับข้อมูลตัวเลขหนึ่งคอลัมน์ แล้วให้ **Gaussian Mixture Model (GMM)** และ **Kernel Density Estimation (KDE)** ประมาณว่าบริเวณใดมีข้อมูลหนาแน่น ผลหลักเป็นค่าความหนาแน่นสำหรับวาดเส้น ไม่ใช่คลาสที่ทำนายหรือเปอร์เซ็นต์ทายถูก
+บทนี้รับข้อมูลตัวเลขหนึ่งคอลัมน์ แล้วให้ **Gaussian Mixture Model (GMM)** และ **Kernel Density Estimation (KDE)** ประมาณว่าบริเวณใดมีข้อมูลหนาแน่น ผลหลักเป็นค่าความหนาแน่น ณ ตำแหน่งต่าง ๆ ที่นำไปวาดกราฟ ไม่ใช่คลาสที่ทำนายหรือเปอร์เซ็นต์ทายถูก
 
 **ใช้สิ่งที่เรียนแล้ว:** clustering จากบท 13, CV จากบท 08–10 และ histogram แบบ density จาก Matplotlib
 
@@ -10,7 +10,7 @@
 
 **GMM — Gaussian Mixture Model** และ **KDE — Kernel Density Estimation** เรียนรู้การกระจายจากข้อมูลนำเข้า `X` เพียงอย่างเดียว โดยไม่ต้องมีค่าหรือประเภทที่ต้องการทำนายกำกับไว้ จึงเป็นงานแบบ Unsupervised Learning
 
-**GMM:** ใช้เส้นความหนาแน่นรูประฆังหลายเส้นมารวมกัน แต่ละเส้นเรียกว่า **Gaussian component หรือองค์ประกอบ Gaussian** โมเดลเรียนจุดกึ่งกลาง ความกว้าง และสัดส่วนของแต่ละองค์ประกอบจากข้อมูล
+**GMM:** ใช้เส้นความหนาแน่นรูประฆังหลายเส้นมารวมกัน แต่ละส่วนเรียกว่า **Gaussian component หรือองค์ประกอบ Gaussian** โมเดลเรียนค่าเฉลี่ยที่กำหนดจุดกลาง ความแปรปรวนที่กำหนดความกว้าง และน้ำหนักที่กำหนดสัดส่วนของแต่ละองค์ประกอบจากข้อมูล
 
 วิธีฝึกเรียกว่า **EM — Expectation-Maximization** ทำสลับกันสองขั้น: ประเมินว่าแต่ละจุดมีโอกาสมาจากองค์ประกอบใดเท่าไร แล้วใช้โอกาสเหล่านั้นเป็นน้ำหนักในการปรับจุดกึ่งกลาง ความกว้าง และสัดส่วนขององค์ประกอบ ทำซ้ำจนค่าเฉลี่ย log density บน train เปลี่ยนระหว่างรอบน้อยกว่าค่า `tol` หรือครบจำนวนรอบสูงสุด `max_iter`
 
@@ -48,7 +48,7 @@
 
 [เปิดภาพ SVG](../../assets/figures/14-mixtures-and-density-area.svg)
 
-**Log density:** นำค่าความหนาแน่นมาคำนวณลอการิทึมธรรมชาติ เช่น density = 0.1 จะได้ log density ประมาณ −2.30 แต่ density = 0.5 จะได้ประมาณ −0.69 ตัวเลขจึงติดลบได้ โดยไม่ใช่ความผิดพลาดติดลบ
+**Log density:** นำค่าความหนาแน่นมาคำนวณลอการิทึมธรรมชาติ หรือ `ln(density)` ซึ่งย้อนกลับเป็น density ได้ด้วย `exp` เช่น density = 0.1 จะได้ log density ประมาณ −2.30 แต่ density = 0.5 จะได้ประมาณ −0.69 ตัวเลขจึงติดลบได้ โดยไม่ใช่ความผิดพลาดติดลบ
 
 เมื่อเปรียบเทียบโมเดลบน test ชุดเดียวกัน ค่า log density เฉลี่ยที่สูงกว่าหมายถึงโมเดลให้ความหนาแน่นกับจุดทดสอบเหล่านั้นมากกว่าโดยรวม เช่น −0.69 สูงกว่า −2.30 ต้องใช้ข้อมูล หน่วย และจำนวนมิติเดียวกันในการเทียบ
 
@@ -83,6 +83,13 @@ X = np.concatenate([rng.normal(-2, 0.6, 250), rng.normal(2, 1.0, 350)]).reshape(
 X_train, X_test = train_test_split(X, test_size=0.25, random_state=42)
 ```
 
+<details>
+<summary>ดูผลลัพธ์ Cell 1</summary>
+
+รันสำเร็จแล้วจะยังไม่มีข้อความหรือกราฟ ขั้นนี้เตรียมข้อมูล 600 แถว แบ่งเป็น train 450 แถวและ test 150 แถว
+
+</details>
+
 **อ่านโค้ด**
 
 - `rng.normal(-2, 0.6, 250)` และ `rng.normal(2, 1.0, 350)` สุ่มข้อมูลสองส่วนที่มีค่าเฉลี่ยและส่วนเบี่ยงเบนมาตรฐานต่างกัน
@@ -98,6 +105,21 @@ for model in mixtures:
     print(f"GMM k={model.n_components}: train BIC={model.bic(X_train):.1f}")
 print("Responsibilities for x=0:", gmm.predict_proba([[0.0]]).round(3))
 ```
+
+<details>
+<summary>ดูผลลัพธ์ Cell 2</summary>
+
+```text
+GMM k=1: train BIC=1968.2
+GMM k=2: train BIC=1675.4
+GMM k=3: train BIC=1691.3
+GMM k=4: train BIC=1707.9
+Responsibilities for x=0: [[0.988 0.012]]
+```
+
+GMM สององค์ประกอบได้ BIC ต่ำสุด ส่วน [0.988, 0.012] เป็นโอกาสของ x=0 ที่จะอยู่ในองค์ประกอบลำดับ 0 และ 1 ไม่ใช่ความสูงของกราฟ density
+
+</details>
 
 **อ่านโค้ด**
 
@@ -119,6 +141,19 @@ print("KDE bandwidth:", kde.bandwidth)
 print(f"GMM test mean log density: {gmm.score_samples(X_test).mean():.3f}")
 print(f"KDE test mean log density: {kde.score_samples(X_test).mean():.3f}")
 ```
+
+<details>
+<summary>ดูผลลัพธ์ Cell 3</summary>
+
+```text
+KDE bandwidth: 0.3
+GMM test mean log density: -1.868
+KDE test mean log density: -1.869
+```
+
+เลือก bandwidth 0.3 จาก CV แล้วประเมิน test; −1.868 สูงกว่า −1.869 เล็กน้อย จึงให้ test mean log density ใกล้เคียงกันในการทดลองนี้
+
+</details>
 
 **อ่านโค้ด**
 
@@ -148,9 +183,18 @@ plt.show()
 plt.close(fig)
 ```
 
+<details>
+<summary>ดูผลลัพธ์ Cell 4</summary>
+
+![เส้น density จาก GMM และ KDE เทียบกับ histogram ของ train](../../assets/figures/14-mixtures-and-density-density.png)
+
+แท่งแสดงการกระจายของ train ส่วนเส้นเป็น density ที่แต่ละโมเดลคำนวณ ความสูงของเส้นไม่ใช่เปอร์เซ็นต์
+
+</details>
+
 **อ่านโค้ด**
 
-- `grid` เป็นตำแหน่ง x ที่ต้องการคำนวณความหนาแน่น จัดเป็นสองมิติตามรูปข้อมูลที่โมเดลรับ
+- `grid` เก็บตำแหน่ง x จำนวน 400 ค่าจาก −5 ถึง 6 เพื่อวาดเส้นต่อเนื่อง คำสั่ง `reshape(-1, 1)` จัดเป็น 400 แถว หนึ่งคอลัมน์ตามรูปข้อมูลที่โมเดลรับ
 - `score_samples(grid)` ใช้ GMM หรือ KDE ที่ฝึกจาก train แล้วคำนวณ log density ณ ตำแหน่ง x แต่ละค่าของ `grid` จากนั้น `np.exp(...)` แปลง log density กลับเป็น density สำหรับความสูงของเส้นกราฟ
 - `hist(..., density=True)` ปรับ histogram ให้พื้นที่รวมเป็น 1 เพื่อเทียบกับเส้น density ได้
 - histogram แสดงข้อมูล train ส่วนการประเมินกับ test อ่านจาก `GMM test mean log density` และ `KDE test mean log density` ใน Cell 3
@@ -162,8 +206,6 @@ plt.close(fig)
 - **KDE:** ดู bandwidth ที่เลือก
 - **กราฟ:** เทียบเส้น GMM และ KDE กับ histogram ของ train
 - **ผล test:** รายงาน log density เฉลี่ยต่อหนึ่งตัวอย่าง
-
-![ผลการทดลอง 14-mixtures-and-density](../../assets/figures/14-mixtures-and-density-density.png)
 
 ## แบบฝึกท้ายบท
 

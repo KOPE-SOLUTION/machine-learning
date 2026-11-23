@@ -19,13 +19,25 @@ print(f"PCA neighborhood trustworthiness: {trustworthiness(X, Z_pca, n_neighbors
 print(f"t-SNE neighborhood trustworthiness: {trustworthiness(X, Z_tsne, n_neighbors=10):.3f}")
 
 # %% [markdown]
+# <details>
+# <summary>ดูผลลัพธ์ Cell 1</summary>
+#
+# ```text
+# PCA neighborhood trustworthiness: 0.829
+# t-SNE neighborhood trustworthiness: 0.986
+# ```
+#
+# t-SNE ได้ trustworthiness สูงกว่า PCA ในการทดลองนี้ หมายถึงจุดใกล้กันในกราฟสอดคล้องกับเพื่อนบ้านในข้อมูลเดิมมากกว่า ไม่ใช่ accuracy ของการทายเลข
+#
+# </details>
+#
 # **อ่านโค้ด**
 #
 # - `train_test_split(..., train_size=600, stratify=y_all)` ใช้เลือกตัวอย่าง 600 ภาพโดยรักษาสัดส่วนตัวเลข ส่วน `_` รับค่าที่ไม่ใช้ต่อ ครั้งนี้ไม่ได้แบ่งเพื่อวัด test accuracy
 # - `X / 16.0` ปรับค่าพิกเซลจากช่วง 0–16 เป็น 0–1 โดยใช้ขอบเขตที่ทราบจากนิยามชุดข้อมูล
 # - `PCA(...).fit_transform(X)` เรียนค่าเฉลี่ยและแกนจาก features ใน X แล้วคำนวณพิกัดของภาพบนสองแกนที่เลือก ส่วน `TSNE(...).fit_transform(X)` จัดตำแหน่งภาพทั้ง 600 ภาพในพื้นที่สองมิติจากความคล้ายของ features ทั้งสองคำสั่งคืนสองคอลัมน์ตาม `n_components=2` และไม่มี y เป็นข้อมูลฝึก
 # - `perplexity=30` กำหนดระดับการพิจารณาเพื่อนบ้านใกล้ ๆ ไม่ใช่จำนวนกลุ่ม ส่วน `init="pca"` ใช้พิกัดจาก PCA เป็นจุดเริ่ม และ `max_iter=750` ให้ปรับตำแหน่งได้สูงสุด 750 รอบ
-# - `learning_rate="auto"` ให้ t-SNE เลือกขนาดก้าวตามวิธีของไลบรารี ส่วน `random_state=42` ช่วยให้ทำซ้ำได้
+# - `learning_rate="auto"` ให้ t-SNE คำนวณขนาดที่ใช้ปรับตำแหน่งจุดจากจำนวนตัวอย่างและค่าเริ่มต้นของไลบรารี ส่วน `random_state=42` ช่วยให้ทำซ้ำได้
 # - `trustworthiness(X, Z, n_neighbors=10)` เทียบเพื่อนบ้านสิบตัวในข้อมูลเดิมกับพิกัดใหม่ โดยไม่ได้ใช้ y คำนวณ
 #
 # **รูปของผลลัพธ์:** `Z_pca` และ `Z_tsne` มีขนาด `(600, 2)` คือพิกัดสองค่าของ 600 ภาพ ค่า trustworthiness ประเมินความสอดคล้องของเพื่อนบ้าน
@@ -43,6 +55,15 @@ plt.show()
 plt.close(fig)
 
 # %% [markdown]
+# <details>
+# <summary>ดูผลลัพธ์ Cell 2</summary>
+#
+# ![ภาพตัวเลข 600 ภาพที่แสดงเป็นจุดในพิกัด PCA และ t-SNE](../../assets/figures/12-manifold-learning-embeddings.png)
+#
+# แต่ละจุดแทนภาพตัวเลขหนึ่งภาพ สีบอกเลขจริงที่กำกับไว้ ส่วนตำแหน่งเกิดจากวิธีลดมิติ ไม่ได้ใช้สีเลือกตำแหน่ง
+#
+# </details>
+#
 # **อ่านโค้ด**
 #
 # - `zip(axes, (Z_pca, Z_tsne), ("PCA", "t-SNE"))` จับคู่แต่ละช่องกราฟกับพิกัดและชื่อวิธีที่ตรงกัน

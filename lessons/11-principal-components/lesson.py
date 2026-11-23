@@ -25,12 +25,25 @@ print("Retained variance:", round(pca.explained_variance_ratio_.sum(), 3))
 print(f"Test accuracy: {accuracy_score(y_test, model.predict(X_test)):.3f}")
 
 # %% [markdown]
+# <details>
+# <summary>ดูผลลัพธ์ Cell 1</summary>
+#
+# ```text
+# Original features: 64 Retained components: 31
+# Retained variance: 0.903
+# Test accuracy: 0.949
+# ```
+#
+# PCA ลดจาก 64 เหลือ 31 คอลัมน์และเก็บ variance ประมาณ 90.3% ส่วน 94.9% เป็นสัดส่วนภาพ test ที่ Logistic Regression ทายเลขถูก
+#
+# </details>
+#
 # **อ่านโค้ด**
 #
 # - `load_digits(return_X_y=True)` คืน `X` ซึ่งมีค่า pixel 64 ค่าต่อภาพ (features) และ `y` ซึ่งระบุว่าแต่ละภาพเป็นเลขใดตั้งแต่ 0–9 (class labels)
 # - `model.fit(X_train, y_train)` ให้ scaler เรียนค่าเฉลี่ยและส่วนเบี่ยงเบนมาตรฐาน ให้ PCA เรียนค่าเฉลี่ยและแกนจาก features ที่ปรับสเกลแล้ว จากนั้น Logistic Regression ใช้พิกัดหลัง PCA คู่กับเลขใน `y_train` ฝึกจำแนกภาพ ทั้ง scaler และ PCA ใช้เฉพาะ features ไม่ใช้เลขใน y เลือกแกน
 # - `PCA(n_components=0.9, svd_solver="full")` เพิ่มแกนตามลำดับจนสัดส่วนความแปรปรวนสะสมเกิน 90% ของข้อมูลฝึกที่ผ่าน scaler แล้ว ค่า 0.9 เป็นเกณฑ์สัดส่วน ไม่ใช่จำนวนแกน
-# - `model.named_steps["pca"]` ดึง PCA ที่ fit แล้วออกมาอ่านผล ส่วน `pca.n_components_` คือจำนวนแกนที่เลือกได้จริง
+# - `model.named_steps["pca"]` เข้าถึง PCA ที่ fit แล้วเพื่ออ่านผล ส่วน `pca.n_components_` คือจำนวนแกนที่เลือกได้จริง
 # - `explained_variance_ratio_` บอกว่าแต่ละแกนเก็บความแปรปรวนไว้เป็นสัดส่วนเท่าไร และ `.sum()` รวมสัดส่วนของทุกแกนที่เก็บไว้ ส่วน accuracy ต้องเทียบเลขที่ Pipeline ทายกับเลขที่กำกับภาพไว้
 # - `max_iter=2000` ตั้งเพดานรอบให้ตัวแก้ปัญหาของ Logistic Regression
 #
@@ -52,6 +65,15 @@ plt.show()
 plt.close(fig)
 
 # %% [markdown]
+# <details>
+# <summary>ดูผลลัพธ์ Cell 2</summary>
+#
+# ![พิกัดสองแกนแรกของ PCA และกราฟ variance สะสม](../../assets/figures/11-principal-components-pca.png)
+#
+# ซ้ายแสดงเพียง PC1 และ PC2 ของชุดฝึก ขวาแสดง variance สะสมครบ 31 components ที่ส่งให้ classifier
+#
+# </details>
+#
 # **อ่านโค้ด**
 #
 # - `model[:-1]` เลือกทุกขั้นก่อน classifier จึงเหลือ scaler กับ PCA

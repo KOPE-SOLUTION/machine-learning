@@ -23,6 +23,24 @@ print("ARI against hidden synthetic labels (after selection):", round(adjusted_r
 print("New point cluster ID:", model.predict(scale.transform([[0.0, 0.0]]))[0])
 
 # %% [markdown]
+# <details>
+# <summary>ดูผลลัพธ์ Cell 1</summary>
+#
+# ```text
+# k=2: inertia=302.4, silhouette=0.653
+# k=3: inertia=53.9, silhouette=0.782
+# k=4: inertia=46.4, silhouette=0.640
+# k=5: inertia=39.4, silhouette=0.478
+# k=6: inertia=32.4, silhouette=0.347
+# Selected k: 3
+# ARI against hidden synthetic labels (after selection): 1.0
+# New point cluster ID: 2
+# ```
+#
+# เลือก k=3 จาก silhouette สูงสุด แล้วจึงใช้ truth ตรวจ ARI ส่วน cluster ID 2 ของจุดใหม่เป็นรหัสกลุ่ม ไม่ใช่คลาสที่มีชื่อว่าเลข 2
+#
+# </details>
+#
 # **อ่านโค้ด**
 #
 # - `make_blobs(..., centers=3, ...)` สร้างจุดจำลองจากสามกลุ่ม เก็บพิกัดใน `X` และรหัสกลุ่มต้นกำเนิดใน `truth` ส่วน K-means รับเฉพาะพิกัดหลังปรับสเกล `Z` ตอน fit และค้นกลุ่มเอง เราใช้ `truth` ตรวจผลหลังเลือก k แล้ว
@@ -47,6 +65,15 @@ plt.show()
 plt.close(fig)
 
 # %% [markdown]
+# <details>
+# <summary>ดูผลลัพธ์ Cell 2</summary>
+#
+# ![จุดหลังปรับสเกลพร้อมกลุ่มและศูนย์กลางที่ K-means เลือก](../../assets/figures/13-kmeans-clustering-clusters.png)
+#
+# สีบอกกลุ่มที่ K-means กำหนด กากบาทดำคือศูนย์กลางกลุ่ม และทั้งสองแกนเป็นค่าหลัง StandardScaler
+#
+# </details>
+#
 # **อ่านโค้ด**
 #
 # - `c=model.labels_` ระบายสีจุดตามกลุ่มที่ K-means หาได้ ไม่ได้ใช้ `truth` ระบายสี

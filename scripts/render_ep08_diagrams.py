@@ -20,6 +20,52 @@ import render_learning_workflows as workflow
 ROOT = Path(__file__).resolve().parents[1]
 
 
+def moons_data():
+    fig, page = art.page(
+        "make_moons · จุดหลายจุดเรียงเป็นแนวโค้งสองกลุ่ม",
+        "หนึ่งจุดแทนข้อมูลหนึ่งแถว · พิกัดแนวนอนและแนวตั้งคือ features สองคอลัมน์",
+    )
+    clean_X, clean_y = make_moons(n_samples=40, noise=0, shuffle=False)
+    X, y = make_moons(n_samples=400, noise=.25, random_state=42)
+    X_train, _, y_train, _ = train_test_split(
+        X, y, test_size=.25, stratify=y, random_state=42
+    )
+    assert X_train.shape == (300, 2)
+    assert np.bincount(y_train).tolist() == [150, 150]
+    for left, data, labels, title in [
+        (.07, clean_X, clean_y, "เริ่มจากจุดที่เรียงเป็นโค้ง · noise = 0"),
+        (.55, X_train, y_train, "ชุดฝึก 300 จุดในบท · noise = 0.25"),
+    ]:
+        ax = fig.add_axes([left, .28, .37, .48])
+        for cls, color, marker in [(0, art.BLUE, "o"), (1, art.ORANGE, "s")]:
+            points = data[labels == cls]
+            ax.scatter(*points.T, color=color, marker=marker,
+                       s=65 if left == .07 else 20, alpha=.9,
+                       edgecolors="white", linewidths=.4,
+                       label=f"Class {cls}", zorder=3)
+        art.plot_style(ax, xlabel="Feature 1", ylabel="Feature 2")
+        ax.set(xlim=(-1.8, 2.8), ylim=(-1.4, 1.9), title=title)
+        if left == .07:
+            for caption, point, label_pos, color in [
+                ("โค้งด้านบน: คลาส 0", (0, 1), (-1.55, 1.55), art.BLUE),
+                ("โค้งด้านล่าง: คลาส 1", (1, -.5), (.75, -1.05), art.ORANGE),
+                ("1 จุด = 1 แถว\nX = (-1, 0), y = 0", (-1, 0), (-1.65, -.95), art.NAVY),
+            ]:
+                ax.annotate(caption, xy=point, xytext=label_pos,
+                            fontsize=15, color=color,
+                            bbox={"facecolor": "white", "edgecolor": "none", "pad": 3},
+                            arrowprops={"arrowstyle": "-|>", "color": color,
+                                        "lw": 1.7, "shrinkB": 7}, zorder=4)
+        else:
+            ax.legend(loc="upper right", fontsize=13)
+    art.label(page, .05, .175,
+              "วงกลมน้ำเงิน = คลาส 0 · สี่เหลี่ยมส้ม = คลาส 1 · สีและรูปจุดบอก label จริง", 18)
+    art.footer(page,
+        "เมื่อเพิ่ม noise จุดจะกระจายออกจากแนวโค้งและอาจปะปนกัน",
+        "โจทย์ของ SVM: ใช้พิกัดสองค่าทำนายว่าจุดใหม่เป็นคลาส 0 หรือ 1")
+    art.save(fig, page, "08-support-vector-machines-moons-data")
+
+
 def margin():
     fig, page = art.page(
         "SVM · แนวแบ่งอยู่ตรงกลางแถบ Margin",
@@ -278,6 +324,7 @@ def main():
     art.configure()
     art.OUT = args.output_dir
     workflow.OUT = args.output_dir
+    moons_data()
     margin()
     c_effect()
     gamma_effect()

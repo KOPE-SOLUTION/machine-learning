@@ -17,7 +17,7 @@
 
 ## โมเดลที่ใช้ทดลองเรื่องการแบ่งข้อมูล
 
-**กรณีคนเดิมหลายแถว:** ใช้ **KNN** จาก [บท 03](../03-first-classifier/README.md) ผ่าน `KNeighborsClassifier(n_neighbors=3)` เลือกสามตัวอย่างที่ใกล้ที่สุดแล้วโหวตคลาส 0/1 ถ้าคนเดิมหลุดไปทั้ง train/test ตัวอย่างใกล้ที่สุดอาจเป็นข้อมูลของคนเดิม คะแนนจึงอาจสูงโดยไม่ได้แสดงความสามารถกับคนใหม่
+**กรณีคนเดิมหลายแถว:** ใช้ **KNN** จาก [บท 03](../03-first-classifier/README.md) ผ่าน `KNeighborsClassifier(n_neighbors=3)` เลือกสามตัวอย่างที่ใกล้ที่สุดแล้วโหวตคลาส 0/1 ถ้าแถวของคนเดียวกันอยู่ทั้ง train และ test ตัวอย่างใกล้ที่สุดอาจเป็นข้อมูลของคนเดิม คะแนนจึงอาจสูงโดยไม่ได้แสดงความสามารถกับคนใหม่
 
 **กรณีข้อมูลเวลา:** ใช้ **Linear Regression** จาก [บท 05](../05-linear-regression/README.md) รับค่าก่อนหน้าหนึ่งค่าเป็น X และเรียนสมการ `ค่าถัดไป ≈ b + w × ค่าก่อนหน้า` จากช่วงอดีต แล้วเทียบกับ **persistence baseline** ที่ทายค่าถัดไปให้เท่าค่าล่าสุด เช่น ล่าสุดเป็น 12 ก็ทาย 12 โดยไม่เรียน w/b
 
@@ -39,15 +39,15 @@
 
 ## ข้อมูลเวลา: ฝึกอดีต ตรวจช่วงถัดไป
 
-**TimeSeriesSplit** ขยายช่วงฝึกจากอดีต แล้วเลื่อนไปตรวจช่วงถัดไป ส่วน **lag** คือค่าจากเวลาก่อนหน้าที่นำมาใช้ทำนาย:
+**TimeSeriesSplit** แบ่งหลายรอบตามลำดับเวลา แต่ละรอบเพิ่มข้อมูลอดีตในชุดฝึก และใช้ช่วงเวลาหลังชุดฝึกเป็น validation ส่วน **lag** คือค่าจากเวลาก่อนหน้าที่นำมาใช้ทำนาย:
 
 ![TimeSeriesSplit สี่รอบใช้ train เพิ่มจาก 38 เป็น 73 108 และ 143 แถว เว้น gap หนึ่งแถวและตรวจรอบละ 35 แถว ตัวอย่าง lag 10 ทาย target 12 และทำนายทีละก้าวเมื่อรู้ค่าจริงล่าสุด](../../assets/figures/17-time-and-groups-time-split.png)
 
 [เปิดภาพ SVG](../../assets/figures/17-time-and-groups-time-split.svg)
 
-**Gap** คือช่วงที่เว้นระหว่างชุดฝึกกับช่วงตรวจสอบ ขนาดที่เหมาะขึ้นอยู่กับช่วงเวลาที่ข้อมูลครอบคลุมและเวลาที่ทราบค่าจริง
+**Gap** คือจำนวนแถวที่เว้นระหว่างแถวฝึกสุดท้ายกับแถว validation แรก เช่น `gap=1` เว้นหนึ่งแถวโดยไม่ใช้ฝึกหรือวัดผลในรอบนั้น ไม่ได้หมายถึงหนึ่งวันเสมอไป เพราะขึ้นอยู่กับว่าแต่ละแถวแทนเวลาเท่าไร
 
-**One-step-ahead** ใช้ค่าจริงล่าสุดทำนายจุดถัดไปหนึ่งจุด แล้วรอค่าจริงก่อนทำนายครั้งต่อไป ตามลำดับในภาพ
+**One-step-ahead** คือทำนายล่วงหน้าทีละช่วงเวลา เช่น ใช้ค่าจริง ณ เวลา t ทำนายค่าที่ t+1 จากนั้นรอค่าจริงที่ t+1 ก่อนใช้ทำนาย t+2
 
 หากทำนายหลายก้าวจากวันเริ่มเดียว จะยังไม่รู้ค่าจริงระหว่างทาง จึงนำค่าจริงเหล่านั้นมาใช้แบบโค้ดนี้ไม่ได้
 
@@ -92,6 +92,21 @@ print("Held-out user groups:", len(np.unique(groups[test_idx])))
 print(f"New-user accuracy (random user labels): {model.score(X[test_idx], y[test_idx]):.3f}")
 ```
 
+<details>
+<summary>ดูผลลัพธ์ Cell 1</summary>
+
+```text
+Random row split - shared users: 41
+Random row-split accuracy: 1.000
+Group split - shared users: 0
+Held-out user groups: 12
+New-user accuracy (random user labels): 0.383
+```
+
+สุ่มแถวแล้วมีคนซ้ำระหว่าง train/test 41 คน แม้ accuracy เป็น 1.000 ก็ยังไม่ได้วัดการทายคนใหม่ เมื่อกันคนออกทั้งกลุ่ม คนซ้ำเป็น 0 และ accuracy เหลือ 0.383
+
+</details>
+
 **อ่านโค้ด**
 
 - `np.repeat(np.arange(60), 5)` สร้างรหัสคน 0–59 โดยแต่ละคนมีห้าแถว รวมเป็น 300 แถว
@@ -121,6 +136,20 @@ for fold, (train_idx, valid_idx) in enumerate(TimeSeriesSplit(n_splits=4, gap=1)
           f"last-value MAE={mean_absolute_error(target[valid_idx], persistence):.3f}")
 ```
 
+<details>
+<summary>ดูผลลัพธ์ Cell 2</summary>
+
+```text
+Fold 1: train ends=37, validation starts=39, model MAE=0.288, last-value MAE=0.241
+Fold 2: train ends=72, validation starts=74, model MAE=0.232, last-value MAE=0.236
+Fold 3: train ends=107, validation starts=109, model MAE=0.253, last-value MAE=0.259
+Fold 4: train ends=142, validation starts=144, model MAE=0.241, last-value MAE=0.256
+```
+
+Fold 1 ใช้แถว 0–37 ฝึก เว้นแถว 38 แล้วเริ่ม validation ที่แถว 39 ส่วน MAE เทียบ Linear Regression กับการทายเท่าค่าล่าสุดบนช่วงเวลาเดียวกัน
+
+</details>
+
 **อ่านโค้ด**
 
 - `series[:-1].reshape(-1, 1)` เก็บค่าตั้งแต่ตัวแรกถึงก่อนตัวสุดท้ายไว้ใน `lag` เป็นข้อมูลนำเข้าหนึ่งคอลัมน์ (feature) ส่วน `series[1:]` เก็บค่าตั้งแต่ตัวที่สองถึงตัวสุดท้ายไว้ใน `target` เป็นค่าถัดไปที่ต้องการทำนาย
@@ -132,7 +161,7 @@ for fold, (train_idx, valid_idx) in enumerate(TimeSeriesSplit(n_splits=4, gap=1)
 
 การใช้ค่าจริงก่อนหน้าของทุกจุดเหมาะกับ one-step-ahead ตามโจทย์นี้ ไม่ใช่การทายหลายก้าวโดยยังไม่เห็นค่าจริงระหว่างทาง
 
-**การตั้งค่าใน cell นี้:** `gap=1` เว้นหนึ่งแถวระหว่าง train กับ validation ส่วน `Fold` ที่พิมพ์ระบุรอบประเมิน และ MAE ของโมเดลกับ last-value baseline เทียบกับค่าจริงของช่วง validation เดียวกัน
+**การตั้งค่าใน cell นี้:** `gap=1` เว้นหนึ่งแถวระหว่าง train กับ validation ส่วน `Fold` ระบุรอบประเมิน และ `train ends` กับ `validation starts` เป็นตำแหน่งแถวที่นับเริ่มจาก 0 ไม่ใช่วันที่ และ MAE ของโมเดลกับ last-value baseline เทียบกับค่าจริงของช่วง validation เดียวกัน
 <!-- CODE:END -->
 
 ## อ่านผล

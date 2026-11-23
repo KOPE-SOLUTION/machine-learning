@@ -35,14 +35,14 @@
 
 [เปิดภาพ SVG](../../assets/figures/13-kmeans-clustering-selection.svg)
 
-- **Silhouette:** เทียบระยะถึงกลุ่มตนเองกับกลุ่มอื่นที่ใกล้ที่สุด ค่ายิ่งใกล้ 1 ยิ่งแยกกลุ่มชัด ใกล้ 0 คือระยะใกล้เคียงกัน และติดลบเมื่อใกล้อีกกลุ่มมากกว่า
+- **Silhouette:** สำหรับแต่ละจุด ให้เทียบระยะเฉลี่ยถึงสมาชิกอื่นในกลุ่มตนเองกับระยะเฉลี่ยถึงสมาชิกของกลุ่มอื่นที่ใกล้ที่สุด แล้วเฉลี่ยคะแนนของทุกจุด ค่ายิ่งใกล้ 1 ยิ่งแยกกลุ่มชัด ใกล้ 0 คือระยะสองแบบใกล้เคียงกัน และค่าติดลบบ่งชี้ว่าจุดอยู่ใกล้สมาชิกอีกกลุ่มมากกว่า ไม่ใช่การวัดระยะถึง centroid
 - **ARI — Adjusted Rand Index:** เทียบการจับคู่สมาชิกกับ label ที่มีไว้ตรวจ ค่า 1 คือตรงกัน ค่า 0 ใกล้ระดับสุ่ม และติดลบได้
 - **Inertia** มักลดเมื่อเพิ่ม k จึงเลือก k จาก inertia ต่ำสุดอย่างเดียวไม่ได้
 
 **หมายเลขกลุ่ม:** เป็นเพียงชื่อที่โมเดลตั้ง เช่น สมาชิกชุดเดียวกันอาจได้รหัส 0 ในรอบหนึ่งและรหัส 2 ในอีกรอบ การแบ่งกลุ่มยังเหมือนเดิม จึงเทียบรหัสกับ label ด้วย accuracy ตรง ๆ ไม่ได้
 
 - **จุดเด่น:** หลักการเรียบง่าย ใช้สำรวจข้อมูลที่ไม่มี label และสรุปแต่ละกลุ่มด้วย centroid เพื่อเทียบลักษณะได้
-- **ข้อจำกัด:** ต้องเลือกจำนวนกลุ่ม ไวต่อสเกล จุดเริ่มต้น และ outlier เหมาะกับกลุ่มกะทัดรัดมากกว่ากลุ่มโค้งยาว
+- **ข้อจำกัด:** ต้องเลือกจำนวนกลุ่ม ไวต่อสเกล จุดเริ่มต้น และ outlier เหมาะกับข้อมูลที่สมาชิกแต่ละกลุ่มอยู่รอบศูนย์กลาง มากกว่าข้อมูลที่สมาชิกเรียงเป็นแนวโค้งยาว
 
 แม้ได้คะแนน silhouette สูง ก็ยังต้องตรวจว่ากลุ่มมีความหมายและเสถียรสำหรับงานจริงหรือไม่
 
@@ -80,6 +80,24 @@ print("ARI against hidden synthetic labels (after selection):", round(adjusted_r
 print("New point cluster ID:", model.predict(scale.transform([[0.0, 0.0]]))[0])
 ```
 
+<details>
+<summary>ดูผลลัพธ์ Cell 1</summary>
+
+```text
+k=2: inertia=302.4, silhouette=0.653
+k=3: inertia=53.9, silhouette=0.782
+k=4: inertia=46.4, silhouette=0.640
+k=5: inertia=39.4, silhouette=0.478
+k=6: inertia=32.4, silhouette=0.347
+Selected k: 3
+ARI against hidden synthetic labels (after selection): 1.0
+New point cluster ID: 2
+```
+
+เลือก k=3 จาก silhouette สูงสุด แล้วจึงใช้ truth ตรวจ ARI ส่วน cluster ID 2 ของจุดใหม่เป็นรหัสกลุ่ม ไม่ใช่คลาสที่มีชื่อว่าเลข 2
+
+</details>
+
 **อ่านโค้ด**
 
 - `make_blobs(..., centers=3, ...)` สร้างจุดจำลองจากสามกลุ่ม เก็บพิกัดใน `X` และรหัสกลุ่มต้นกำเนิดใน `truth` ส่วน K-means รับเฉพาะพิกัดหลังปรับสเกล `Z` ตอน fit และค้นกลุ่มเอง เราใช้ `truth` ตรวจผลหลังเลือก k แล้ว
@@ -106,6 +124,15 @@ plt.show()
 plt.close(fig)
 ```
 
+<details>
+<summary>ดูผลลัพธ์ Cell 2</summary>
+
+![จุดหลังปรับสเกลพร้อมกลุ่มและศูนย์กลางที่ K-means เลือก](../../assets/figures/13-kmeans-clustering-clusters.png)
+
+สีบอกกลุ่มที่ K-means กำหนด กากบาทดำคือศูนย์กลางกลุ่ม และทั้งสองแกนเป็นค่าหลัง StandardScaler
+
+</details>
+
 **อ่านโค้ด**
 
 - `c=model.labels_` ระบายสีจุดตามกลุ่มที่ K-means หาได้ ไม่ได้ใช้ `truth` ระบายสี
@@ -119,22 +146,23 @@ plt.close(fig)
 - กากบาทดำคือ centroid ในพิกัดที่ scale แล้ว
 - `predict` ของจุดใหม่เลือกกลุ่มจาก centroid ที่ใกล้ที่สุด โดยปรับสเกลจุดใหม่ด้วยสถิติที่เรียนจาก X ก่อน แล้วเทียบกับ centroid ที่เก็บไว้โดยไม่ฝึก K-means ใหม่
 
-![ผลการทดลอง 13-kmeans-clustering](../../assets/figures/13-kmeans-clustering-clusters.png)
-
 ## แบบฝึกท้ายบท
 
-**ลองทำ:** เปลี่ยนข้อมูลเป็น `make_moons` แล้วอ่านรูปร่างกลุ่ม
+**ลองทำ:** ใช้ `make_moons(n_samples=450, noise=0.08, random_state=42)` แทน `make_blobs` เพื่อสร้างจุดที่เรียงตัวเป็นแนวโค้งสองกลุ่ม แล้วเปรียบเทียบสีที่ K-means กำหนดกับกลุ่มต้นกำเนิดใน `truth`
 
 <details>
 <summary>ดูแนวคำตอบ</summary>
 
-**แนวคำตอบ:** K-means อาจตัดกลุ่มโค้งตามระยะถึง centroid
+**แนวคำตอบ:** K-means จัดจุดตามศูนย์กลางที่ใกล้ที่สุด จึงอาจแยกสมาชิกของแนวโค้งเดียวกันออกเป็นคนละกลุ่ม แทนที่จะได้หนึ่งกลุ่มต่อหนึ่งแนวโค้ง
 
-ทางเลือกอย่าง DBSCAN ใช้ความหนาแน่น แต่ยังต้องเลือก `eps`, `min_samples` และสเกลอย่างเหมาะสม
+หากทดลองใน Cell 1 ให้ import `make_moons` แล้วแทนบรรทัดสร้างข้อมูลด้วย `X, truth = make_moons(n_samples=450, noise=0.08, random_state=42)` ส่วนขั้นปรับสเกลและค้นกลุ่มใช้ต่อได้
+
+[DBSCAN](https://scikit-learn.org/1.7/modules/clustering.html#dbscan) เป็นอีกวิธีที่จัดกลุ่มจากบริเวณที่มีจุดหนาแน่นต่อเนื่องกัน จึงรองรับกลุ่มรูปโค้งได้ แต่ยังต้องเลือกการตั้งค่าและสเกลให้เหมาะ
 
 </details>
 
 ## อ้างอิง
 
 - [Handbook: k-Means Clustering](https://jakevdp.github.io/PythonDataScienceHandbook/05.11-k-means.html)
+- [scikit-learn: Silhouette และวิธีคำนวณระยะเฉลี่ย](https://scikit-learn.org/1.7/modules/generated/sklearn.metrics.silhouette_score.html)
 - [scikit-learn: Clustering](https://scikit-learn.org/1.7/modules/clustering.html)

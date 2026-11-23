@@ -1,4 +1,4 @@
-# %% Cell 1 — เทียบต้นไม้และป่าด้วย CV
+# %% Cell 1 — เปรียบเทียบ Decision Tree กับ Random Forest ด้วย CV
 import numpy as np
 from sklearn.datasets import make_classification
 from sklearn.ensemble import RandomForestClassifier
@@ -25,13 +25,26 @@ for name, model in models.items():
     print(f"{name}: train={result['train_score'].mean():.3f}, CV={scores[name]:.3f}")
 
 # %% [markdown]
+# <details>
+# <summary>ดูผลลัพธ์ Cell 1</summary>
+#
+# ```text
+# shallow_tree: train=0.832, CV=0.775
+# deep_tree: train=1.000, CV=0.737
+# forest: train=0.989, CV=0.815
+# ```
+#
+# ต้นไม้ไม่จำกัดความลึกได้ train 1.000 แต่ CV 0.737 ส่วน Random Forest ได้ CV สูงสุดในสามตัวเลือก จึงเลือกไปฝึกกับ train ทั้งหมด
+#
+# </details>
+#
 # **อ่านโค้ด**
 #
-# - `make_classification` สร้าง 10 feature: 4 คอลัมน์มีข้อมูลสำหรับแยกคลาส และ 2 คอลัมน์เป็นค่าผสมจากสี่คอลัมน์นั้น ส่วน `flip_y=0.08` สุ่มกำหนดคลาสใหม่ให้บางแถว เพื่อจำลองข้อมูลที่มีการระบุคลาส (class label) คลาดเคลื่อน
-# - `models` เก็บต้นไม้จำกัดความลึก 3 ชั้น ต้นไม้ไม่กำหนดเพดานความลึก และ Random Forest 120 ต้น
+# - `make_classification` สร้าง 10 feature: 4 คอลัมน์มีข้อมูลสำหรับแยกคลาส 2 คอลัมน์เป็นค่าผสมจากสี่คอลัมน์นั้น และอีก 4 คอลัมน์เป็นค่าที่สุ่มโดยไม่ใช้กำหนดคลาส ส่วน `flip_y=0.08` สุ่มกำหนดคลาสใหม่ให้บางแถว เพื่อจำลองข้อมูลที่มีการระบุคลาส (class label) คลาดเคลื่อน
+# - `models` เก็บ Decision Tree ที่แบ่งได้ไม่เกิน 3 ขั้นจากราก, Decision Tree ที่ไม่กำหนดเพดานความลึก และ Random Forest 120 ต้น
 # - `cross_validate(..., return_train_score=True)` คืนทั้งคะแนนบนข้อมูลที่ใช้ฝึกและ validation ของแต่ละ fold
 # - `result["train_score"]` ใช้ดูผลบนชุดฝึก ส่วน `result["test_score"]` ในคำสั่งนี้หมายถึง validation fold ไม่ใช่ final test
-# - `scores[name]` เก็บ accuracy เฉลี่ยจาก CV แล้วเลือกโมเดลที่ได้ค่าเฉลี่ยสูงที่สุด ส่วน `n_jobs=1` จำกัดการทำงานให้ใช้หนึ่งงานพร้อมกัน
+# - `scores[name]` เก็บ accuracy เฉลี่ยจาก CV แล้วเลือกโมเดลที่ได้ค่าเฉลี่ยสูงที่สุด ส่วน `n_jobs=1` ให้ประมวลผลทีละงาน
 #
 # **การตั้งค่าใน cell นี้:** `max_depth=3` จำกัดความลึกของต้นแรก ส่วน Random Forest ใช้ `n_estimators=120` เป็นต้นไม้ 120 ต้น และ `min_samples_leaf=2` ให้แต่ละใบมีตัวอย่างอย่างน้อย 2 แถว
 
@@ -45,6 +58,22 @@ for i in order:
     print(f"feature_{i}: accuracy drop={importance.importances_mean[i]:.3f} +/- {importance.importances_std[i]:.3f}")
 
 # %% [markdown]
+# <details>
+# <summary>ดูผลลัพธ์ Cell 2</summary>
+#
+# ```text
+# Selected: forest test accuracy: 0.82
+# feature_1: accuracy drop=0.149 +/- 0.019
+# feature_9: accuracy drop=0.074 +/- 0.022
+# feature_8: accuracy drop=0.058 +/- 0.015
+# feature_0: accuracy drop=0.015 +/- 0.010
+# feature_7: accuracy drop=0.015 +/- 0.007
+# ```
+#
+# Random Forest ได้ test accuracy 0.82 ส่วน accuracy drop 0.149 ของ feature_1 หมายถึงคะแนนลดลงเฉลี่ย 14.9 จุดเปอร์เซ็นต์เมื่อสุ่มสลับคอลัมน์นี้
+#
+# </details>
+#
 # **อ่านโค้ด**
 #
 # - เลือกโมเดลจาก `scores` แล้ว fit บน train ทั้งหมดก่อนประเมิน test ตามวิธีในบท 08

@@ -8,7 +8,7 @@
 
 ## โมเดลที่ปรับ: KNN จากบท 03
 
-**KNeighborsClassifier** รับขนาดกลีบสี่ค่าหลังปรับสเกล แล้วทายสายพันธุ์จากสายพันธุ์ที่กำกับไว้ของดอกไม้เพื่อนบ้านใกล้ที่สุด ทบทวนหลักการใน [บท 03](../03-first-classifier/README.md)
+**KNeighborsClassifier** รับความยาวและความกว้างของกลีบเลี้ยงกับกลีบดอก รวมสี่ค่าหลังปรับสเกล แล้วใช้สายพันธุ์ของตัวอย่างฝึกที่อยู่ใกล้ที่สุดมาโหวตสายพันธุ์ของดอกใหม่ ทบทวนหลักการใน [บท 03](../03-first-classifier/README.md)
 
 บทนี้ลองจำนวนเพื่อนบ้านหลายค่า และเปรียบเทียบการลงคะแนนเท่ากันกับการให้จุดใกล้มีน้ำหนักมากกว่า เพื่อเลือกวิธีที่เหมาะกับข้อมูลฝึก **GridSearchCV เป็นเครื่องมือเลือกการตั้งค่า ส่วน KNN ยังเป็นตัวทำนาย** ผลเลือกอาจเปลี่ยนตามข้อมูลและ metric จึงต้องเก็บ test ไว้ตรวจท้ายสุด
 
@@ -34,7 +34,7 @@
 - **จุดเด่น:** เปรียบเทียบชุดค่าตามกระบวนการเดียวกัน และตรวจย้อนกลับได้ว่าแต่ละชุดได้คะแนนเท่าไร
 - **ข้อจำกัด:** จำนวนการฝึกเพิ่มตามจำนวนชุดค่าและ fold อีกทั้งคำว่า “ดีที่สุด” หมายถึงดีที่สุดในรายการที่ลอง ตามข้อมูลและ metric ที่ใช้เท่านั้น
 
-ชุดค่าที่ชนะอาจได้ประโยชน์จากความบังเอิญใน validation จึงเก็บ test ไว้ประเมินหลังเลือกเสร็จ
+ชุดค่าที่ได้คะแนน CV สูงสุดอาจเหมาะเป็นพิเศษกับแถวที่ถูกเลือกเป็น validation ในการแบ่งครั้งนั้น จึงเก็บ test ไว้ประเมินหลังเลือกเสร็จ
 
 ## อ่าน learning curve
 
@@ -90,10 +90,29 @@ print("Best parameters:", search.best_params_)
 print(f"Best CV accuracy: {search.best_score_:.3f}")
 ```
 
+<details>
+<summary>ดูผลลัพธ์ Cell 1</summary>
+
+```text
+ param_knn__n_neighbors param_knn__weights  mean_test_score  std_test_score  rank_test_score
+                      3            uniform            0.967           0.017                1
+                      3           distance            0.967           0.017                1
+                      5            uniform            0.958           0.026                3
+                      5           distance            0.958           0.026                3
+                      9            uniform            0.958           0.026                3
+                      9           distance            0.958           0.026                3
+Best parameters: {'knn__n_neighbors': 3, 'knn__weights': 'uniform'}
+Best CV accuracy: 0.967
+```
+
+k=3 ได้คะแนน CV สูงสุดเท่ากันทั้งสอง weights; GridSearchCV เลือกชุดแรกในลำดับที่ลอง คือ uniform คะแนน 0.967 เป็น CV accuracy
+
+</details>
+
 **อ่านโค้ด**
 
 - `load_iris(return_X_y=True)` คืน X และ y โดยตรง แทนการคืนชุดข้อมูลพร้อมรายละเอียดแบบบท 02
-- `Pipeline([("scale", ...), ("knn", ...)])` ตั้งชื่อแต่ละขั้นเอง เพื่ออ้างชื่อในการค้นพารามิเตอร์
+- `Pipeline([("scale", ...), ("knn", ...)])` ตั้งชื่อแต่ละขั้นเอง เพื่อระบุว่า GridSearchCV ต้องปรับการตั้งค่าของขั้นใด
 - `knn__n_neighbors` และ `knn__weights` ใช้รูปแบบ `ชื่อขั้น__ชื่อพารามิเตอร์` ให้ GridSearchCV รู้ว่าต้องปรับค่าของ KNN
 - `search.fit(X_train, y_train)` ลองหกชุดค่า แต่ละชุดฝึกและวัด validation ห้ารอบ แล้วเลือกชุดที่มีคะแนนเฉลี่ยสูงสุด จากนั้นฝึกใหม่ด้วย train ทั้งหมดโดยอัตโนมัติ ขั้นตอนฝึกใหม่นี้เรียกว่า refit
 - `pd.DataFrame(search.cv_results_)` ทำผลค้นหาเป็นตาราง แล้วเรียงด้วย `rank_test_score` เพื่ออ่านลำดับจากคะแนน CV
@@ -123,6 +142,19 @@ plt.show()
 plt.close(fig)
 print(f"Final test accuracy: {accuracy_score(y_test, search.predict(X_test)):.3f}")
 ```
+
+<details>
+<summary>ดูผลลัพธ์ Cell 2</summary>
+
+```text
+Final test accuracy: 0.933
+```
+
+![กราฟ accuracy บน train และ validation เมื่อเพิ่มจำนวนตัวอย่างฝึก](../../assets/figures/10-tuning-and-learning-curves-learning-curve.png)
+
+กราฟเทียบ train กับ validation ตามจำนวนแถวที่ใช้ฝึกต่อ fold ส่วน 0.933 เป็น accuracy บน test ที่กันไว้
+
+</details>
 
 **อ่านโค้ด**
 
