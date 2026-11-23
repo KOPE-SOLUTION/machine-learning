@@ -2,13 +2,15 @@
 
 [กลับสารบัญ](../../README.md) · [Notebook](lesson.ipynb) · [Python](lesson.py)
 
-บทนี้ใช้ **SVM จำแนกจุดเป็นคลาส 0 หรือ 1 จากพิกัดสองค่า** เปรียบเทียบแนวแบ่งแบบเส้นตรงกับแบบโค้ง แล้วเลือกด้วยคะแนน Cross-validation ก่อนประเมินบนชุดทดสอบ
+บทนี้ใช้ **SVM ซึ่งเป็นโมเดล Machine Learning สำหรับจำแนกจุดเป็นคลาส 0 หรือ 1 จากพิกัดสองค่า** เปรียบเทียบแนวแบ่งแบบเส้นตรงกับแบบโค้ง แล้วเลือกด้วยคะแนน Cross-validation ก่อนประเมินบนชุดทดสอบ
 
 **ใช้สิ่งที่เรียนแล้ว:** train/test, StandardScaler, Pipeline และ Accuracy จากบท 03–06 ส่วนใหม่คือหลักการ SVM, kernel และการใช้ CV เปรียบเทียบโมเดล
 
 ## SVM คืออะไร
 
-**SVM — Support Vector Machine** อ่านว่า **ซัพพอร์ต เวกเตอร์ แมชชีน** เป็นวิธีเรียนรู้แบบมีผู้สอน (Supervised Learning) โดยรับ features คู่กับ labels เพื่อฝึกโมเดล
+**SVM — Support Vector Machine** อ่านว่า **ซัพพอร์ต เวกเตอร์ แมชชีน** เป็นโมเดล **Machine Learning แบบ Supervised Learning หรือการเรียนรู้แบบมีผู้สอน** โมเดลเรียนรู้จาก features คู่กับ labels แล้วนำสิ่งที่เรียนรู้ไปทำนายข้อมูลใหม่
+
+สำหรับงานจำแนกคลาส SVM เรียนรู้แนวแบ่งระหว่างคลาส เช่น แยกจุดคลาส 0 ออกจากคลาส 1 เมื่อมีจุดใหม่เข้ามา โมเดลจึงทำนายจากฝั่งของแนวแบ่งที่จุดนั้นอยู่
 
 | รุ่น | งานที่ใช้ |
 |---|---|
@@ -40,19 +42,34 @@ SVM พยายามหาแนวแบ่งที่มี **Margin — �
 **SVM ใช้ได้ทั้ง Linear และ RBF kernel** บทนี้จึงเปรียบเทียบ SVM สองการตั้งค่า โดยใช้ `SVC` เหมือนกันทั้งคู่
 
 - **Linear kernel:** ได้แนวแบ่งเส้นตรงเมื่อแสดงบนกราฟสอง features
-- **RBF — Radial Basis Function:** ใช้ความคล้ายที่ลดลงตามระยะห่าง จุดใกล้กันมีความคล้ายมากกว่า จึงสร้างแนวแบ่งโค้งได้บนกราฟเดิม
+- **RBF — Radial Basis Function:** ใน `SVC(kernel="rbf")` ใช้แบบ Gaussian เพื่อคำนวณความคล้ายที่ลดลงตามระยะห่าง ช่วยให้ SVM สร้างแนวแบ่งโค้งได้บนกราฟเดิม
 
 RBF อ่านว่า **อาร์ บี เอฟ** ส่วน Radial Basis Function อ่านว่า **เรเดียล เบซิส ฟังก์ชัน**
+
+**RBF คืออะไร?** เป็นฟังก์ชันที่ให้ค่าตามระยะห่างจากจุดอ้างอิง คำว่า **Radial** สื่อถึงระยะจากจุดกลาง สำหรับแบบ Gaussian ที่ใช้ในบทนี้ จุดใกล้กันให้ความคล้ายสูง ส่วนจุดไกลกันให้ความคล้ายต่ำ
+
+**ตัวอย่าง:** สมมติมีจุดอ้างอิงอยู่ตรงกลาง จุด A อยู่ทางซ้ายและจุด B อยู่ทางขวา โดยทั้งคู่ห่างจากจุดกลางเท่ากัน RBF จะให้ความคล้ายกับจุดกลางเท่ากันเมื่อใช้ gamma เดียวกัน เพราะพิจารณาระยะห่าง ไม่ได้พิจารณาว่าอยู่ทิศไหน
 
 ![Linear ใช้แนวแบ่งตรง ส่วน RBF ใช้แนวแบ่งโค้งบนข้อมูลชุดเดียวกัน วงแหวนระบุ support vectors](../../assets/figures/08-support-vector-machines-model.png)
 
 **อ่านภาพ:** เส้นทึบคือแนวแบ่ง เส้นประฝั่ง Linear คือขอบ margin ส่วนสีพื้นบอกคลาสที่โมเดลจะทำนาย · [เปิดภาพ SVG](../../assets/figures/08-support-vector-machines-model.svg)
 
-RBF รวมผลความคล้ายกับ support vectors เพื่อทำนาย ไม่ใช่การหาเพื่อนบ้านแล้วโหวตแบบ KNN และไม่ได้รับประกันว่าจะดีกว่า Linear ทุกชุดข้อมูล
+**แยกหน้าที่:** RBF คำนวณความคล้าย ส่วน SVM รวมความคล้ายกับ support vectors โดยใช้น้ำหนักที่เรียนรู้ระหว่าง `fit` เพื่อทำนาย จึงไม่ใช่การหาเพื่อนบ้านแล้วโหวตแบบ KNN และไม่ได้รับประกันว่าจะดีกว่า Linear ทุกชุดข้อมูล
 
 **จุดเด่น:** เลือก kernel ให้รองรับรูปแบบข้อมูลที่ต่างกันได้
 
 **ข้อจำกัด:** ต้องปรับสเกลและเลือก C ให้เหมาะ ส่วน RBF ต้องเลือก gamma ด้วย การฝึก SVC แบบ kernel อาจช้าเมื่อมีข้อมูลจำนวนมาก
+
+<details>
+<summary>ศึกษาต่อ: สูตร RBF และ Kernel trick</summary>
+
+สำหรับการทดลองในบทนี้ ให้เข้าใจหน้าที่ของ RBF ผลของ gamma และการเลือกค่าด้วย CV ก่อน ส่วนการพิสูจน์สูตรและคณิตศาสตร์ของ Kernel trick อ่านเพิ่มเติมได้ตามความสนใจ:
+
+1. [สูตร RBF kernel](https://scikit-learn.org/1.7/modules/metrics.html#rbf-kernel) — ดูว่าระยะห่างกับ gamma ใช้คำนวณความคล้ายอย่างไร
+2. [ภาพผลของ C และ gamma](https://scikit-learn.org/1.7/auto_examples/svm/plot_rbf_parameters.html) — เปรียบเทียบแนวแบ่งเมื่อเปลี่ยนค่าทีละแบบ
+3. [สมการ SVC และ Kernel trick](https://scikit-learn.org/1.7/modules/svm.html#mathematical-formulation) — ศึกษาว่า kernel ช่วยคำนวณในพื้นที่ features อีกแบบได้อย่างไร และ support vectors ร่วมกันกำหนดคะแนนทำนายอย่างไร
+
+</details>
 
 ## C และ gamma เปลี่ยนแนวแบ่งอย่างไร
 
@@ -103,23 +120,57 @@ C ใช้ได้ทั้ง Linear และ RBF ส่วน gamma ใช�
 
 ## Cross-validation (CV): เลือก kernel ก่อนใช้ Test
 
-แบ่ง 400 แถวเป็น **train 300 แถว** กับ **test 100 แถว** จากนั้นใช้เฉพาะ train เปรียบเทียบ Linear กับ RBF
+### ทำไมจึงตรวจผลมากกว่าหนึ่งรอบ
 
-**Fold อ่านว่า โฟลด์** คือหนึ่งส่วนของข้อมูลที่แบ่งไว้สำหรับ CV บทนี้แบ่ง train เป็นห้าส่วน ส่วนละ 60 แถว แล้วสลับใช้สี่ส่วนฝึกและหนึ่งส่วนตรวจผล:
+ในบท 04 เราใช้ validation ชุดเดียวเลือกโมเดล แต่คะแนนอาจเปลี่ยนเมื่อเลือกแถวสำหรับฝึกและ validation ต่างกัน **Cross-validation หรือ CV จึงสลับใช้ข้อมูลเป็นส่วนฝึกและส่วนตรวจผลหลายรอบ** เพื่อเปรียบเทียบโมเดลจากหลายคะแนน แทนการพึ่งการแบ่งเพียงครั้งเดียว
+
+### 5-fold CV ทำงานอย่างไร
+
+เริ่มจากแบ่ง 400 แถวเป็น **train 300 แถว** กับ **test 100 แถว** แล้วเก็บ test ไว้ก่อน ใช้เฉพาะ train เปรียบเทียบ SVM แบบ Linear กับ RBF
+
+**Fold อ่านว่า โฟลด์** คือหนึ่งส่วนของข้อมูลที่แบ่งไว้สำหรับ CV ส่วน **validation** คือข้อมูลที่ใช้ตรวจผลของโมเดลที่ฝึกในรอบนั้น บทนี้แบ่ง train เป็นห้าส่วน ส่วนละ 60 แถว แล้วสลับใช้สี่ส่วนฝึกและหนึ่งส่วนตรวจผล:
 
 ![แบ่ง train เป็นห้า fold แต่ละรอบฝึก 240 แถวและตรวจ validation 60 แถว เลือก kernel จาก CV ก่อนฝึก train ทั้งหมดแล้วประเมิน test](../../assets/figures/08-support-vector-machines-cross-validation.png)
 
 [เปิดภาพ SVG](../../assets/figures/08-support-vector-machines-cross-validation.svg)
 
-แต่ละ kernel จึงได้ **Accuracy ห้าค่า** แล้วนำมาเฉลี่ยเพื่อเปรียบเทียบกัน โดยใช้ fold ชุดเดียวกันทั้งสอง kernel
+**อ่านภาพทีละรอบ:** รอบแรกกันส่วนที่ 1 ไว้ตรวจผล แล้วฝึกจากส่วนที่ 2–5 รอบถัดไปกันส่วนที่ 2 แล้วฝึกจากส่วนที่เหลือ ทำจนครบห้ารอบ แต่ละแถวจึงถูกใช้เป็น validation หนึ่งครั้ง
 
-**ในแต่ละรอบ:** scaler fit/transform เฉพาะ 240 แถวก่อนส่งให้ SVC fit ส่วน validation 60 แถวใช้ transform และ predict ด้วยค่าที่ฝึกไว้ เมื่อเลือก kernel แล้วจึงฝึก Pipeline ใหม่ด้วย train ทั้ง 300 แถว และใช้ test ประเมินครั้งสุดท้าย
+**ทุกครั้งเริ่มฝึก Pipeline ใหม่:** scaler fit/transform เฉพาะ 240 แถวก่อนส่งให้ SVC fit ส่วน validation 60 แถวใช้ transform และ predict ด้วยค่าที่ฝึกไว้ การฝึกของรอบก่อนหน้าไม่ถูกนำมาฝึกต่อในรอบถัดไป
+
+ใช้ **StratifiedKFold** เพื่อรักษาสัดส่วนคลาส ในข้อมูลนี้ validation แต่ละรอบมีคลาส 0 จำนวน 30 แถว และคลาส 1 จำนวน 30 แถว ทั้งสอง kernel ใช้ตำแหน่งแถวชุดเดียวกันในแต่ละรอบ เพื่อให้เปรียบเทียบจากข้อมูลเดียวกัน
+
+### คะแนนแต่ละ Fold มาจากไหน และเลือกอย่างไร
+
+แต่ละรอบนำคำทำนายของ validation 60 แถวเทียบกับ labels จริง จึงได้ Accuracy หนึ่งค่า เช่น RBF ในรอบแรกทายถูก 54 จาก 60 แถว ได้ `54 / 60 = 0.900` เมื่อทำครบห้ารอบจะได้ห้าคะแนน:
+
+![ตารางคะแนน validation ห้ารอบของ Linear และ RBF พร้อมจำนวนที่ทายถูกในแต่ละรอบ และค่าเฉลี่ยที่ใช้เลือก RBF](../../assets/figures/08-support-vector-machines-cv-scores.png)
+
+[เปิดภาพ SVG](../../assets/figures/08-support-vector-machines-cv-scores.svg)
+
+**เลือกจากค่าเฉลี่ยทั้งห้ารอบ** ไม่เลือกเฉพาะรอบที่คะแนนสูงที่สุด ผลนี้ Linear ได้ประมาณ 0.803 และ RBF ได้ประมาณ 0.907 จึงเลือกการตั้งค่า RBF ที่เตรียมไว้ ส่วน `std` บอกการกระจายของคะแนนระหว่างรอบ ค่ายิ่งมากแปลว่าคะแนนแต่ละรอบต่างกันมากขึ้น
+
+### ทำ CV แล้ว ทำไมยังต้องใช้ Test
+
+คะแนน CV ถูกใช้ตัดสินใจเลือก kernel แล้ว จึงเก็บ **test 100 แถวที่ไม่เคยใช้เลือกโมเดล** ไว้ประเมินครั้งสุดท้าย หลังเลือก RBF ให้ฝึก Pipeline ใหม่ด้วย train ทั้ง 300 แถว แล้วจึงทำนาย test
+
+เราไม่ได้เลือกโมเดลจาก fold ที่คะแนนสูงที่สุด และไม่ได้เอาโมเดลทั้งห้ารอบมาโหวตกัน แต่เลือก **การตั้งค่า** แล้วฝึกโมเดลสำหรับใช้งานขึ้นใหม่
+
+<details>
+<summary>ต้องใช้ 5 fold เสมอไหม และต้องฝึกกี่ครั้ง?</summary>
+
+- 5 เป็นจำนวน fold ที่กำหนดสำหรับการทดลองนี้ ไม่ใช่ค่าบังคับของ SVM การเพิ่มจำนวน fold ทำให้ต้องฝึกหลายครั้งขึ้น และไม่ได้รับประกันว่าจะเลือกโมเดลได้ดีกว่าเสมอ
+- สอง kernel × ห้า fold = **ฝึก Pipeline 10 ครั้งเพื่อเปรียบเทียบ** แล้วฝึกแบบที่เลือกด้วย train ทั้งหมดอีกหนึ่งครั้ง รวมเป็น 11 ครั้ง
+- CV ใช้ได้กับโมเดลอื่นด้วย และใช้เปรียบเทียบ C/gamma หลายค่าได้ เมื่อเรียน GridSearchCV ในบท 10
+- ข้อมูลที่มีลำดับเวลาหรือหลายแถวจากบุคคลเดียวกัน ต้องแบ่งให้เคารพลำดับเวลาหรือกลุ่ม อ่านต่อใน [บท 17](../17-time-and-groups/README.md)
+
+</details>
 
 ## ลงมือทำ
 
-สร้าง Notebook ใหม่แล้วรัน **Cell 1–5 ตามลำดับ** หรือเปิด [Notebook ของบทนี้](lesson.ipynb)
+สร้าง Notebook ใหม่แล้วรัน **Cell 1–6 ตามลำดับ** หรือเปิด [Notebook ของบทนี้](lesson.ipynb)
 
-ลำดับการทดลอง: **แบ่งข้อมูล → สร้าง Pipeline สองแบบ → เปรียบเทียบด้วย CV → ฝึกแบบที่เลือกและทดสอบ → วาดแนวแบ่ง**
+ลำดับการทดลอง: **แบ่งข้อมูล → สร้าง Pipeline สองแบบ → ดูการแบ่ง Fold → ฝึกและอ่านคะแนน CV → ฝึกแบบที่เลือกและทดสอบ → วาดแนวแบ่ง**
 
 <!-- CODE:CELLS -->
 
@@ -131,6 +182,7 @@ from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
 from matplotlib.colors import ListedColormap
 from sklearn.datasets import make_moons
 from sklearn.inspection import DecisionBoundaryDisplay
@@ -185,32 +237,62 @@ SVC ใช้สูตร `gamma = 1 / (จำนวน features × ความ
 
 </details>
 
-### Cell 3 — เปรียบเทียบ Linear กับ RBF ด้วย CV
+### Cell 3 — ดูการแบ่งข้อมูลสำหรับ 5-fold CV
 
 ```python
 cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
+folds = list(cv.split(X_train, y_train))
+
+for fold_no, (fit_idx, valid_idx) in enumerate(folds, start=1):
+    print(
+        f"Fold {fold_no}: fit={len(fit_idx)} rows, "
+        f"validation={len(valid_idx)} rows"
+    )
+```
+
+**อ่านโค้ด**
+
+- `StratifiedKFold(n_splits=5)` กำหนดการแบ่งเป็นห้าส่วนโดยรักษาสัดส่วนคลาส; `shuffle=True` สลับแถวก่อนจัดส่วน และ `random_state=42` ทำให้ได้การแบ่งเดิมเมื่อรันซ้ำ
+- `cv.split(X_train, y_train)` คืนคู่ **ตำแหน่งแถวสำหรับฝึก** กับ **ตำแหน่งแถวสำหรับ validation** ในแต่ละรอบ ไม่ได้คืนโมเดลหรือคะแนน
+- `list(...)` เก็บคู่ตำแหน่งครบห้ารอบไว้ใน `folds` เพื่อให้ Linear และ RBF ใช้การแบ่งชุดเดียวกัน
+- `fit_idx` และ `valid_idx` เป็นตำแหน่งแถวภายใน `X_train` กับ `y_train` ส่วน test 100 แถวยังไม่ถูกนำมาใช้ ขั้นนี้ยังไม่ได้ฝึกโมเดล
+
+**ผลที่ได้:** ห้าบรรทัด ตั้งแต่ `Fold 1` ถึง `Fold 5` แต่ละรอบแสดง `fit=240 rows, validation=60 rows`
+
+### Cell 4 — ฝึกด้วย CV และอ่านคะแนนทีละ Fold
+
+```python
+fold_scores = {}
+for name, candidate in models.items():
+    fold_scores[name] = cross_val_score(
+        candidate, X_train, y_train, cv=folds, scoring="accuracy"
+    )
+
+fold_table = pd.DataFrame(fold_scores, index=range(1, len(folds) + 1))
+fold_table.index.name = "Fold"
+print("Validation accuracy by fold:")
+print(fold_table.round(3).to_string())
 
 scores = {}
-for name, candidate in models.items():
-    values = cross_val_score(
-        candidate, X_train, y_train, cv=cv, scoring="accuracy"
-    )
+for name, values in fold_scores.items():
     scores[name] = values.mean()
-    print(f"{name} fold accuracy:", np.round(values, 3))
     print(f"{name} CV accuracy: {values.mean():.3f} +/- {values.std():.3f}")
 ```
 
 **อ่านโค้ด**
 
-- `StratifiedKFold` แบ่งชุดฝึกเป็นห้าส่วน ส่วนละ 60 แถว และรักษาสัดส่วนคลาส แต่ละรอบใช้ 240 แถวฝึก อีก 60 แถวตรวจผล
-- `cross_val_score` ฝึก **สำเนา Pipeline ใหม่ในแต่ละรอบ** แล้วคืน accuracy ห้าค่า จึงยังต้อง fit Pipeline ตัวที่จะใช้งานจริงหลังเลือก kernel
-- `scores[name]` เก็บค่าเฉลี่ยของแต่ละ kernel ส่วน `std()` แสดงว่าคะแนนแตกต่างกันระหว่างห้ารอบมากเพียงใด ค่า `+/-` นี้ไม่ใช่ช่วงความเชื่อมั่น
+- `cross_val_score` รับ Pipeline ที่จะเปรียบเทียบ และใช้ `cv=folds` แบ่งตามตำแหน่งที่เตรียมไว้ แต่ละรอบฝึก **สำเนา Pipeline ใหม่** บน 240 แถว แล้วทำนาย validation 60 แถวก่อนคำนวณ Accuracy
+- `scoring="accuracy"` กำหนดตัวชี้วัด; ผลที่คืนคือคะแนน validation ห้าค่า เก็บใน `fold_scores[name]` ตามชื่อ kernel
+- `fold_table` วางคะแนนรอบเดียวกันไว้แถวเดียวกัน เช่น แถว Fold 1 เปรียบเทียบ Linear กับ RBF บน validation 60 แถวชุดเดียวกัน
+- `values.mean()` เฉลี่ยห้าคะแนนและเก็บใน `scores[name]` ส่วน `values.std()` แสดงการกระจายระหว่างรอบ เช่น RBF ได้ค่าเฉลี่ยประมาณ 0.907 และ std ประมาณ 0.043 ค่า `+/-` นี้ไม่ใช่ช่วงความเชื่อมั่น
+
+**ทำไมยังต้อง fit อีก:** CV ฝึกสำเนาเพื่อเก็บคะแนน Pipeline ต้นฉบับใน `models` ยังไม่ได้ fit เมื่อเลือกการตั้งค่าแล้วจึงฝึกตัวที่จะใช้งานจริงด้วย train ครบ 300 แถว
 
 **ทำไมใช้ Accuracy:** ข้อมูลนี้มีจำนวนคลาส 0 และ 1 เท่ากัน จึงเริ่มเปรียบเทียบจากสัดส่วนที่ทายถูกได้ หากคลาสไม่สมดุลหรือการทายผิดแต่ละแบบมีผลต่างกัน ให้พิจารณา Precision, Recall และ F1 ที่เรียนในบท 04 ด้วย
 
 เรากำลังเลือกจากสองชุดการตั้งค่าที่เตรียมไว้ใน `models` ยังไม่ได้ค้นหา C/gamma หลายค่า
 
-### Cell 4 — ฝึกโมเดลที่เลือกแล้วประเมินบน Test
+### Cell 5 — ฝึกโมเดลที่เลือกแล้วประเมินบน Test
 
 ```python
 chosen = max(scores, key=scores.get)
@@ -230,7 +312,7 @@ print(f"Correct predictions: {(y_pred == y_test).sum()}/{len(y_test)}")
 - `model.predict(X_test)` ให้ scaler transform ด้วยค่าเดิมก่อน SVC ทำนาย จึงไม่มีการ fit จาก test
 - `accuracy_score` เปรียบเทียบคำทำนายกับ `y_test` ส่วนบรรทัดสุดท้ายแสดงจำนวนที่ทายถูกจาก test 100 แถว
 
-### Cell 5 — อ่านแนวแบ่งคลาสและ Support vectors
+### Cell 6 — อ่านแนวแบ่งคลาสและ Support vectors
 
 ```python
 colors = ListedColormap(["#1558D6", "#BD5A00"])
@@ -332,5 +414,7 @@ Correct predictions: 95/100
 - [scikit-learn: Support Vector Machines](https://scikit-learn.org/1.7/modules/svm.html)
 - [scikit-learn: ผลของ C และ gamma สำหรับ RBF](https://scikit-learn.org/1.7/auto_examples/svm/plot_rbf_parameters.html)
 - [scikit-learn: cross_val_score](https://scikit-learn.org/1.7/modules/generated/sklearn.model_selection.cross_val_score.html)
+- [scikit-learn: Cross-validation และการเก็บ test ไว้ประเมิน](https://scikit-learn.org/1.7/modules/cross_validation.html)
+- [scikit-learn: StratifiedKFold](https://scikit-learn.org/1.7/modules/generated/sklearn.model_selection.StratifiedKFold.html)
 - [scikit-learn: SVC](https://scikit-learn.org/1.7/modules/generated/sklearn.svm.SVC.html)
 - [scikit-learn: DecisionBoundaryDisplay](https://scikit-learn.org/1.7/modules/generated/sklearn.inspection.DecisionBoundaryDisplay.html)

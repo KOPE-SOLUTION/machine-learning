@@ -3,6 +3,7 @@ from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
 from matplotlib.colors import ListedColormap
 from sklearn.datasets import make_moons
 from sklearn.inspection import DecisionBoundaryDisplay
@@ -55,30 +56,58 @@ print("Prepared kernels:", list(models))
 #
 # </details>
 
-# %% Cell 3 — เปรียบเทียบ Linear กับ RBF ด้วย CV
+# %% Cell 3 — ดูการแบ่งข้อมูลสำหรับ 5-fold CV
 cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
+folds = list(cv.split(X_train, y_train))
+
+for fold_no, (fit_idx, valid_idx) in enumerate(folds, start=1):
+    print(
+        f"Fold {fold_no}: fit={len(fit_idx)} rows, "
+        f"validation={len(valid_idx)} rows"
+    )
+
+# %% [markdown]
+# **อ่านโค้ด**
+#
+# - `StratifiedKFold(n_splits=5)` กำหนดการแบ่งเป็นห้าส่วนโดยรักษาสัดส่วนคลาส; `shuffle=True` สลับแถวก่อนจัดส่วน และ `random_state=42` ทำให้ได้การแบ่งเดิมเมื่อรันซ้ำ
+# - `cv.split(X_train, y_train)` คืนคู่ **ตำแหน่งแถวสำหรับฝึก** กับ **ตำแหน่งแถวสำหรับ validation** ในแต่ละรอบ ไม่ได้คืนโมเดลหรือคะแนน
+# - `list(...)` เก็บคู่ตำแหน่งครบห้ารอบไว้ใน `folds` เพื่อให้ Linear และ RBF ใช้การแบ่งชุดเดียวกัน
+# - `fit_idx` และ `valid_idx` เป็นตำแหน่งแถวภายใน `X_train` กับ `y_train` ส่วน test 100 แถวยังไม่ถูกนำมาใช้ ขั้นนี้ยังไม่ได้ฝึกโมเดล
+#
+# **ผลที่ได้:** ห้าบรรทัด ตั้งแต่ `Fold 1` ถึง `Fold 5` แต่ละรอบแสดง `fit=240 rows, validation=60 rows`
+
+# %% Cell 4 — ฝึกด้วย CV และอ่านคะแนนทีละ Fold
+fold_scores = {}
+for name, candidate in models.items():
+    fold_scores[name] = cross_val_score(
+        candidate, X_train, y_train, cv=folds, scoring="accuracy"
+    )
+
+fold_table = pd.DataFrame(fold_scores, index=range(1, len(folds) + 1))
+fold_table.index.name = "Fold"
+print("Validation accuracy by fold:")
+print(fold_table.round(3).to_string())
 
 scores = {}
-for name, candidate in models.items():
-    values = cross_val_score(
-        candidate, X_train, y_train, cv=cv, scoring="accuracy"
-    )
+for name, values in fold_scores.items():
     scores[name] = values.mean()
-    print(f"{name} fold accuracy:", np.round(values, 3))
     print(f"{name} CV accuracy: {values.mean():.3f} +/- {values.std():.3f}")
 
 # %% [markdown]
 # **อ่านโค้ด**
 #
-# - `StratifiedKFold` แบ่งชุดฝึกเป็นห้าส่วน ส่วนละ 60 แถว และรักษาสัดส่วนคลาส แต่ละรอบใช้ 240 แถวฝึก อีก 60 แถวตรวจผล
-# - `cross_val_score` ฝึก **สำเนา Pipeline ใหม่ในแต่ละรอบ** แล้วคืน accuracy ห้าค่า จึงยังต้อง fit Pipeline ตัวที่จะใช้งานจริงหลังเลือก kernel
-# - `scores[name]` เก็บค่าเฉลี่ยของแต่ละ kernel ส่วน `std()` แสดงว่าคะแนนแตกต่างกันระหว่างห้ารอบมากเพียงใด ค่า `+/-` นี้ไม่ใช่ช่วงความเชื่อมั่น
+# - `cross_val_score` รับ Pipeline ที่จะเปรียบเทียบ และใช้ `cv=folds` แบ่งตามตำแหน่งที่เตรียมไว้ แต่ละรอบฝึก **สำเนา Pipeline ใหม่** บน 240 แถว แล้วทำนาย validation 60 แถวก่อนคำนวณ Accuracy
+# - `scoring="accuracy"` กำหนดตัวชี้วัด; ผลที่คืนคือคะแนน validation ห้าค่า เก็บใน `fold_scores[name]` ตามชื่อ kernel
+# - `fold_table` วางคะแนนรอบเดียวกันไว้แถวเดียวกัน เช่น แถว Fold 1 เปรียบเทียบ Linear กับ RBF บน validation 60 แถวชุดเดียวกัน
+# - `values.mean()` เฉลี่ยห้าคะแนนและเก็บใน `scores[name]` ส่วน `values.std()` แสดงการกระจายระหว่างรอบ เช่น RBF ได้ค่าเฉลี่ยประมาณ 0.907 และ std ประมาณ 0.043 ค่า `+/-` นี้ไม่ใช่ช่วงความเชื่อมั่น
+#
+# **ทำไมยังต้อง fit อีก:** CV ฝึกสำเนาเพื่อเก็บคะแนน Pipeline ต้นฉบับใน `models` ยังไม่ได้ fit เมื่อเลือกการตั้งค่าแล้วจึงฝึกตัวที่จะใช้งานจริงด้วย train ครบ 300 แถว
 #
 # **ทำไมใช้ Accuracy:** ข้อมูลนี้มีจำนวนคลาส 0 และ 1 เท่ากัน จึงเริ่มเปรียบเทียบจากสัดส่วนที่ทายถูกได้ หากคลาสไม่สมดุลหรือการทายผิดแต่ละแบบมีผลต่างกัน ให้พิจารณา Precision, Recall และ F1 ที่เรียนในบท 04 ด้วย
 #
 # เรากำลังเลือกจากสองชุดการตั้งค่าที่เตรียมไว้ใน `models` ยังไม่ได้ค้นหา C/gamma หลายค่า
 
-# %% Cell 4 — ฝึกโมเดลที่เลือกแล้วประเมินบน Test
+# %% Cell 5 — ฝึกโมเดลที่เลือกแล้วประเมินบน Test
 chosen = max(scores, key=scores.get)
 model = models[chosen]
 model.fit(X_train, y_train)
@@ -96,7 +125,7 @@ print(f"Correct predictions: {(y_pred == y_test).sum()}/{len(y_test)}")
 # - `model.predict(X_test)` ให้ scaler transform ด้วยค่าเดิมก่อน SVC ทำนาย จึงไม่มีการ fit จาก test
 # - `accuracy_score` เปรียบเทียบคำทำนายกับ `y_test` ส่วนบรรทัดสุดท้ายแสดงจำนวนที่ทายถูกจาก test 100 แถว
 
-# %% Cell 5 — อ่านแนวแบ่งคลาสและ Support vectors
+# %% Cell 6 — อ่านแนวแบ่งคลาสและ Support vectors
 colors = ListedColormap(["#1558D6", "#BD5A00"])
 fig, ax = plt.subplots(figsize=(7, 4.5))
 DecisionBoundaryDisplay.from_estimator(

@@ -120,6 +120,8 @@ def ep07():
 def ep08():
     fig,ax=canvas("Cross-validation · เลือก kernel ก่อนเปิด test","ข้อมูล 400 แถว → train 300 แถว / test 100 แถว")
     text(ax,.04,.813,"train 300 แถว → 5 fold",21,BLUE,"bold")
+    for c in range(5):
+        text(ax,.176+c*.081,.777,f"ส่วน {c+1}",14,MUTED,ha="center")
     for r in range(5):
         y=.707-r*.073
         text(ax,.045,y+.021,f"รอบ {r+1}",17)

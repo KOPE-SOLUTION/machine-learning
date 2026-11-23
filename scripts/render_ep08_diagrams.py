@@ -1,4 +1,4 @@
-"""Original EP08 illustrations: margin, support vectors and RBF parameters.
+"""Original EP08 illustrations: SVM, RBF parameters and cross-validation.
 
 Run with the figure-authoring dependencies in scripts/requirements-figures.txt.
 """
@@ -9,7 +9,8 @@ import numpy as np
 from matplotlib import font_manager
 from matplotlib.colors import LinearSegmentedColormap
 from sklearn.datasets import make_moons
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import StratifiedKFold, cross_val_score, train_test_split
+from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
 from sklearn.svm import SVC
 
@@ -221,6 +222,50 @@ def parameters():
     art.save(fig, page, "08-support-vector-machines-parameters")
 
 
+def cv_scores():
+    X, y = make_moons(n_samples=400, noise=.25, random_state=42)
+    X_train, _, y_train, _ = train_test_split(
+        X, y, test_size=.25, stratify=y, random_state=42
+    )
+    cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
+    folds = list(cv.split(X_train, y_train))
+    scores = {}
+    for name in ("linear", "rbf"):
+        candidate = make_pipeline(StandardScaler(), SVC(kernel=name, C=1, gamma="scale"))
+        scores[name] = cross_val_score(candidate, X_train, y_train,
+                                      cv=folds, scoring="accuracy")
+    correct = {name: np.rint(values * 60).astype(int) for name, values in scores.items()}
+    assert correct["linear"].tolist() == [43, 48, 51, 50, 49]
+    assert correct["rbf"].tolist() == [54, 50, 57, 57, 54]
+
+    fig, page = art.page(
+        "Cross-validation · คะแนนแต่ละรอบมาจากไหน",
+        "แต่ละรอบฝึก Pipeline ใหม่บน 240 แถว · ตรวจผลบน validation 60 แถวชุดเดียวกันทั้งสอง kernel",
+    )
+    art.box(page, .05, .31, .56, .50, color="white")
+    for x, title in [(.11, "Fold"), (.30, "Linear"), (.50, "RBF")]:
+        art.label(page, x, .765, title, 21, art.BLUE, True, ha="center")
+    for i in range(5):
+        ypos = .685 - i * .075
+        art.label(page, .11, ypos, str(i + 1), 21, ha="center")
+        for x, name in [(.30, "linear"), (.50, "rbf")]:
+            art.label(page, x, ypos,
+                      f"{correct[name][i]}/60 ≈ {scores[name][i]:.3f}",
+                      19, art.NAVY, ha="center")
+    art.box(page, .05, .15, .56, .10,
+            f"ค่าเฉลี่ย  Linear ≈ {scores['linear'].mean():.3f}  |  RBF ≈ {scores['rbf'].mean():.3f}",
+            size=21)
+    art.box(page, .66, .59, .29, .20,
+            "รอบที่ 1 ของ RBF\nฝึก 240 → ทำนายอีก 60\nทายถูก 54 → 54/60 = 0.900", size=19)
+    art.arrow(page, (.615, .685), (.655, .685), art.BLUE)
+    art.box(page, .66, .30, .29, .24,
+            "เฉลี่ย RBF ทั้ง 5 รอบ\n(0.900 + 0.833 + 0.950\n+ 0.950 + 0.900) ÷ 5\n≈ 0.907", size=19)
+    art.footer(page,
+        "เลือกการตั้งค่า RBF เพราะ CV accuracy เฉลี่ยสูงกว่า · ไม่เลือกเฉพาะรอบที่ดีที่สุด",
+        "จากนั้นฝึกใหม่ด้วย train 300 แถว → ประเมินบน test 100 แถวที่กันไว้")
+    art.save(fig, page, "08-support-vector-machines-cv-scores")
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output-dir", type=Path, default=ROOT / "assets/figures")
@@ -239,6 +284,7 @@ def main():
     art.svm()
     parameters()
     workflow.ep08()
+    cv_scores()
 
 
 if __name__ == "__main__":
