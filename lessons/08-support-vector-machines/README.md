@@ -19,13 +19,15 @@
 
 ## Margin และ Support vectors: SVM เลือกแนวแบ่งอย่างไร
 
-**Decision boundary — แนวแบ่งคลาส** แบ่งพื้นที่ว่าโมเดลจะทายเป็นคลาสใด เช่น พื้นที่ฝั่งซ้ายทาย 0 และฝั่งขวาทาย 1
+**Decision boundary — แนวแบ่งคลาส** คือ **เส้นทึบสีดำ** ที่แบ่งพื้นที่ว่าโมเดลจะทายเป็นคลาสใด เช่น พื้นที่ฝั่งซ้ายทาย 0 และฝั่งขวาทาย 1
 
 SVM พยายามหาแนวแบ่งที่มี **Margin — แถบรอบแนวแบ่ง** กว้าง ขณะเดียวกันก็ลดการที่จุดฝึกอยู่ใกล้แนวแบ่งเกินไปหรือถูกแบ่งผิดฝั่ง
 
 ![แนวแบ่งอยู่ตรงกลาง เส้นประเป็นขอบ margin สองฝั่ง และวงแหวนแสดง support vectors ที่ใช้กำหนดแนวแบ่ง](../../assets/figures/08-support-vector-machines-margin.png)
 
 [เปิดภาพ SVG](../../assets/figures/08-support-vector-machines-margin.svg)
+
+**เส้นประสองเส้นเป็นขอบ Margin** ส่วนแถบระหว่างเส้นประยังแบ่งเป็นสองคลาสตามเส้นทึบตรงกลาง จุดใหม่ที่อยู่ในแถบนี้จึงยังทำนายเป็น 0 หรือ 1 ได้ ไม่ได้มีคลาสที่สามเพิ่มขึ้น
 
 **Support vectors** คือจุดฝึกที่โมเดลใช้กำหนดแนวแบ่ง ในตัวอย่างที่แยกได้ชัด จุดเหล่านี้อยู่บนขอบ margin เมื่อข้อมูลปะปนกัน support vectors อาจอยู่ในแถบ margin หรือผิดฝั่งด้วย จึงไม่ใช่เฉพาะจุดที่ทายผิด
 
@@ -35,8 +37,12 @@ SVM พยายามหาแนวแบ่งที่มี **Margin — �
 
 **Kernel อ่านว่า เคอร์เนล** เป็นวิธีคำนวณความสัมพันธ์ระหว่างจุดที่ SVM ใช้สร้างแนวแบ่ง
 
+**SVM ใช้ได้ทั้ง Linear และ RBF kernel** บทนี้จึงเปรียบเทียบ SVM สองการตั้งค่า โดยใช้ `SVC` เหมือนกันทั้งคู่
+
 - **Linear kernel:** ได้แนวแบ่งเส้นตรงเมื่อแสดงบนกราฟสอง features
 - **RBF — Radial Basis Function:** ใช้ความคล้ายที่ลดลงตามระยะห่าง จุดใกล้กันมีความคล้ายมากกว่า จึงสร้างแนวแบ่งโค้งได้บนกราฟเดิม
+
+RBF อ่านว่า **อาร์ บี เอฟ** ส่วน Radial Basis Function อ่านว่า **เรเดียล เบซิส ฟังก์ชัน**
 
 ![Linear ใช้แนวแบ่งตรง ส่วน RBF ใช้แนวแบ่งโค้งบนข้อมูลชุดเดียวกัน วงแหวนระบุ support vectors](../../assets/figures/08-support-vector-machines-model.png)
 
@@ -46,16 +52,50 @@ RBF รวมผลความคล้ายกับ support vectors เพ�
 
 **จุดเด่น:** เลือก kernel ให้รองรับรูปแบบข้อมูลที่ต่างกันได้
 
-**ข้อจำกัด:** ต้องปรับสเกลและเลือก C/gamma ให้เหมาะ การฝึก SVC แบบ kernel อาจช้าเมื่อมีข้อมูลจำนวนมาก
+**ข้อจำกัด:** ต้องปรับสเกลและเลือก C ให้เหมาะ ส่วน RBF ต้องเลือก gamma ด้วย การฝึก SVC แบบ kernel อาจช้าเมื่อมีข้อมูลจำนวนมาก
 
 ## C และ gamma เปลี่ยนแนวแบ่งอย่างไร
 
-- **C อ่านว่า ซี:** ค่ามากให้น้ำหนักกับการลดจุดที่ละเมิด margin มากขึ้น โมเดลจึงอาจตามรายละเอียดของชุดฝึกมากขึ้น; ค่าน้อยยอมให้ละเมิด margin ได้มากขึ้นเพื่อควบคุมความซับซ้อน
-- **gamma อ่านว่า แกมมา:** สำหรับ RBF ค่าน้อยทำให้ความคล้ายลดลงช้าเมื่อห่างออกไป ส่วนค่ามากทำให้ความคล้ายลดลงเร็ว จึงมีอิทธิพลในบริเวณใกล้จุดมากกว่า
+**C และ gamma เป็น Hyperparameters — ไฮเปอร์พารามิเตอร์** คือค่าที่เรากำหนดก่อน `fit` เพื่อควบคุมวิธีที่โมเดลเรียนรู้ จากนั้นโมเดลจึงฝึกหาแนวแบ่งภายใต้ค่าที่กำหนด เราสามารถลองหลายค่าแล้วใช้ CV ช่วยเลือกได้
+
+C ใช้ได้ทั้ง Linear และ RBF ส่วน gamma ใช้ควบคุมความคล้ายของ RBF ในบทนี้
+
+### C: ให้ความสำคัญกับจุดที่อยู่ใน Margin หรือผิดฝั่งมากแค่ไหน
+
+**C อ่านว่า ซี** ใช้ได้ทั้ง Linear และ RBF จุดฝึกอาจทายถูกแต่อยู่ใกล้แนวแบ่งจนเข้าไปในแถบ margin หรืออาจอยู่ผิดฝั่งจนทายผิดก็ได้ SVM พยายามลดทั้งสองกรณี พร้อมรักษา margin ให้กว้าง
+
+- **C น้อย:** ยอมให้จุดฝึกบางจุดอยู่ใน margin หรือผิดฝั่งได้มากขึ้น เพื่อให้ margin กว้าง
+- **C มาก:** ให้ความสำคัญกับการลดปัญหาของจุดฝึกเหล่านี้มากขึ้น จึงอาจยอมให้ margin แคบลง
+
+![เปรียบเทียบ Linear SVM บนจุดชุดเดียวกัน ลูกศรชี้จุดสีน้ำเงินที่ C น้อยทายผิด และ C มากปรับแนวแบ่งให้ทายถูก พร้อมลูกศรแสดงความกว้าง Margin](../../assets/figures/08-support-vector-machines-c-effect.png)
+
+**อ่านภาพจากจุดที่ลูกศรชี้:** เมื่อ C น้อย จุดสีน้ำเงินนั้นอยู่ฝั่งที่ทาย 1 เมื่อเพิ่ม C แนวแบ่งเอียงจนจุดเดิมอยู่ฝั่งที่ทาย 0 ได้ถูกต้อง แต่ margin แคบลง ตัวอย่างนี้แสดงสิ่งที่โมเดลยอมแลก ไม่ได้แปลว่า C มากจะดีกับข้อมูลใหม่เสมอ · [เปิดภาพ SVG](../../assets/figures/08-support-vector-machines-c-effect.svg)
+
+### gamma: ความคล้ายลดลงเร็วแค่ไหนเมื่อจุดห่างกัน
+
+**gamma อ่านว่า แกมมา** เป็นค่าที่ใช้กับ RBF ในบทนี้ ลองยึดจุดหนึ่งไว้ แล้วดูว่าจุดอื่นที่ห่างออกไปยังคล้ายจุดนั้นมากเพียงใด
+
+- **gamma น้อย:** ความคล้ายลดลงช้า บริเวณที่ยังคล้ายจุดกลางจึงแผ่กว้าง
+- **gamma มาก:** ความคล้ายลดลงเร็ว บริเวณที่ยังคล้ายมากจึงอยู่ใกล้จุดกลาง
+
+![RBF เปรียบเทียบความคล้ายกับจุดกลางเดียวกัน gamma น้อยให้บริเวณสีเข้มกว้าง ส่วน gamma มากให้บริเวณสีเข้มแคบ ลูกศรชี้จุดเปรียบเทียบที่ระยะเท่ากัน](../../assets/figures/08-support-vector-machines-gamma-effect.png)
+
+**สีเข้มหมายถึงคล้ายจุดกลางมาก** SVM นำความคล้ายกับ support vectors หลายจุดมารวมกันเพื่อทำนาย เมื่อ gamma มาก แต่ละจุดมีผลในบริเวณแคบ แนวแบ่งจึงอาจโค้งตามรายละเอียดเฉพาะจุดมากขึ้น ภาพนี้แสดงความคล้าย ส่วนกราฟแนวแบ่งคลาสอยู่ในส่วนขยายด้านล่าง · [เปิดภาพ SVG](../../assets/figures/08-support-vector-machines-gamma-effect.svg)
+
+**จำหน้าที่แยกกัน:** C ควบคุมว่าโมเดลจะพยายามให้จุดฝึกอยู่ถูกฝั่งและพ้น margin มากแค่ไหน ส่วน gamma ควบคุมความคล้ายตามระยะห่างของ RBF ทั้งสองค่ากำหนดก่อน `fit`
+
+<details>
+<summary>ดูผลต่อแนวแบ่ง RBF เมื่อเปลี่ยน C และ gamma ทีละค่า</summary>
+
+แถวบนเปลี่ยนเฉพาะ C โดยคง gamma ไว้ ส่วนแถวล่างเปลี่ยนเฉพาะ gamma โดยคง C ไว้ จึงเห็นผลของแต่ละค่าแยกกัน
+
+ลูกศรแถวบนชี้จุดสีน้ำเงินจุดเดียวกันที่ทายผิดเมื่อ C = 0.1 และทายถูกเมื่อ C = 100 ส่วนลูกศรขวาล่างชี้แนวแบ่งที่ล้อมจุดเพียงจุดเดียวเมื่อ gamma = 20 เป็นตัวอย่างของการตามรายละเอียดเฉพาะจุดมากขึ้น
 
 ![แถวบนเปลี่ยน C โดยคง gamma ส่วนแถวล่างเปลี่ยน gamma โดยคง C ให้เห็นผลต่อแนวแบ่ง RBF บนจุดฝึกชุดเดียวกัน](../../assets/figures/08-support-vector-machines-parameters.png)
 
 [เปิดภาพ SVG](../../assets/figures/08-support-vector-machines-parameters.svg)
+
+</details>
 
 **ดูความเปลี่ยนแปลงของแนวแบ่ง ไม่เลือกจากกราฟที่ตามจุดฝึกได้ดีที่สุดเพียงอย่างเดียว** ถ้าตามรายละเอียดของ train มากเกินไป อาจเกิด overfitting จึงต้องเปรียบเทียบด้วยข้อมูลที่ไม่ได้ใช้ fit ในรอบนั้น
 
@@ -77,7 +117,9 @@ RBF รวมผลความคล้ายกับ support vectors เพ�
 
 ## ลงมือทำ
 
-สร้าง Notebook ใหม่แล้วรัน **Cell 1–4 ตามลำดับ** หรือเปิด [Notebook ของบทนี้](lesson.ipynb)
+สร้าง Notebook ใหม่แล้วรัน **Cell 1–5 ตามลำดับ** หรือเปิด [Notebook ของบทนี้](lesson.ipynb)
+
+ลำดับการทดลอง: **แบ่งข้อมูล → สร้าง Pipeline สองแบบ → เปรียบเทียบด้วย CV → ฝึกแบบที่เลือกและทดสอบ → วาดแนวแบ่ง**
 
 <!-- CODE:CELLS -->
 
@@ -114,16 +156,39 @@ print("Training labels:", np.unique(y_train))
 
 **ผลที่ได้:** `Train: (300, 2) Test: (100, 2)` และ labels `[0 1]` หมายถึงแต่ละจุดมีสอง features และมีสองคลาส
 
-### Cell 2 — เปรียบเทียบ Linear กับ RBF ด้วย CV
+### Cell 2 — สร้าง Pipeline ของ SVM สองแบบ
 
 ```python
-cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
 models = {
     "linear": make_pipeline(StandardScaler(), SVC(kernel="linear", C=1.0)),
     "rbf": make_pipeline(
         StandardScaler(), SVC(kernel="rbf", C=1.0, gamma="scale")
     ),
 }
+print("Prepared kernels:", list(models))
+```
+
+**อ่านโค้ด**
+
+- `models` เก็บ Pipeline สองตัว ทั้งคู่เป็น SVM สำหรับจำแนกคลาส โดยใช้ `StandardScaler` ก่อน `SVC`; ตัวหนึ่งใช้ `kernel="linear"` อีกตัวใช้ `kernel="rbf"`
+- `C=1.0` เป็นค่าที่กำหนดไว้ให้ทั้งสองแบบ ฝั่ง RBF เพิ่ม `gamma="scale"` เพื่อให้ SVC คำนวณ gamma จาก features **หลังผ่าน StandardScaler** เมื่อเริ่ม fit
+- ขั้นนี้เพียงสร้าง Pipeline และกำหนดค่า ยังไม่ได้ฝึกโมเดล; `Prepared kernels: ['linear', 'rbf']` แสดงสองแบบที่เตรียมไว้เปรียบเทียบ
+
+<details>
+<summary>gamma="scale" คำนวณอย่างไร และต่างจาก StandardScaler อย่างไร?</summary>
+
+**StandardScaler แปลงค่า features** ส่วน **gamma="scale" กำหนดความเร็วที่ความคล้ายของ RBF ลดลงตามระยะ** SVC ไม่ได้ปรับสเกลข้อมูลให้อีกครั้ง
+
+SVC ใช้สูตร `gamma = 1 / (จำนวน features × ความแปรปรวนของข้อมูลที่เข้า SVC)`
+
+ข้อมูลบทนี้มีสองคอลัมน์ที่ไม่ใช่ค่าคงที่ หลัง StandardScaler แปลงชุดฝึก แต่ละคอลัมน์มีค่าเฉลี่ยประมาณ 0 และความแปรปรวนประมาณ 1 จึงได้ `gamma ≈ 1 / (2 × 1) = 0.5` ในแต่ละรอบที่ fit
+
+</details>
+
+### Cell 3 — เปรียบเทียบ Linear กับ RBF ด้วย CV
+
+```python
+cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
 
 scores = {}
 for name, candidate in models.items():
@@ -137,14 +202,15 @@ for name, candidate in models.items():
 
 **อ่านโค้ด**
 
-- `models` เก็บ Pipeline สองตัว ใช้ `StandardScaler` ก่อน SVC ทั้งคู่ ต่างกันที่ kernel: `linear` หรือ `rbf`
 - `StratifiedKFold` แบ่งชุดฝึกเป็นห้าส่วน ส่วนละ 60 แถว และรักษาสัดส่วนคลาส แต่ละรอบใช้ 240 แถวฝึก อีก 60 แถวตรวจผล
 - `cross_val_score` ฝึก **สำเนา Pipeline ใหม่ในแต่ละรอบ** แล้วคืน accuracy ห้าค่า จึงยังต้อง fit Pipeline ตัวที่จะใช้งานจริงหลังเลือก kernel
 - `scores[name]` เก็บค่าเฉลี่ยของแต่ละ kernel ส่วน `std()` แสดงว่าคะแนนแตกต่างกันระหว่างห้ารอบมากเพียงใด ค่า `+/-` นี้ไม่ใช่ช่วงความเชื่อมั่น
 
-**การตั้งค่า:** ใช้ `C=1.0` ทั้งคู่ ฝั่ง RBF ใช้ `gamma="scale"` ให้คำนวณ gamma จาก features ที่เข้า SVC **หลังปรับสเกลในแต่ละรอบ** สำหรับข้อมูลสองคอลัมน์นี้ได้ประมาณ 0.5 เรากำลังเลือกจากสองชุดการตั้งค่านี้ ยังไม่ได้ค้นหา C/gamma ที่ดีที่สุด
+**ทำไมใช้ Accuracy:** ข้อมูลนี้มีจำนวนคลาส 0 และ 1 เท่ากัน จึงเริ่มเปรียบเทียบจากสัดส่วนที่ทายถูกได้ หากคลาสไม่สมดุลหรือการทายผิดแต่ละแบบมีผลต่างกัน ให้พิจารณา Precision, Recall และ F1 ที่เรียนในบท 04 ด้วย
 
-### Cell 3 — ฝึกโมเดลที่เลือกแล้วประเมินบน Test
+เรากำลังเลือกจากสองชุดการตั้งค่าที่เตรียมไว้ใน `models` ยังไม่ได้ค้นหา C/gamma หลายค่า
+
+### Cell 4 — ฝึกโมเดลที่เลือกแล้วประเมินบน Test
 
 ```python
 chosen = max(scores, key=scores.get)
@@ -164,13 +230,18 @@ print(f"Correct predictions: {(y_pred == y_test).sum()}/{len(y_test)}")
 - `model.predict(X_test)` ให้ scaler transform ด้วยค่าเดิมก่อน SVC ทำนาย จึงไม่มีการ fit จาก test
 - `accuracy_score` เปรียบเทียบคำทำนายกับ `y_test` ส่วนบรรทัดสุดท้ายแสดงจำนวนที่ทายถูกจาก test 100 แถว
 
-### Cell 4 — อ่านแนวแบ่งคลาสและ Support vectors
+### Cell 5 — อ่านแนวแบ่งคลาสและ Support vectors
 
 ```python
 colors = ListedColormap(["#1558D6", "#BD5A00"])
 fig, ax = plt.subplots(figsize=(7, 4.5))
 DecisionBoundaryDisplay.from_estimator(
-    model, X_train, response_method="predict", cmap=colors, alpha=0.18, ax=ax
+    model, X_train, response_method="predict", grid_resolution=250,
+    cmap=colors, alpha=0.18, ax=ax
+)
+DecisionBoundaryDisplay.from_estimator(
+    model, X_train, response_method="decision_function", grid_resolution=250,
+    plot_method="contour", levels=[0], colors="black", linewidths=1.5, ax=ax
 )
 points = ax.scatter(
     X_train[:, 0], X_train[:, 1], c=y_train, cmap=colors,
@@ -199,7 +270,8 @@ print("Saved:", (out / "boundary.png").resolve())
 
 **อ่านโค้ด**
 
-- `DecisionBoundaryDisplay.from_estimator` ให้ Pipeline ทำนายจุดทั่วพื้นที่กราฟ แล้วระบายพื้นตามคลาสที่ได้ จึงเห็นบริเวณที่จะทายเป็น 0 หรือ 1
+- `DecisionBoundaryDisplay.from_estimator` ครั้งแรกใช้ `response_method="predict"` ให้ Pipeline ทำนายจุดทั่วพื้นที่กราฟ แล้วระบายพื้นตามคลาสที่ได้
+- ครั้งที่สองใช้ `decision_function` ซึ่งคืนคะแนนตัดสินใจ สำหรับสองคลาสในบทนี้ ค่าติดลบอยู่ฝั่งคลาส 0 ค่าบวกอยู่ฝั่งคลาส 1; `levels=[0]` จึงวาดเส้นทึบตรงรอยแบ่งที่คะแนนเป็นศูนย์ คะแนนนี้ไม่ใช่ความน่าจะเป็น
 - สีของจุดมาจาก label จริง `y_train` ถ้าสีจุดต่างจากสีพื้นรอบจุด แสดงว่าโมเดลทายจุดฝึกนั้นผิด
 - `model.named_steps["svc"]` เข้าถึง SVC ภายใน Pipeline; `support_` คือ **ตำแหน่งแถวของ support vectors ในข้อมูลที่ใช้ fit** จึงนำไปเลือกพิกัดเดิมจาก `X_train` แล้ววงแหวนได้ตรงกับแกนกราฟ
 - พื้นที่สีเป็นผลจำแนกคลาส ไม่ใช่ระดับความมั่นใจ ส่วนวงแหวนบอก support vectors ไม่ได้หมายความว่าจุดนั้นทายผิดทุกจุด
@@ -261,3 +333,4 @@ Correct predictions: 95/100
 - [scikit-learn: ผลของ C และ gamma สำหรับ RBF](https://scikit-learn.org/1.7/auto_examples/svm/plot_rbf_parameters.html)
 - [scikit-learn: cross_val_score](https://scikit-learn.org/1.7/modules/generated/sklearn.model_selection.cross_val_score.html)
 - [scikit-learn: SVC](https://scikit-learn.org/1.7/modules/generated/sklearn.svm.SVC.html)
+- [scikit-learn: DecisionBoundaryDisplay](https://scikit-learn.org/1.7/modules/generated/sklearn.inspection.DecisionBoundaryDisplay.html)

@@ -147,8 +147,8 @@ def svm():
     X = StandardScaler().fit_transform(X)
     xx, yy = np.meshgrid(np.linspace(-2.3, 2.3, 240), np.linspace(-2.4, 2.4, 240))
     grid = np.c_[xx.ravel(), yy.ravel()]
-    for pos, kernel, title in [(.075, "linear", "Linear · แนวแบ่งเส้นตรง"),
-                                (.555, "rbf", "RBF · แนวแบ่งโค้ง")]:
+    for pos, kernel, title in [(.075, "linear", "SVM + Linear kernel · แนวแบ่งตรง"),
+                                (.555, "rbf", "SVM + RBF kernel · แนวแบ่งโค้ง")]:
         ax = fig.add_axes([pos, .25, .37, .49])
         model = SVC(kernel=kernel, C=1, gamma="scale").fit(X, y)
         score = model.decision_function(grid).reshape(xx.shape)
@@ -165,7 +165,7 @@ def svm():
         plot_style(ax)
         ax.set(xlim=(-2.3, 2.3), ylim=(-2.4, 2.4), title=title)
     footer(p, "เส้นทึบ = แนวแบ่ง · เส้นประฝั่ง Linear = ขอบ margin · วงแหวน = support vectors",
-           "RBF ใช้ความคล้ายตามระยะเพื่อสร้างขอบเขตโค้ง · ภาพนี้อธิบายหลักการ ไม่ใช่ผล test ในบท")
+           "ทั้งสองแบบเป็น SVM · เปลี่ยน kernel เพื่อให้แนวแบ่งรองรับรูปแบบข้อมูลที่ต่างกัน")
     save(fig, p, "08-support-vector-machines-model")
 
 

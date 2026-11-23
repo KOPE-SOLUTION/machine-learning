@@ -28,14 +28,35 @@ print("Training labels:", np.unique(y_train))
 #
 # **ผลที่ได้:** `Train: (300, 2) Test: (100, 2)` และ labels `[0 1]` หมายถึงแต่ละจุดมีสอง features และมีสองคลาส
 
-# %% Cell 2 — เปรียบเทียบ Linear กับ RBF ด้วย CV
-cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
+# %% Cell 2 — สร้าง Pipeline ของ SVM สองแบบ
 models = {
     "linear": make_pipeline(StandardScaler(), SVC(kernel="linear", C=1.0)),
     "rbf": make_pipeline(
         StandardScaler(), SVC(kernel="rbf", C=1.0, gamma="scale")
     ),
 }
+print("Prepared kernels:", list(models))
+
+# %% [markdown]
+# **อ่านโค้ด**
+#
+# - `models` เก็บ Pipeline สองตัว ทั้งคู่เป็น SVM สำหรับจำแนกคลาส โดยใช้ `StandardScaler` ก่อน `SVC`; ตัวหนึ่งใช้ `kernel="linear"` อีกตัวใช้ `kernel="rbf"`
+# - `C=1.0` เป็นค่าที่กำหนดไว้ให้ทั้งสองแบบ ฝั่ง RBF เพิ่ม `gamma="scale"` เพื่อให้ SVC คำนวณ gamma จาก features **หลังผ่าน StandardScaler** เมื่อเริ่ม fit
+# - ขั้นนี้เพียงสร้าง Pipeline และกำหนดค่า ยังไม่ได้ฝึกโมเดล; `Prepared kernels: ['linear', 'rbf']` แสดงสองแบบที่เตรียมไว้เปรียบเทียบ
+#
+# <details>
+# <summary>gamma="scale" คำนวณอย่างไร และต่างจาก StandardScaler อย่างไร?</summary>
+#
+# **StandardScaler แปลงค่า features** ส่วน **gamma="scale" กำหนดความเร็วที่ความคล้ายของ RBF ลดลงตามระยะ** SVC ไม่ได้ปรับสเกลข้อมูลให้อีกครั้ง
+#
+# SVC ใช้สูตร `gamma = 1 / (จำนวน features × ความแปรปรวนของข้อมูลที่เข้า SVC)`
+#
+# ข้อมูลบทนี้มีสองคอลัมน์ที่ไม่ใช่ค่าคงที่ หลัง StandardScaler แปลงชุดฝึก แต่ละคอลัมน์มีค่าเฉลี่ยประมาณ 0 และความแปรปรวนประมาณ 1 จึงได้ `gamma ≈ 1 / (2 × 1) = 0.5` ในแต่ละรอบที่ fit
+#
+# </details>
+
+# %% Cell 3 — เปรียบเทียบ Linear กับ RBF ด้วย CV
+cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
 
 scores = {}
 for name, candidate in models.items():
@@ -49,14 +70,15 @@ for name, candidate in models.items():
 # %% [markdown]
 # **อ่านโค้ด**
 #
-# - `models` เก็บ Pipeline สองตัว ใช้ `StandardScaler` ก่อน SVC ทั้งคู่ ต่างกันที่ kernel: `linear` หรือ `rbf`
 # - `StratifiedKFold` แบ่งชุดฝึกเป็นห้าส่วน ส่วนละ 60 แถว และรักษาสัดส่วนคลาส แต่ละรอบใช้ 240 แถวฝึก อีก 60 แถวตรวจผล
 # - `cross_val_score` ฝึก **สำเนา Pipeline ใหม่ในแต่ละรอบ** แล้วคืน accuracy ห้าค่า จึงยังต้อง fit Pipeline ตัวที่จะใช้งานจริงหลังเลือก kernel
 # - `scores[name]` เก็บค่าเฉลี่ยของแต่ละ kernel ส่วน `std()` แสดงว่าคะแนนแตกต่างกันระหว่างห้ารอบมากเพียงใด ค่า `+/-` นี้ไม่ใช่ช่วงความเชื่อมั่น
 #
-# **การตั้งค่า:** ใช้ `C=1.0` ทั้งคู่ ฝั่ง RBF ใช้ `gamma="scale"` ให้คำนวณ gamma จาก features ที่เข้า SVC **หลังปรับสเกลในแต่ละรอบ** สำหรับข้อมูลสองคอลัมน์นี้ได้ประมาณ 0.5 เรากำลังเลือกจากสองชุดการตั้งค่านี้ ยังไม่ได้ค้นหา C/gamma ที่ดีที่สุด
+# **ทำไมใช้ Accuracy:** ข้อมูลนี้มีจำนวนคลาส 0 และ 1 เท่ากัน จึงเริ่มเปรียบเทียบจากสัดส่วนที่ทายถูกได้ หากคลาสไม่สมดุลหรือการทายผิดแต่ละแบบมีผลต่างกัน ให้พิจารณา Precision, Recall และ F1 ที่เรียนในบท 04 ด้วย
+#
+# เรากำลังเลือกจากสองชุดการตั้งค่าที่เตรียมไว้ใน `models` ยังไม่ได้ค้นหา C/gamma หลายค่า
 
-# %% Cell 3 — ฝึกโมเดลที่เลือกแล้วประเมินบน Test
+# %% Cell 4 — ฝึกโมเดลที่เลือกแล้วประเมินบน Test
 chosen = max(scores, key=scores.get)
 model = models[chosen]
 model.fit(X_train, y_train)
@@ -74,11 +96,16 @@ print(f"Correct predictions: {(y_pred == y_test).sum()}/{len(y_test)}")
 # - `model.predict(X_test)` ให้ scaler transform ด้วยค่าเดิมก่อน SVC ทำนาย จึงไม่มีการ fit จาก test
 # - `accuracy_score` เปรียบเทียบคำทำนายกับ `y_test` ส่วนบรรทัดสุดท้ายแสดงจำนวนที่ทายถูกจาก test 100 แถว
 
-# %% Cell 4 — อ่านแนวแบ่งคลาสและ Support vectors
+# %% Cell 5 — อ่านแนวแบ่งคลาสและ Support vectors
 colors = ListedColormap(["#1558D6", "#BD5A00"])
 fig, ax = plt.subplots(figsize=(7, 4.5))
 DecisionBoundaryDisplay.from_estimator(
-    model, X_train, response_method="predict", cmap=colors, alpha=0.18, ax=ax
+    model, X_train, response_method="predict", grid_resolution=250,
+    cmap=colors, alpha=0.18, ax=ax
+)
+DecisionBoundaryDisplay.from_estimator(
+    model, X_train, response_method="decision_function", grid_resolution=250,
+    plot_method="contour", levels=[0], colors="black", linewidths=1.5, ax=ax
 )
 points = ax.scatter(
     X_train[:, 0], X_train[:, 1], c=y_train, cmap=colors,
@@ -107,7 +134,8 @@ print("Saved:", (out / "boundary.png").resolve())
 # %% [markdown]
 # **อ่านโค้ด**
 #
-# - `DecisionBoundaryDisplay.from_estimator` ให้ Pipeline ทำนายจุดทั่วพื้นที่กราฟ แล้วระบายพื้นตามคลาสที่ได้ จึงเห็นบริเวณที่จะทายเป็น 0 หรือ 1
+# - `DecisionBoundaryDisplay.from_estimator` ครั้งแรกใช้ `response_method="predict"` ให้ Pipeline ทำนายจุดทั่วพื้นที่กราฟ แล้วระบายพื้นตามคลาสที่ได้
+# - ครั้งที่สองใช้ `decision_function` ซึ่งคืนคะแนนตัดสินใจ สำหรับสองคลาสในบทนี้ ค่าติดลบอยู่ฝั่งคลาส 0 ค่าบวกอยู่ฝั่งคลาส 1; `levels=[0]` จึงวาดเส้นทึบตรงรอยแบ่งที่คะแนนเป็นศูนย์ คะแนนนี้ไม่ใช่ความน่าจะเป็น
 # - สีของจุดมาจาก label จริง `y_train` ถ้าสีจุดต่างจากสีพื้นรอบจุด แสดงว่าโมเดลทายจุดฝึกนั้นผิด
 # - `model.named_steps["svc"]` เข้าถึง SVC ภายใน Pipeline; `support_` คือ **ตำแหน่งแถวของ support vectors ในข้อมูลที่ใช้ fit** จึงนำไปเลือกพิกัดเดิมจาก `X_train` แล้ววงแหวนได้ตรงกับแกนกราฟ
 # - พื้นที่สีเป็นผลจำแนกคลาส ไม่ใช่ระดับความมั่นใจ ส่วนวงแหวนบอก support vectors ไม่ได้หมายความว่าจุดนั้นทายผิดทุกจุด
