@@ -41,14 +41,20 @@ print(f"Test accuracy: {accuracy_score(y_test, model.predict(X_test)):.3f}")
 # **อ่านโค้ด**
 #
 # - `load_digits(return_X_y=True)` คืน `X` ซึ่งมีค่า pixel 64 ค่าต่อภาพ (features) และ `y` ซึ่งระบุว่าแต่ละภาพเป็นเลขใดตั้งแต่ 0–9 (class labels)
-# - `model.fit(X_train, y_train)` ให้ scaler เรียนค่าเฉลี่ยและส่วนเบี่ยงเบนมาตรฐาน ให้ PCA เรียนค่าเฉลี่ยและแกนจาก features ที่ปรับสเกลแล้ว จากนั้น Logistic Regression ใช้พิกัดหลัง PCA คู่กับเลขใน `y_train` ฝึกจำแนกภาพ ทั้ง scaler และ PCA ใช้เฉพาะ features ไม่ใช้เลขใน y เลือกแกน
-# - `PCA(n_components=0.9, svd_solver="full")` เพิ่มแกนตามลำดับจนสัดส่วนความแปรปรวนสะสมเกิน 90% ของข้อมูลฝึกที่ผ่าน scaler แล้ว ค่า 0.9 เป็นเกณฑ์สัดส่วน ไม่ใช่จำนวนแกน
+# - `model.fit(X_train, y_train)` ทำงานตามลำดับ: scaler เรียนสถิติและปรับสเกล → PCA เรียนค่าเฉลี่ยกับแกนแล้วแปลงพิกัด → Logistic Regression ใช้พิกัดหลัง PCA คู่กับเลขใน `y_train` ฝึกจำแนกภาพ<br>ทั้ง scaler และ PCA ใช้เฉพาะ features ไม่ใช้เลขใน `y` เลือกแกน
+# - `PCA(n_components=0.9, svd_solver="full")` เพิ่มแกนตามลำดับจนสัดส่วนความแปรปรวนสะสมเกิน 90% ของข้อมูลฝึกที่ผ่าน scaler แล้ว<br>ค่า 0.9 เป็นเกณฑ์สัดส่วน ไม่ใช่จำนวนแกน
 # - `model.named_steps["pca"]` เข้าถึง PCA ที่ fit แล้วเพื่ออ่านผล ส่วน `pca.n_components_` คือจำนวนแกนที่เลือกได้จริง
 # - `explained_variance_ratio_` บอกว่าแต่ละแกนเก็บความแปรปรวนไว้เป็นสัดส่วนเท่าไร และ `.sum()` รวมสัดส่วนของทุกแกนที่เก็บไว้ ส่วน accuracy ต้องเทียบเลขที่ Pipeline ทายกับเลขที่กำกับภาพไว้
 # - `max_iter=2000` ตั้งเพดานรอบให้ตัวแก้ปัญหาของ Logistic Regression
 #
-# **อ่านผลตามหน้าที่:** `Original features` กับ `Retained components` บอกจำนวนคอลัมน์ก่อนและหลัง PCA; `Retained variance` บอกสัดส่วนความแปรปรวนที่เก็บ ส่วน `Test accuracy` เทียบเลขที่ Logistic Regression ทายกับเลขที่กำกับภาพไว้ ไม่ใช้ variance แทน accuracy
-
+# **อ่านผลตามหน้าที่:**
+#
+# - `Original features` กับ `Retained components`: จำนวนคอลัมน์ก่อนและหลัง PCA
+# - `Retained variance`: สัดส่วนความแปรปรวนที่เก็บ
+# - `Test accuracy`: เทียบเลขที่ Logistic Regression ทายกับเลขที่กำกับภาพไว้
+#
+# จึงไม่ใช้ variance แทน accuracy
+#
 # %% Cell 2 — อ่านพิกัดใหม่และ variance สะสม
 Z_train = model[:-1].transform(X_train)
 fig, axes = plt.subplots(1, 2, figsize=(10, 4))

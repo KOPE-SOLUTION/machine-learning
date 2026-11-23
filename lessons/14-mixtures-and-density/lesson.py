@@ -23,8 +23,8 @@ X_train, X_test = train_test_split(X, test_size=0.25, random_state=42)
 #
 # - `rng.normal(-2, 0.6, 250)` และ `rng.normal(2, 1.0, 350)` สุ่มข้อมูลสองส่วนที่มีค่าเฉลี่ยและส่วนเบี่ยงเบนมาตรฐานต่างกัน
 # - `np.concatenate(...)` ต่อทั้งสองส่วนเป็น 600 ค่า แล้ว `reshape(-1, 1)` จัดเป็น 600 แถว หนึ่ง feature
-# - `train_test_split(..., test_size=0.25)` แยก train 450 แถวและ test 150 แถว บทนี้ไม่มี y เพราะกำลังประมาณการกระจายของ X
-
+# - `train_test_split(..., test_size=0.25)` แยก train 450 แถวและ test 150 แถว<br>บทนี้ไม่มี `y` เพราะกำลังประมาณการกระจายของ `X`
+#
 # %% Cell 2 — เลือก GMM ด้วย BIC
 mixtures = [GaussianMixture(n_components=k, n_init=5, random_state=42).fit(X_train) for k in range(1, 5)]
 gmm = min(mixtures, key=lambda model: model.bic(X_train))
@@ -51,10 +51,10 @@ print("Responsibilities for x=0:", gmm.predict_proba([[0.0]]).round(3))
 # **อ่านโค้ด**
 #
 # - list comprehension สร้างและ fit GMM ที่มี `n_components` ตั้งแต่ 1 ถึง 4 บน train ชุดเดียวกัน
-# - `n_init=5` ให้ GMM ที่มีจำนวนองค์ประกอบเท่ากันลองเริ่มฝึกห้าครั้ง แล้วเก็บผลที่มีค่าเฉลี่ย log density บน train ระหว่างฝึกสูงที่สุด ค่าเฉลี่ย log density ใช้เปรียบเทียบว่าผลการฝึกครั้งใดอธิบายการกระจายของ train ได้ดีกว่า
+# - `n_init=5` ให้ GMM ที่มีจำนวนองค์ประกอบเท่ากันลองเริ่มฝึกห้าครั้ง แล้วเก็บผลที่มีค่าเฉลี่ย log density บน train ระหว่างฝึกสูงที่สุด<br>ค่าเฉลี่ย log density ใช้เปรียบเทียบว่าผลการฝึกครั้งใดอธิบายการกระจายของ train ได้ดีกว่า
 # - `min(mixtures, key=lambda model: model.bic(X_train))` เลือก **ตัวโมเดล** ที่มี BIC ต่ำสุด โดย `lambda` ระบุค่าที่นำมาเทียบ
-# - `gmm.predict_proba([[0.0]])` ใช้จุดกึ่งกลาง ความกว้าง และน้ำหนักของ Gaussian แต่ละ component ที่เรียนจาก train มาประเมินว่า x=0 มีโอกาสมาจากแต่ละ component เท่าไร โดยไม่ fit ใหม่ ความน่าจะเป็นที่คืนมาสำหรับ x=0 รวมกันเป็น 1 โดยประมาณ
-
+# - `gmm.predict_proba([[0.0]])` ใช้จุดกึ่งกลาง ความกว้าง และน้ำหนักของ Gaussian แต่ละ component ที่เรียนจาก train มาประเมินว่า x=0 มีโอกาสมาจากแต่ละ component เท่าไร โดยไม่ fit ใหม่<br>ความน่าจะเป็นที่คืนมาสำหรับ x=0 รวมกันเป็น 1 โดยประมาณ
+#
 # %% Cell 3 — เลือก KDE ด้วย CV
 kde_search = GridSearchCV(
     KernelDensity(kernel="gaussian"), {"bandwidth": [0.15, 0.3, 0.6, 1.0]},
@@ -84,12 +84,17 @@ print(f"KDE test mean log density: {kde.score_samples(X_test).mean():.3f}")
 #
 # - `KernelDensity(kernel="gaussian")` เลือก kernel รูป Gaussian ส่วน dictionary `bandwidth` ระบุสี่ค่าที่ให้ GridSearchCV ทดลอง
 # - `KFold(5, shuffle=True, ...)` แบ่ง train ห้าส่วนเพื่อเลือก bandwidth โดยไม่ต้องมี label
-# - เมื่อไม่กำหนด `scoring` การค้นหาจะใช้ `KernelDensity.score` ซึ่งคืนผลรวม log density บน validation ของแต่ละ fold
+# - เมื่อไม่กำหนด `scoring`, การค้นหาจะใช้ `KernelDensity.score` ซึ่งคืนผลรวม log density บน validation ของแต่ละ fold
 # - `best_estimator_` คือ KDE ที่เลือกและ refit บน train แล้ว
 # - `score_samples(X_test).mean()` เฉลี่ย log density ต่อแถวบน test เพื่อเปรียบเทียบ GMM กับ KDE
 #
-# **อ่านคะแนน CV กับ test แยกกัน:** KDE ใช้ KFold เพราะไม่มี label ให้ stratify คะแนนค้นหาเป็นผลรวม log density ของ validation fold ที่มี 90 แถวเท่ากันทุกรอบ ส่วน `GMM test mean log density` และ `KDE test mean log density` เป็นค่าเฉลี่ย log density ต่อแถวบน test 150 แถว จึงไม่เทียบผลรวมจาก CV กับค่าเฉลี่ยบน test โดยตรง
-
+# **อ่านคะแนน CV กับ test แยกกัน:** KDE ใช้ KFold เพราะไม่มี label ให้ stratify
+#
+# - **คะแนนค้นหาด้วย CV:** ผลรวม log density ของ validation fold ที่มี 90 แถวเท่ากันทุกรอบ
+# - **GMM/KDE test mean log density:** ค่าเฉลี่ย log density ต่อแถวบน test 150 แถว
+#
+# จึงไม่เทียบผลรวมจาก CV กับค่าเฉลี่ยบน test โดยตรง
+#
 # %% Cell 4 — วาดความหนาแน่นของสองโมเดล
 grid = np.linspace(-5, 6, 400).reshape(-1, 1)
 fig, ax = plt.subplots(figsize=(7, 4))
@@ -117,7 +122,7 @@ plt.close(fig)
 #
 # **อ่านโค้ด**
 #
-# - `grid` เก็บตำแหน่ง x จำนวน 400 ค่าจาก −5 ถึง 6 เพื่อวาดเส้นต่อเนื่อง คำสั่ง `reshape(-1, 1)` จัดเป็น 400 แถว หนึ่งคอลัมน์ตามรูปข้อมูลที่โมเดลรับ
+# - `grid` เก็บตำแหน่ง x จำนวน 400 ค่าจาก −5 ถึง 6 เพื่อวาดเส้นต่อเนื่อง<br>คำสั่ง `reshape(-1, 1)` จัดเป็น 400 แถว หนึ่งคอลัมน์ตามรูปข้อมูลที่โมเดลรับ
 # - `score_samples(grid)` ใช้ GMM หรือ KDE ที่ฝึกจาก train แล้วคำนวณ log density ณ ตำแหน่ง x แต่ละค่าของ `grid` จากนั้น `np.exp(...)` แปลง log density กลับเป็น density สำหรับความสูงของเส้นกราฟ
 # - `hist(..., density=True)` ปรับ histogram ให้พื้นที่รวมเป็น 1 เพื่อเทียบกับเส้น density ได้
 # - histogram แสดงข้อมูล train ส่วนการประเมินกับ test อ่านจาก `GMM test mean log density` และ `KDE test mean log density` ใน Cell 3

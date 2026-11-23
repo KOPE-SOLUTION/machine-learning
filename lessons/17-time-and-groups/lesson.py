@@ -39,7 +39,9 @@ print(f"New-user accuracy (random user labels): {model.score(X[test_idx], y[test
 # New-user accuracy (random user labels): 0.383
 # ```
 #
-# สุ่มแถวแล้วมีคนซ้ำระหว่าง train/test 41 คน แม้ accuracy เป็น 1.000 ก็ยังไม่ได้วัดการทายคนใหม่ เมื่อกันคนออกทั้งกลุ่ม คนซ้ำเป็น 0 และ accuracy เหลือ 0.383
+# สุ่มแถวแล้วมีคนซ้ำระหว่าง train/test 41 คน แม้ accuracy เป็น 1.000 ก็ยังไม่ได้วัดการทายคนใหม่
+#
+# เมื่อกันคนออกทั้งกลุ่ม คนซ้ำเป็น 0 และ accuracy เหลือ 0.383
 #
 # </details>
 #
@@ -49,11 +51,14 @@ print(f"New-user accuracy (random user labels): {model.score(X[test_idx], y[test
 # - `user_signal[groups]` ใช้รหัสคนเลือกค่าข้อมูลนำเข้าตั้งต้นของคนนั้น แล้วเติม noise เล็กน้อย ส่วน `user_label[groups]` ทำให้ทั้งห้าแถวของคนเดียวกันมีคลาสที่กำกับไว้เหมือนกัน
 # - `set(groups[row_train]) & set(groups[row_test])` หารหัสคนที่อยู่ทั้ง train และ test หลังสุ่มแถว เพื่อแสดงปัญหาคนเดิมข้ามชุด
 # - `next(split.split(X, y, groups))` รับคู่ index จาก `GroupShuffleSplit` รอบแรก โดยตัวแบ่งใช้ groups กันคนออกทั้งกลุ่ม
-# - `isdisjoint` คืน True เมื่อไม่มีรหัสคนร่วมกันระหว่าง train กับ test และ `assert` จะหยุดพร้อมข้อผิดพลาดหากเงื่อนไขนี้ไม่จริง ส่วน `np.unique(groups[test_idx])` หารหัสคนที่ไม่ซ้ำกันใน test เพื่อนำไปนับจำนวนคน
+# - `isdisjoint` คืน True เมื่อไม่มีรหัสคนร่วมกันระหว่าง train กับ test และ `assert` จะหยุดพร้อมข้อผิดพลาดหากเงื่อนไขนี้ไม่จริง
+# - `np.unique(groups[test_idx])` หารหัสคนที่ไม่ซ้ำกันใน test เพื่อนำไปนับจำนวนคน
 # - สำหรับ KNN classifier ในบทนี้ `model.score(...)` คืน accuracy ของข้อมูลที่ส่งให้ประเมิน จึงต้องอ่านพร้อมจำนวนคนที่ซ้ำ ไม่เลือกวิธีแบ่งจากคะแนนสูงสุด
 #
-# **การตั้งค่าและจำนวนแถว:** `GroupShuffleSplit(test_size=0.2)` กัน 20% ของ 60 คน จึงเป็น 12 คน × 5 แถว = test 60 แถว ไม่ได้สุ่มกันเพียงบางแถวของคนเดิม ค่า `Group split - shared users` ต้องเป็น 0
-
+# **การตั้งค่าและจำนวนแถว:** `GroupShuffleSplit(test_size=0.2)` กัน 20% ของ 60 คน จึงเป็น 12 คน × 5 แถว = test 60 แถว ไม่ได้สุ่มกันเพียงบางแถวของคนเดิม
+#
+# ค่า `Group split - shared users` ต้องเป็น 0
+#
 # %% Cell 2 — แบ่งข้อมูลตามเวลาและเทียบค่าล่าสุด
 t = np.arange(180)
 series = 0.1 * t + np.sin(t / 6) + rng.normal(0, 0.2, len(t))
@@ -86,13 +91,21 @@ for fold, (train_idx, valid_idx) in enumerate(TimeSeriesSplit(n_splits=4, gap=1)
 #
 # **อ่านโค้ด**
 #
-# - `series[:-1].reshape(-1, 1)` เก็บค่าตั้งแต่ตัวแรกถึงก่อนตัวสุดท้ายไว้ใน `lag` เป็นข้อมูลนำเข้าหนึ่งคอลัมน์ (feature) ส่วน `series[1:]` เก็บค่าตั้งแต่ตัวที่สองถึงตัวสุดท้ายไว้ใน `target` เป็นค่าถัดไปที่ต้องการทำนาย
+# - `series[:-1].reshape(-1, 1)` เก็บค่าตั้งแต่ตัวแรกถึงก่อนตัวสุดท้ายไว้ใน `lag` เป็นข้อมูลนำเข้าหนึ่งคอลัมน์ (feature)
+# - `series[1:]` เก็บค่าตั้งแต่ตัวที่สองถึงตัวสุดท้ายไว้ใน `target` เป็นค่าถัดไปที่ต้องการทำนาย
 # - แต่ละแถวจึงจับคู่ค่าก่อนหน้ากับค่าถัดไป โดย `lag` และ `target` มีจำนวนแถวเท่ากัน
 # - `TimeSeriesSplit(n_splits=4, gap=1).split(lag)` คืน index สี่รอบ ฝึกจากอดีตและเว้นหนึ่งแถวก่อนช่วง validation
 # - `train_idx.max() < valid_idx.min()` ตรวจว่าแถวฝึกอยู่ก่อนแถว validation
-# - `LinearRegression().fit(lag[train_idx], target[train_idx])` เรียน w และ b จากคู่ค่าก่อนหน้าและค่าถัดไปในช่วงฝึกของแต่ละ fold ส่วน `model.predict(lag[valid_idx])` ใช้ w และ b ที่เรียนได้คำนวณค่าถัดไปของช่วง validation โดยไม่ fit จากค่าจริงในช่วง validation
+# - `LinearRegression().fit(lag[train_idx], target[train_idx])` เรียน w และ b จากคู่ค่าก่อนหน้าและค่าถัดไปในช่วงฝึกของแต่ละ fold
+# - `model.predict(lag[valid_idx])` ใช้ w และ b ที่เรียนได้คำนวณค่าถัดไปของช่วง validation โดยไม่ fit จากค่าจริงในช่วง validation
 # - `persistence = lag[valid_idx, 0]` ใช้ค่าล่าสุดเป็นคำทำนาย baseline แล้ววัด MAE กับ target ชุดเดียวกับโมเดล
 #
 # การใช้ค่าจริงก่อนหน้าของทุกจุดเหมาะกับ one-step-ahead ตามโจทย์นี้ ไม่ใช่การทายหลายก้าวโดยยังไม่เห็นค่าจริงระหว่างทาง
 #
-# **การตั้งค่าใน cell นี้:** `gap=1` เว้นหนึ่งแถวระหว่าง train กับ validation ส่วน `Fold` ระบุรอบประเมิน และ `train ends` กับ `validation starts` เป็นตำแหน่งแถวที่นับเริ่มจาก 0 ไม่ใช่วันที่ และ MAE ของโมเดลกับ last-value baseline เทียบกับค่าจริงของช่วง validation เดียวกัน
+# **การตั้งค่าและผลลัพธ์ใน cell นี้:**
+#
+# - `gap=1`: เว้นหนึ่งแถวระหว่าง train กับ validation
+# - `Fold`: รอบประเมิน
+# - `train ends` กับ `validation starts`: ตำแหน่งแถวที่นับเริ่มจาก 0 ไม่ใช่วันที่
+#
+# MAE ของโมเดลกับ last-value baseline เทียบกับค่าจริงของช่วง validation เดียวกัน

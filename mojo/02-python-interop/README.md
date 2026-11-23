@@ -8,7 +8,10 @@
 
 ## โมเดลที่เรียกผ่าน Mojo: KNN
 
-โมเดลยังเป็น **KNeighborsClassifier(n_neighbors=5)** จาก [บท 03](../../lessons/03-first-classifier/README.md) รับความยาวและความกว้างของกลีบเลี้ยงกับกลีบดอก Iris รวมสี่ค่าหลังปรับสเกล แล้วเลือกสายพันธุ์ที่พบมากที่สุดในตัวอย่างฝึกห้าดอกที่อยู่ใกล้ที่สุด การ fit เก็บตัวอย่าง train พร้อมคำตอบ ส่วน predict หาเพื่อนบ้านของแถวที่ส่งเข้าไป
+โมเดลยังเป็น **KNeighborsClassifier(n_neighbors=5)** จาก [บท 03](../../lessons/03-first-classifier/README.md) รับความยาวและความกว้างของกลีบเลี้ยงกับกลีบดอก Iris รวมสี่ค่าหลังปรับสเกล แล้วเลือกสายพันธุ์ที่พบมากที่สุดในตัวอย่างฝึกห้าดอกที่อยู่ใกล้ที่สุด
+
+- **fit:** เก็บตัวอย่าง train พร้อมคำตอบ
+- **predict:** หาเพื่อนบ้านของแถวที่ส่งเข้าไป
 
 Mojo เรียก Pipeline นี้ผ่าน Python จึงยังต้องรักษาชื่อหรือลำดับและหน่วยของ feature รวมถึง fit scaler เฉพาะ train เช่นเดิม การเปลี่ยนภาษาเรียกใช้งานไม่ได้เปลี่ยนวิธีเรียนของ KNN
 
@@ -18,13 +21,17 @@ Mojo เรียก Pipeline นี้ผ่าน Python จึงยังต
 
 ## สิ่งที่เพิ่มจากบท 03 และ M01
 
-ใช้ KNN/Pipeline เดิม จึงไม่ทวนการ scale, fit และ predict รอบนี้ให้ Mojo เรียก Python ผ่าน `Python.import_module`
+ใช้ KNN/Pipeline เดิม จึงไม่ทวนการ scale, fit และ predict
+
+รอบนี้ให้ Mojo เรียก Python ผ่าน `Python.import_module`
 
 - `PythonObject` คือ object ฝั่ง Python ที่เข้าถึงจาก Mojo ได้ ไม่ได้แปลงอัลกอริทึม scikit-learn เป็น Mojo
 - `def main() raises` ยอมให้ข้อผิดพลาดจากการเรียก Python ส่งกลับมา
 - ผล `split` มีลำดับ `X_train, X_test, y_train, y_test` จึงใช้ index `0, 2` ตอน fit และ `1, 3` ตอนตรวจ accuracy
 
-หากพบ `ModuleNotFoundError` ให้ตรวจ environment ตามคู่มือติดตั้ง การคำนวณของ scikit-learn/NumPy ยังทำผ่าน Python interpreter ที่โหลดอยู่
+หากพบ `ModuleNotFoundError`, ให้ตรวจ environment ตามคู่มือติดตั้ง
+
+การคำนวณของ scikit-learn/NumPy ยังทำผ่าน Python interpreter ที่โหลดอยู่
 
 ## รันจาก root ของ repo
 
@@ -96,7 +103,9 @@ print("first five predictions:", model.predict(X_test)[:5])
 
 **ลองทำ:** เปลี่ยน `n_neighbors=3` ทั้งสองไฟล์แล้วเทียบผล
 
-**แนวคำตอบ:** split และ Pipeline ต้องตรงกัน การทดลองนี้ตรวจการเรียกข้ามภาษา; หากจะเลือก k ใช้งานจริงให้ใช้ CV ตามบท 10 การเรียกจาก Mojo ไม่รับประกันว่าจะเร็วกว่า เพราะยังมีต้นทุน startup/interpreter
+**แนวคำตอบ:** split และ Pipeline ต้องตรงกัน การทดลองนี้ตรวจการเรียกข้ามภาษา; หากจะเลือก k ใช้งานจริง ให้ใช้ CV ตามบท 10
+
+การเรียกจาก Mojo ไม่รับประกันว่าจะเร็วกว่า เพราะยังมีต้นทุน startup/interpreter
 
 </details>
 

@@ -2,7 +2,9 @@
 
 [กลับหลักสูตร](../README.md)
 
-เรียนบท 03, 05 และ 15 ก่อน ส่วนนี้มีเป้าหมายให้เห็นว่าการคำนวณตัวเลขแบบมีชนิดข้อมูลและการเรียก Python library มาเชื่อมกับหลักสูตรอย่างไร ไม่มี GPU หรือบริการ AI ภายนอก
+เรียนบท 03, 05 และ 15 ก่อน
+
+ส่วนนี้มีเป้าหมายให้เห็นว่าการคำนวณตัวเลขแบบมีชนิดข้อมูลและการเรียก Python library มาเชื่อมกับหลักสูตรอย่างไร ไม่มี GPU หรือบริการ AI ภายนอก
 
 | บท | เป้าหมาย |
 |---|---|
@@ -30,7 +32,9 @@ mojo --version
 python --version
 ```
 
-บน Ubuntu 24.04 หากยังไม่มีเครื่องมือสร้าง environment ให้ติดตั้ง `python3.12-venv` ตาม [คู่มือ WSL](../docs/wsl.md) ก่อน การ activate นี้เลือก Mojo และ Python จาก `.venv-mojo` สำหรับ terminal ปัจจุบัน ไม่ติดตั้ง compiler ทับ environment ของหลักสูตรหลัก
+บน Ubuntu 24.04 หากยังไม่มีเครื่องมือสร้าง environment ให้ติดตั้ง `python3.12-venv` ตาม [คู่มือ WSL](../docs/wsl.md) ก่อน
+
+การ activate นี้เลือก Mojo และ Python จาก `.venv-mojo` สำหรับ terminal ปัจจุบัน ไม่ติดตั้ง compiler ทับ environment ของหลักสูตรหลัก
 
 ## รันตามลำดับ
 
@@ -42,13 +46,24 @@ python mojo/02-python-interop/reference.py
 python scripts/verify_mojo.py
 ```
 
-คำสั่งสุดท้ายรันทั้งสองภาษาและตรวจผลเทียบอัตโนมัติ บันทึกหลักฐานใน `outputs/verification/mojo/` เมื่อจะกลับไปบท Python ใช้ `deactivate` แล้วรัน environment หลักตาม [setup](../docs/setup.md)
+คำสั่งสุดท้ายรันทั้งสองภาษาและตรวจผลเทียบอัตโนมัติ บันทึกหลักฐานใน `outputs/verification/mojo/`
+
+เมื่อจะกลับไปบท Python ใช้ `deactivate` แล้วรัน environment หลักตาม [setup](../docs/setup.md)
 
 หาก Mojo หา Python library ไม่เจอ ให้ตรวจว่า `which mojo` และ `which python` ชี้ `.venv-mojo/bin/` ทั้งคู่ แล้วรัน `python -c "import sklearn; print(sklearn.__version__)"` อ่าน [Calling Python from Mojo](https://mojolang.org/docs/manual/python/python-from-mojo/) หากยังมีปัญหา ไม่ชี้ WSL ไปยัง Python executable ของ Windows
 
 ## อ่านผลอย่างถูกต้อง
 
-การเรียก scikit-learn จาก Mojo ยังเรียก Python library ผ่าน CPython ไม่ได้แปลงโค้ดฝึกโมเดลของ scikit-learn เป็นภาษา Mojo อัตโนมัติ การใช้ typed loop ก็ไม่ได้รับประกันว่าเร็วกว่าการคำนวณ NumPy ที่ใช้ native kernels อยู่แล้ว
+การเรียก scikit-learn จาก Mojo ยังเรียก Python library ผ่าน CPython ไม่ได้แปลงโค้ดฝึกโมเดลของ scikit-learn เป็นภาษา Mojo อัตโนมัติ
 
-หากทดลอง benchmark ให้ตรวจคำตอบเท่ากันก่อน ระบุ dtype/ขนาดข้อมูล แยก compile/startup ออกจากเวลาคำนวณ warm up รันซ้ำหลายครั้ง รายงาน median และรวมต้นทุนข้ามภาษาเมื่อสิ่งนั้นเกิดในการใช้งานจริง หลักสูตรนี้ยังไม่มีผล benchmark ที่ยืนยันว่า Mojo เร็วกว่า
+การใช้ typed loop ก็ไม่ได้รับประกันว่าเร็วกว่าการคำนวณ NumPy ที่ใช้ native kernels อยู่แล้ว
+
+หากทดลอง benchmark ให้ตรวจตามลำดับ:
+
+1. ตรวจว่าคำตอบเท่ากัน และระบุ dtype กับขนาดข้อมูล
+2. แยกเวลา compile/startup ออกจากเวลาคำนวณ แล้ว warm up ก่อนวัด
+3. รันซ้ำหลายครั้งและรายงาน median
+4. รวมต้นทุนข้ามภาษา หากการใช้งานจริงมีขั้นตอนนี้
+
+หลักสูตรนี้ยังไม่มีผล benchmark ที่ยืนยันว่า Mojo เร็วกว่า
 

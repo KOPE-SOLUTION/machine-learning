@@ -8,7 +8,11 @@
 
 ## โมเดลที่ฝึกในบทนี้
 
-โมเดลคือ **Linear Regression** ใช้ `ŷ = wx + b` ทำนาย y จาก x ส่วน Gradient Descent เป็นวิธีปรับ w/b โค้ด Mojo เรียนจากตัวอย่างห้าจุดบนเส้น `y = 3x + 2` แล้วตรวจว่าค่าที่เรียนเข้าใกล้ w=3 และ b=2 ทบทวนความหมายโมเดลและการอัปเดตใน [บท 15](../../lessons/15-gradient-descent/README.md)
+โมเดลคือ **Linear Regression** ใช้ `ŷ = wx + b` ทำนาย y จาก x
+
+ส่วน Gradient Descent เป็นวิธีปรับ w/b
+
+โค้ด Mojo เรียนจากตัวอย่างห้าจุดบนเส้น `y = 3x + 2` แล้วตรวจว่าค่าที่เรียนเข้าใกล้ w=3 และ b=2 ทบทวนความหมายโมเดลและการอัปเดตใน [บท 15](../../lessons/15-gradient-descent/README.md)
 
 ![ทบทวน Gradient Descent ปรับ w และ b ของ Linear Regression หนึ่งก้าวแล้ว squared error ลดจาก 25 เป็น 9](../../assets/figures/15-gradient-descent-update.png)
 
@@ -26,7 +30,9 @@
 | `Float64(n)` | แปลงจำนวนตัวอย่างก่อนหาร |
 | `main()` | จุดเริ่มโปรแกรม |
 
-คำนวณ dw/db จาก w/b รอบเดิมก่อนอัปเดตเหมือนบท 15 คัดลอกโค้ด Mojo ไปไฟล์ `main.mojo` ไม่วางใน cell Python
+คำนวณ dw/db จาก w/b รอบเดิมก่อนอัปเดตเหมือนบท 15
+
+คัดลอกโค้ด Mojo ไปไฟล์ `main.mojo` ไม่วางใน cell Python
 
 ## รันจาก root ของ repo
 
@@ -98,7 +104,9 @@ print("training MSE:", np.mean((w * x + b - y) ** 2))
 
 ## อ่านผล
 
-คาด w≈3, b≈2 และ training MSE ใกล้ศูนย์ เพราะข้อมูลไม่มี noise และใช้ฝึกทุกจุด ผลนี้ไม่ใช่คะแนนกับข้อมูลใหม่ Python reference ตรวจพารามิเตอร์ด้วย tolerance 1e-8
+คาด w≈3, b≈2 และ training MSE ใกล้ศูนย์ เพราะข้อมูลไม่มี noise และใช้ฝึกทุกจุด ผลนี้ไม่ใช่คะแนนกับข้อมูลใหม่
+
+Python reference ตรวจพารามิเตอร์ด้วย tolerance 1e-8
 
 <details>
 <summary>ฝึกต่อพร้อมแนวคำตอบ</summary>
