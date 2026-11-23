@@ -49,7 +49,7 @@ def moons_data():
             for caption, point, label_pos, color in [
                 ("โค้งด้านบน: คลาส 0", (0, 1), (-1.55, 1.55), art.BLUE),
                 ("โค้งด้านล่าง: คลาส 1", (1, -.5), (.75, -1.05), art.ORANGE),
-                ("1 จุด = 1 แถว\nX = (-1, 0), y = 0", (-1, 0), (-1.65, -.95), art.NAVY),
+                ("1 จุด = 1 แถว\nfeatures = (-1, 0)\nlabel = คลาส 0", (-1, 0), (-1.65, -1.05), art.NAVY),
             ]:
                 ax.annotate(caption, xy=point, xytext=label_pos,
                             fontsize=15, color=color,
