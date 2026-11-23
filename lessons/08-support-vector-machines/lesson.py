@@ -21,13 +21,23 @@ print("Train:", X_train.shape, "Test:", X_test.shape)
 print("Training labels:", np.unique(y_train))
 
 # %% [markdown]
+# <details>
+# <summary>ดูผลลัพธ์ Cell 1</summary>
+#
+# ```text
+# Train: (300, 2) Test: (100, 2)
+# Training labels: [0 1]
+# ```
+#
+# มีข้อมูลฝึก 300 แถวและข้อมูลทดสอบ 100 แถว แต่ละแถวมีสอง features ส่วน labels มีสองคลาสคือ 0 และ 1
+#
+# </details>
+#
 # **อ่านโค้ด**
 #
 # - `make_moons` สร้างจุดรูปโค้งสองชุด: `X` เก็บพิกัดสองค่า ส่วน `y` เป็น label 0 หรือ 1 ที่กำกับแต่ละจุด
 # - `noise=0.25` เพิ่มความกระจายให้จุดไม่เรียงเป็นเส้นโค้งพอดี; ค่า 0.25 เป็นขนาดความกระจาย ไม่ใช่จำนวนจุดที่ทายผิด 25%
 # - `test_size=0.25` กันข้อมูล 100 จาก 400 แถวไว้ทดสอบ เหลือ 300 แถวสำหรับฝึกและทำ CV ส่วน `stratify=y` รักษาสัดส่วนคลาส
-#
-# **ผลที่ได้:** `Train: (300, 2) Test: (100, 2)` และ labels `[0 1]` หมายถึงแต่ละจุดมีสอง features และมีสองคลาส
 
 # %% Cell 2 — สร้าง Pipeline ของ SVM สองแบบ
 models = {
@@ -39,11 +49,22 @@ models = {
 print("Prepared kernels:", list(models))
 
 # %% [markdown]
+# <details>
+# <summary>ดูผลลัพธ์ Cell 2</summary>
+#
+# ```text
+# Prepared kernels: ['linear', 'rbf']
+# ```
+#
+# เตรียม Pipeline ไว้สองแบบแล้ว ขั้นนี้ยังไม่ได้ฝึกโมเดล จึงยังไม่มีคะแนน Accuracy
+#
+# </details>
+#
 # **อ่านโค้ด**
 #
 # - `models` เก็บ Pipeline สองตัว ทั้งคู่เป็น SVM สำหรับจำแนกคลาส โดยใช้ `StandardScaler` ก่อน `SVC`; ตัวหนึ่งใช้ `kernel="linear"` อีกตัวใช้ `kernel="rbf"`
 # - `C=1.0` เป็นค่าที่กำหนดไว้ให้ทั้งสองแบบ ฝั่ง RBF เพิ่ม `gamma="scale"` เพื่อให้ SVC คำนวณ gamma จาก features **หลังผ่าน StandardScaler** เมื่อเริ่ม fit
-# - ขั้นนี้เพียงสร้าง Pipeline และกำหนดค่า ยังไม่ได้ฝึกโมเดล; `Prepared kernels: ['linear', 'rbf']` แสดงสองแบบที่เตรียมไว้เปรียบเทียบ
+# - `Prepared kernels` แสดงชื่อสองแบบที่เตรียมไว้เปรียบเทียบ
 #
 # <details>
 # <summary>gamma="scale" คำนวณอย่างไร และต่างจาก StandardScaler อย่างไร?</summary>
@@ -67,14 +88,27 @@ for fold_no, (fit_idx, valid_idx) in enumerate(folds, start=1):
     )
 
 # %% [markdown]
+# <details>
+# <summary>ดูผลลัพธ์ Cell 3</summary>
+#
+# ```text
+# Fold 1: fit=240 rows, validation=60 rows
+# Fold 2: fit=240 rows, validation=60 rows
+# Fold 3: fit=240 rows, validation=60 rows
+# Fold 4: fit=240 rows, validation=60 rows
+# Fold 5: fit=240 rows, validation=60 rows
+# ```
+#
+# แต่ละรอบมีจำนวนแถวเท่ากัน แต่สลับส่วนที่ใช้เป็น validation ตามภาพ 5-fold CV
+#
+# </details>
+#
 # **อ่านโค้ด**
 #
 # - `StratifiedKFold(n_splits=5)` กำหนดการแบ่งเป็นห้าส่วนโดยรักษาสัดส่วนคลาส; `shuffle=True` สลับแถวก่อนจัดส่วน และ `random_state=42` ทำให้ได้การแบ่งเดิมเมื่อรันซ้ำ
 # - `cv.split(X_train, y_train)` คืนคู่ **ตำแหน่งแถวสำหรับฝึก** กับ **ตำแหน่งแถวสำหรับ validation** ในแต่ละรอบ ไม่ได้คืนโมเดลหรือคะแนน
 # - `list(...)` เก็บคู่ตำแหน่งครบห้ารอบไว้ใน `folds` เพื่อให้ Linear และ RBF ใช้การแบ่งชุดเดียวกัน
 # - `fit_idx` และ `valid_idx` เป็นตำแหน่งแถวภายใน `X_train` กับ `y_train` ส่วน test 100 แถวยังไม่ถูกนำมาใช้ ขั้นนี้ยังไม่ได้ฝึกโมเดล
-#
-# **ผลที่ได้:** ห้าบรรทัด ตั้งแต่ `Fold 1` ถึง `Fold 5` แต่ละรอบแสดง `fit=240 rows, validation=60 rows`
 
 # %% Cell 4 — ฝึกด้วย CV และอ่านคะแนนทีละ Fold
 fold_scores = {}
@@ -94,6 +128,26 @@ for name, values in fold_scores.items():
     print(f"{name} CV accuracy: {values.mean():.3f} +/- {values.std():.3f}")
 
 # %% [markdown]
+# <details>
+# <summary>ดูผลลัพธ์ Cell 4</summary>
+#
+# ```text
+# Validation accuracy by fold:
+#       linear    rbf
+# Fold
+# 1      0.717  0.900
+# 2      0.800  0.833
+# 3      0.850  0.950
+# 4      0.833  0.950
+# 5      0.817  0.900
+# linear CV accuracy: 0.803 +/- 0.046
+# rbf CV accuracy: 0.907 +/- 0.043
+# ```
+#
+# RBF ได้ค่าเฉลี่ย CV ประมาณ 0.907 สูงกว่า Linear ที่ประมาณ 0.803 คะแนนเหล่านี้คำนวณจาก validation ในแต่ละ fold
+#
+# </details>
+#
 # **อ่านโค้ด**
 #
 # - `cross_val_score` รับ Pipeline ที่จะเปรียบเทียบ และใช้ `cv=folds` แบ่งตามตำแหน่งที่เตรียมไว้ แต่ละรอบฝึก **สำเนา Pipeline ใหม่** บน 240 แถว แล้วทำนาย validation 60 แถวก่อนคำนวณ Accuracy
@@ -118,6 +172,19 @@ print(f"Test accuracy: {accuracy_score(y_test, y_pred):.3f}")
 print(f"Correct predictions: {(y_pred == y_test).sum()}/{len(y_test)}")
 
 # %% [markdown]
+# <details>
+# <summary>ดูผลลัพธ์ Cell 5</summary>
+#
+# ```text
+# Selected kernel: rbf
+# Test accuracy: 0.950
+# Correct predictions: 95/100
+# ```
+#
+# เลือก RBF จากค่าเฉลี่ย CV แล้วฝึกใหม่ด้วย train ทั้ง 300 แถว ผลบน test คือทายถูก 95 จาก 100 แถว
+#
+# </details>
+#
 # **อ่านโค้ด**
 #
 # - `max(scores, key=scores.get)` เลือก **ชื่อ kernel** ที่มี CV accuracy เฉลี่ยสูงสุด เช่น `"rbf"`; ไม่ได้เลือกจาก test
@@ -161,6 +228,19 @@ plt.close(fig)
 print("Saved:", (out / "boundary.png").resolve())
 
 # %% [markdown]
+# <details>
+# <summary>ดูผลลัพธ์ Cell 6</summary>
+#
+# ![กราฟจาก Cell 6 แสดงแนวแบ่ง RBF จุดฝึก และวงแหวน support vectors](../../assets/figures/08-support-vector-machines-boundary.png)
+#
+# ```text
+# Saved: <โฟลเดอร์ที่ Notebook ทำงาน>/outputs/08-support-vector-machines/boundary.png
+# ```
+#
+# ส่วน `<โฟลเดอร์ที่ Notebook ทำงาน>` จะแสดงเป็นเส้นทางจริงในเครื่องที่รัน
+#
+# </details>
+#
 # **อ่านโค้ด**
 #
 # - `DecisionBoundaryDisplay.from_estimator` ครั้งแรกใช้ `response_method="predict"` ให้ Pipeline ทำนายจุดทั่วพื้นที่กราฟ แล้วระบายพื้นตามคลาสที่ได้
