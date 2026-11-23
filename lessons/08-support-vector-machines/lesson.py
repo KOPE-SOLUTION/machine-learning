@@ -74,7 +74,6 @@ print("Prepared kernels:", list(models))
 #
 # - `models` เก็บ Pipeline สองตัว ทั้งคู่เป็น SVM สำหรับจำแนกคลาส โดยใช้ `StandardScaler` ก่อน `SVC`; ตัวหนึ่งใช้ `kernel="linear"` อีกตัวใช้ `kernel="rbf"`
 # - `C=1.0` เป็นค่าที่กำหนดไว้ให้ทั้งสองแบบ ฝั่ง RBF เพิ่ม `gamma="scale"` เพื่อให้ SVC คำนวณ gamma จาก features **หลังผ่าน StandardScaler** เมื่อเริ่ม fit
-# - `Prepared kernels` แสดงชื่อสองแบบที่เตรียมไว้เปรียบเทียบ
 #
 # <details>
 # <summary>gamma="scale" คำนวณอย่างไร และต่างจาก StandardScaler อย่างไร?</summary>
@@ -163,7 +162,7 @@ for name, values in fold_scores.items():
 # - `cross_val_score` รับ Pipeline ที่จะเปรียบเทียบ และใช้ `cv=folds` แบ่งตามตำแหน่งที่เตรียมไว้ แต่ละรอบฝึก **สำเนา Pipeline ใหม่** บน 240 แถว แล้วทำนาย validation 60 แถวก่อนคำนวณ Accuracy
 # - `scoring="accuracy"` กำหนดตัวชี้วัด; ผลที่คืนคือคะแนน validation ห้าค่า เก็บใน `fold_scores[name]` ตามชื่อ kernel
 # - `fold_table` วางคะแนนรอบเดียวกันไว้แถวเดียวกัน เช่น แถว Fold 1 เปรียบเทียบ Linear กับ RBF บน validation 60 แถวชุดเดียวกัน
-# - `values.mean()` เฉลี่ยห้าคะแนนและเก็บใน `scores[name]` ส่วน `values.std()` แสดงการกระจายระหว่างรอบ เช่น RBF ได้ค่าเฉลี่ยประมาณ 0.907 และ std ประมาณ 0.043 ค่า `+/-` นี้ไม่ใช่ช่วงความเชื่อมั่น
+# - `values.mean()` เฉลี่ยห้าคะแนนและเก็บใน `scores[name]` ส่วน `values.std()` แสดงการกระจายระหว่างรอบ: ค่ายิ่งมาก คะแนนแต่ละรอบยิ่งต่างกันมากขึ้น ค่า `+/-` นี้ไม่ใช่ช่วงความเชื่อมั่น
 #
 # **ทำไมยังต้อง fit อีก:** CV ฝึกสำเนาเพื่อเก็บคะแนน Pipeline ต้นฉบับใน `models` ยังไม่ได้ fit เมื่อเลือกการตั้งค่าแล้วจึงฝึกตัวที่จะใช้งานจริงด้วย train ครบ 300 แถว
 #
