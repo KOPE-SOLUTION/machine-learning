@@ -68,8 +68,8 @@ def moons_data():
 
 def margin():
     fig, page = art.page(
-        "SVM · แนวแบ่งอยู่ตรงกลางแถบ Margin",
-        "เส้นทึบแบ่งคลาส · เส้นประเป็นขอบแถบ · วงแหวนระบุ support vectors",
+        "Margin · วัดระยะระหว่างเส้นประสองฝั่ง",
+        "ตัวอย่าง Linear SVM ที่แยกสองคลาสได้ชัด · เส้นทึบแบ่งคลาส · เส้นประเป็นขอบแถบ",
     )
     X = np.array([[-2, -1], [-2, 1], [-1, 0], [1, 0], [2, -1], [2, 1]])
     y = np.array([0, 0, 0, 1, 1, 1])
@@ -92,11 +92,12 @@ def margin():
                edgecolors=art.NAVY, linewidths=1.7, zorder=4)
     ax.annotate("", xy=(1, 1.5), xytext=(-1, 1.5),
                 arrowprops={"arrowstyle": "<->", "color": art.PURPLE, "lw": 2})
-    ax.text(0, 1.73, "Margin", ha="center", color=art.PURPLE, fontsize=20,
+    ax.text(0, 1.73, "ความกว้างของแถบ = 2 หน่วย", ha="center", color=art.PURPLE, fontsize=18,
             bbox={"facecolor": "#F0EDF9", "edgecolor": "none", "pad": 2})
     ax.text(-1.9, -1.6, "ทายคลาส 0", ha="center", color=art.BLUE, fontsize=17)
     ax.text(1.9, -1.6, "ทายคลาส 1", ha="center", color=art.ORANGE, fontsize=17)
-    ax.set(xlim=(-2.8, 2.8), ylim=(-2, 2.25), xticks=[], yticks=[])
+    ax.set(xlim=(-2.8, 2.8), ylim=(-2, 2.25), xticks=[-1, 0, 1], yticks=[],
+           xlabel="Feature 1")
     ax.spines[["top", "right", "left", "bottom"]].set_visible(False)
 
     art.box(page, .64, .61, .30, .14, "Decision boundary\nเส้นทึบ = แนวแบ่งคลาส", size=19)
@@ -110,8 +111,8 @@ def margin():
                     arrowprops={"arrowstyle": "-|>", "color": color, "lw": 2,
                                 "shrinkA": 6, "shrinkB": 7})
     art.footer(page,
-        "SVM พยายามให้ Margin กว้าง พร้อมให้จุดฝึกอยู่ถูกฝั่งและพ้นแถบ",
-        "Margin ไม่ใช่คลาสที่สาม · จุดใหม่ยังทายตามฝั่งของเส้นทึบ")
+        "เส้นทึบอยู่ที่ 0 · ขอบอยู่ที่ −1 และ 1 · ห่างขอบฝั่งละ 1 หน่วย",
+        "ความกว้างรวม = 1 + 1 = 2 หน่วย · วัดตั้งฉากกับแนวแบ่งตามลูกศรสีม่วง")
     art.save(fig, page, "08-support-vector-machines-margin")
 
 
