@@ -1,4 +1,4 @@
-# 08 · Support Vector Machines และขอบเขตไม่เป็นเส้นตรง
+# 08 · Support Vector Machines: Linear, RBF และ Cross-validation (CV)
 
 [กลับสารบัญ](../../README.md) · [Notebook](lesson.ipynb) · [Python](lesson.py)
 
