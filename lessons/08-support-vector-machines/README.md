@@ -137,7 +137,15 @@ RBF จะให้ความคล้ายกับจุดกลางเ�
 
 **ดูความเปลี่ยนแปลงของแนวแบ่ง ไม่เลือกจากกราฟที่ตามจุดฝึกได้ดีที่สุดเพียงอย่างเดียว** ถ้าตามรายละเอียดของ train มากเกินไป อาจเกิด overfitting จึงต้องเปรียบเทียบด้วยข้อมูลที่ไม่ได้ใช้ fit ในรอบนั้น
 
-ใช้ StandardScaler ก่อน SVM เพราะขนาดของ features มีผลต่อระยะและความคล้าย โดยให้ scaler อยู่ใน Pipeline เช่นเดียวกับบทก่อน
+## Pipeline: ปรับสเกลก่อนส่งข้อมูลให้ SVM
+
+ใช้ **StandardScaler ก่อน SVM** เพราะขนาดของ features มีผลต่อระยะและความคล้าย คอลัมน์ที่มีค่ากระจายกว้างอาจมีอิทธิพลมากกว่าคอลัมน์อื่น เราจึงรวม StandardScaler กับ SVC ไว้ใน Pipeline เพื่อให้ข้อมูลผ่านการปรับสเกลทั้งตอนฝึกและตอนทำนาย
+
+![ตอนฝึก StandardScaler หาค่าเฉลี่ยและส่วนเบี่ยงเบนมาตรฐานจาก X_train แล้วแปลง features ก่อนส่งให้ SVC ฝึกคู่กับ y_train ตอนทำนาย X_test หรือข้อมูลใหม่ผ่าน scaler ด้วยสถิติเดิม แล้วให้ SVC ทำนายคลาส 0 หรือ 1](../../assets/figures/08-support-vector-machines-pipeline.png)
+
+[เปิดภาพ SVG](../../assets/figures/08-support-vector-machines-pipeline.svg)
+
+**อ่านภาพ:** แถวบนเป็นการฝึก — scaler `fit → transform` ก่อน SVC `fit`<br>แถวล่างเป็นการทำนาย — scaler `transform` ด้วยสถิติเดิม ก่อน SVC `predict` โดย labels ไม่ผ่านการปรับสเกล
 
 ## Cross-validation (CV): เลือก kernel ก่อนใช้ Test
 
@@ -159,6 +167,8 @@ RBF จะให้ความคล้ายกับจุดกลางเ�
 [เปิดภาพ SVG](../../assets/figures/08-support-vector-machines-cross-validation.svg)
 
 แต่ละแถวถูกใช้เป็น validation หนึ่งครั้ง และ **แต่ละรอบเริ่มฝึก Pipeline ใหม่** จึงไม่ใช้โมเดลจากรอบก่อนหน้ามาฝึกต่อ
+
+ในแต่ละรอบ scaler หาสถิติจากส่วนฝึก 240 แถวเท่านั้น แล้วใช้สถิติของรอบนั้นแปลง validation 60 แถวก่อนทำนาย จึงไม่ให้ validation มีส่วนกำหนดสเกลระหว่างฝึก
 
 ใช้ **StratifiedKFold** เพื่อรักษาสัดส่วนคลาส ในข้อมูลนี้ validation แต่ละรอบมีคลาส 0 จำนวน 30 แถว และคลาส 1 จำนวน 30 แถว ทั้งสอง kernel ใช้ตำแหน่งแถวชุดเดียวกันในแต่ละรอบ เพื่อให้เปรียบเทียบจากข้อมูลเดียวกัน
 
@@ -521,4 +531,6 @@ Saved: <โฟลเดอร์ที่ Notebook ทำงาน>/outputs/08-s
 - [scikit-learn: Cross-validation และการเก็บ test ไว้ประเมิน](https://scikit-learn.org/1.7/modules/cross_validation.html)
 - [scikit-learn: StratifiedKFold](https://scikit-learn.org/1.7/modules/generated/sklearn.model_selection.StratifiedKFold.html)
 - [scikit-learn: SVC](https://scikit-learn.org/1.7/modules/generated/sklearn.svm.SVC.html)
+- [scikit-learn: StandardScaler](https://scikit-learn.org/1.7/modules/generated/sklearn.preprocessing.StandardScaler.html)
+- [scikit-learn: Pipeline และลำดับ fit/transform/predict](https://scikit-learn.org/1.7/modules/generated/sklearn.pipeline.Pipeline.html)
 - [scikit-learn: DecisionBoundaryDisplay](https://scikit-learn.org/1.7/modules/generated/sklearn.inspection.DecisionBoundaryDisplay.html)
