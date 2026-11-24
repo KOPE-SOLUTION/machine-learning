@@ -170,43 +170,13 @@ def svm():
 
 
 def tree():
-    fig, p = page("Decision Tree · เดินตามเงื่อนไขจนถึงใบ",
-                  "กฎสมมติเพื่ออธิบาย · ข้อมูลใหม่: feature_3 = 0.8 และ feature_1 = 0.7")
-    box(p, .35, .65, .30, .12, "feature_3 ≤ 0.5 ?", size=24)
-    box(p, .12, .40, .20, .12, "ใบ: ทายคลาส 0", size=21)
-    box(p, .56, .40, .30, .12, "feature_1 ≤ 1.0 ?", color="#FFF0DF", size=24)
-    box(p, .43, .19, .22, .11, "ใบ: ทายคลาส 1", color="#FFF0DF", size=22, ink=ORANGE)
-    box(p, .74, .19, .22, .11, "ใบ: ทายคลาส 0", size=21)
-    for start, end, c in [((.43,.65),(.22,.52),MUTED), ((.57,.65),(.71,.52),ORANGE),
-                          ((.65,.40),(.54,.30),ORANGE), ((.77,.40),(.85,.30),MUTED)]:
-        arrow(p, start, end, c, 3)
-    label(p, .29, .585, "จริง", 18, MUTED)
-    label(p, .66, .585, "ไม่จริง: 0.8 > 0.5", 17, ORANGE)
-    label(p, .45, .355, "จริง: 0.7 ≤ 1.0", 17, ORANGE)
-    label(p, .86, .355, "ไม่จริง", 18, MUTED)
-    assert .8 > .5 and .7 <= 1
-    footer(p, "เส้นสีส้มคือเส้นทางของข้อมูลแถวนี้ · ทุกแถวเริ่มที่ราก แล้วไปจบที่ใบหนึ่งใบ",
-           "ตอน fit เลือกคอลัมน์และค่าตัดจาก train · ตอน predict ใช้กฎที่เรียนไว้แล้ว")
-    save(fig, p, "09-trees-and-forests-tree")
+    from render_ep09_diagrams import tree as render_tree
+    render_tree()
 
 
 def forest():
-    fig, p = page("Random Forest · รวมคำตอบจากต้นไม้หลายต้น",
-                  "ภาพย่อด้วยสองต้น · RandomForestClassifier ในโค้ดใช้ 120 ต้น")
-    box(p, .35, .71, .30, .10, "ข้อมูล train ชุดเดียวกัน", size=23)
-    for x, name, prob in [(.08, "ต้นที่ 1", .8), (.58, "ต้นที่ 2", .4)]:
-        arrow(p, (.5, .71), (x+.17, .61))
-        box(p, x, .52, .34, .09, "สุ่มแถวแบบคืนกลับ", color="white", size=21)
-        arrow(p, (x+.17, .52), (x+.17, .45))
-        box(p, x, .30, .34, .15, name+"\nสุ่ม feature ที่พิจารณาในแต่ละจุดแบ่ง", size=17)
-        label(p, x+.17, .245, f"แถวใหม่เดียวกัน → P(คลาส 1) = {prob}", 18, ha="center")
-        arrow(p, (x+.17, .22), (.5, .17))
-    box(p, .20, .115, .60, .07, "เฉลี่ย (0.8 + 0.4) / 2 = 0.6 → ทายคลาส 1",
-        color="#FFF0DF", size=22, ink=ORANGE)
-    assert np.isclose(np.mean([.8,.4]), .6)
-    label(p, .05, .045, "scikit-learn เฉลี่ย probability ของต้นไม้ · ไม่ใช่นับแค่คลาสที่แต่ละต้นเลือก",
-          20, BLUE, True)
-    save(fig, p, "09-trees-and-forests-ensemble")
+    from render_ep09_diagrams import forest as render_forest
+    render_forest()
 
 
 def pca():
