@@ -224,9 +224,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.svm import SVC
 
 X, y = make_moons(n_samples=400, noise=0.25, random_state=42)
-X_train, X_test, y_train, y_test = train_test_split(
-    X, y, test_size=0.25, stratify=y, random_state=42
-)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, stratify=y, random_state=42)
 print("Train:", X_train.shape, "Test:", X_test.shape)
 print("Training labels:", np.unique(y_train))
 ```
@@ -264,9 +262,7 @@ Training labels: [0 1]
 ```python
 models = {
     "linear": make_pipeline(StandardScaler(), SVC(kernel="linear", C=1.0)),
-    "rbf": make_pipeline(
-        StandardScaler(), SVC(kernel="rbf", C=1.0, gamma="scale")
-    ),
+    "rbf": make_pipeline(StandardScaler(), SVC(kernel="rbf", C=1.0, gamma="scale")),
 }
 print("Prepared kernels:", list(models))
 ```
@@ -308,10 +304,7 @@ cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
 folds = list(cv.split(X_train, y_train))
 
 for fold_no, (fit_idx, valid_idx) in enumerate(folds, start=1):
-    print(
-        f"Fold {fold_no}: fit={len(fit_idx)} rows, "
-        f"validation={len(valid_idx)} rows"
-    )
+    print(f"Fold {fold_no}: fit={len(fit_idx)} rows, validation={len(valid_idx)} rows")
 ```
 
 <details>
@@ -341,9 +334,7 @@ Fold 5: fit=240 rows, validation=60 rows
 ```python
 fold_scores = {}
 for name, candidate in models.items():
-    fold_scores[name] = cross_val_score(
-        candidate, X_train, y_train, cv=folds, scoring="accuracy"
-    )
+    fold_scores[name] = cross_val_score(candidate, X_train, y_train, cv=folds, scoring="accuracy")
 
 fold_table = pd.DataFrame(fold_scores, index=range(1, len(folds) + 1))
 fold_table.index.name = "Fold"
@@ -446,8 +437,7 @@ support_idx = model.named_steps["svc"].support_
 support_points = X_train[support_idx]
 ax.scatter(
     support_points[:, 0], support_points[:, 1], s=85,
-    facecolors="none", edgecolors="black", linewidths=0.8,
-    label="Support vectors"
+    facecolors="none", edgecolors="black", linewidths=0.8, label="Support vectors"
 )
 ax.set(xlabel="Feature 1", ylabel="Feature 2", title=f"Training data: {chosen} SVM")
 ax.legend(loc="upper right")
