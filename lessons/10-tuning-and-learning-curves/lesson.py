@@ -53,11 +53,11 @@ print(f"Best CV accuracy: {search.best_score_:.3f}")
 # - `load_iris(return_X_y=True)` คืน X และ y โดยตรง แทนการคืนชุดข้อมูลพร้อมรายละเอียดแบบบท 02
 # - `Pipeline([("scale", ...), ("knn", ...)])` ตั้งชื่อแต่ละขั้นเอง เพื่อระบุว่า GridSearchCV ต้องปรับการตั้งค่าของขั้นใด
 # - `knn__n_neighbors` และ `knn__weights` ใช้รูปแบบ `ชื่อขั้น__ชื่อพารามิเตอร์` ให้ GridSearchCV รู้ว่าต้องปรับค่าของ KNN
-# - `search.fit(X_train, y_train)` ลองหกชุดค่า แต่ละชุดฝึกและวัด validation ห้ารอบ แล้วเลือกชุดที่มีคะแนนเฉลี่ยสูงสุด<br>จากนั้นฝึกใหม่ด้วย train ทั้งหมดโดยอัตโนมัติ ขั้นตอนฝึกใหม่นี้เรียกว่า **refit**
+# - `search.fit(X_train, y_train)` ลองหกชุดค่า แต่ละชุดฝึกและวัด validation ห้ารอบ แล้วเลือกชุดที่มีคะแนนเฉลี่ยสูงสุด<br>จากนั้นฝึกใหม่ด้วย train ทั้งหมดโดยอัตโนมัติ<br>ขั้นตอนฝึกใหม่นี้เรียกว่า **refit**
 # - `pd.DataFrame(search.cv_results_)` ทำผลค้นหาเป็นตาราง แล้วเรียงด้วย `rank_test_score` เพื่ออ่านลำดับจากคะแนน CV
 # - `best_params_` บอกชุดค่าที่เลือก และ `best_score_` เป็นคะแนน CV เฉลี่ยของชุดนั้น ไม่ใช่ final test
 #
-# **ชื่อที่ใช้ในตารางผล:** `mean_test_score` คือ accuracy เฉลี่ยของ validation ใน CV และ `std_test_score` คือส่วนเบี่ยงเบนมาตรฐานระหว่าง fold ไม่ใช่คะแนน final test
+# **ชื่อที่ใช้ในตารางผล:** `mean_test_score` คือ accuracy เฉลี่ยของ validation ใน CV<br>ส่วน `std_test_score` คือส่วนเบี่ยงเบนมาตรฐานระหว่าง fold ไม่ใช่คะแนน final test
 #
 # `weights="uniform"` ให้เพื่อนบ้านลงคะแนนเท่ากัน ส่วน `"distance"` ให้จุดใกล้มีน้ำหนักมากกว่า
 #
@@ -95,10 +95,10 @@ print(f"Final test accuracy: {accuracy_score(y_test, search.predict(X_test)):.3f
 #
 # **อ่านโค้ด**
 #
-# - `learning_curve(search.best_estimator_, ...)` ใช้ค่า k และ weights ที่ GridSearchCV เลือก แล้วสร้าง Pipeline แยกเพื่อ fit ใหม่สำหรับแต่ละขนาดข้อมูลฝึกและแต่ละ fold กราฟจึงแสดงผลของจำนวนข้อมูลที่ใช้ฝึกจริง
+# - `learning_curve(search.best_estimator_, ...)` ใช้ค่า k และ weights ที่ GridSearchCV เลือก แล้วสร้าง Pipeline แยกเพื่อ fit ใหม่สำหรับแต่ละขนาดข้อมูลฝึกและแต่ละ fold<br>กราฟจึงแสดงผลของจำนวนข้อมูลที่ใช้ฝึกจริง
 # - `train_sizes=[0.4, 0.6, 0.8, 1.0]` เป็นสัดส่วนของข้อมูลฝึกที่ใช้ได้ในแต่ละ fold ระดับ 1.0 จึงเท่ากับ 96 แถวในบทนี้
 # - `sizes` คืนจำนวนแถวจริง ส่วน `train_scores` และ `valid_scores` มีหนึ่งแถวต่อขนาดข้อมูล และหนึ่งคอลัมน์ต่อ fold
 # - `mean(axis=1)` เฉลี่ยคะแนนข้าม fold เพื่อวาดหนึ่งจุดต่อขนาดข้อมูล
 # - `search.predict(X_test)` ใช้ Pipeline ที่ GridSearchCV ฝึกด้วยค่าที่เลือกบน train ทั้ง 120 แถว เพื่อทำนาย test<br>ส่วน Pipeline ที่ฝึกด้วยข้อมูลขนาดต่าง ๆ สำหรับ learning curve ใช้สร้างกราฟเท่านั้น
 #
-# **ที่มาของ 96 แถวบนแกนนอน:** train ทั้งหมดมี 120 แถว แต่แต่ละรอบของ 5-fold CV ใช้ฝึกเพียง 4 ส่วน จึงมีสูงสุด `120 × 4/5 = 96` แถว ส่วนอีก 24 แถวใช้ validation
+# **ที่มาของ 96 แถวบนแกนนอน:** train ทั้งหมดมี 120 แถว แต่แต่ละรอบของ 5-fold CV ใช้ฝึกเพียง 4 ส่วน จึงมีสูงสุด `120 × 4/5 = 96` แถว<br>ส่วนอีก 24 แถวใช้ validation

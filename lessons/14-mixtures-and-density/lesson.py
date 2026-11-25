@@ -123,6 +123,6 @@ plt.close(fig)
 # **อ่านโค้ด**
 #
 # - `grid` เก็บตำแหน่ง x จำนวน 400 ค่าจาก −5 ถึง 6 เพื่อวาดเส้นต่อเนื่อง<br>คำสั่ง `reshape(-1, 1)` จัดเป็น 400 แถว หนึ่งคอลัมน์ตามรูปข้อมูลที่โมเดลรับ
-# - `score_samples(grid)` ใช้ GMM หรือ KDE ที่ฝึกจาก train แล้วคำนวณ log density ณ ตำแหน่ง x แต่ละค่าของ `grid` จากนั้น `np.exp(...)` แปลง log density กลับเป็น density สำหรับความสูงของเส้นกราฟ
+# - `score_samples(grid)` ใช้ GMM หรือ KDE ที่ฝึกจาก train แล้วคำนวณ log density ณ ตำแหน่ง x แต่ละค่าของ `grid`<br>จากนั้น `np.exp(...)` แปลง log density กลับเป็น density สำหรับความสูงของเส้นกราฟ
 # - `hist(..., density=True)` ปรับ histogram ให้พื้นที่รวมเป็น 1 เพื่อเทียบกับเส้น density ได้
 # - histogram แสดงข้อมูล train ส่วนการประเมินกับ test อ่านจาก `GMM test mean log density` และ `KDE test mean log density` ใน Cell 3

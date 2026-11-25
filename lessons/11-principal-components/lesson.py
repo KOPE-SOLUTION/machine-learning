@@ -44,7 +44,7 @@ print(f"Test accuracy: {accuracy_score(y_test, model.predict(X_test)):.3f}")
 # - `model.fit(X_train, y_train)` ทำงานตามลำดับ: scaler เรียนสถิติและปรับสเกล → PCA เรียนค่าเฉลี่ยกับแกนแล้วแปลงพิกัด → Logistic Regression ใช้พิกัดหลัง PCA คู่กับเลขใน `y_train` ฝึกจำแนกภาพ<br>ทั้ง scaler และ PCA ใช้เฉพาะ features ไม่ใช้เลขใน `y` เลือกแกน
 # - `PCA(n_components=0.9, svd_solver="full")` เพิ่มแกนตามลำดับจนสัดส่วนความแปรปรวนสะสมเกิน 90% ของข้อมูลฝึกที่ผ่าน scaler แล้ว<br>ค่า 0.9 เป็นเกณฑ์สัดส่วน ไม่ใช่จำนวนแกน
 # - `model.named_steps["pca"]` เข้าถึง PCA ที่ fit แล้วเพื่ออ่านผล ส่วน `pca.n_components_` คือจำนวนแกนที่เลือกได้จริง
-# - `explained_variance_ratio_` บอกว่าแต่ละแกนเก็บความแปรปรวนไว้เป็นสัดส่วนเท่าไร และ `.sum()` รวมสัดส่วนของทุกแกนที่เก็บไว้ ส่วน accuracy ต้องเทียบเลขที่ Pipeline ทายกับเลขที่กำกับภาพไว้
+# - `explained_variance_ratio_` บอกว่าแต่ละแกนเก็บความแปรปรวนไว้เป็นสัดส่วนเท่าไร และ `.sum()` รวมสัดส่วนของทุกแกนที่เก็บไว้<br>ส่วน accuracy ต้องเทียบเลขที่ Pipeline ทายกับเลขที่กำกับภาพไว้
 # - `max_iter=2000` ตั้งเพดานรอบให้ตัวแก้ปัญหาของ Logistic Regression
 #
 # **อ่านผลตามหน้าที่:**

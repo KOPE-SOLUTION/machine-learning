@@ -12,7 +12,9 @@
 
 RBF kernel ช่วยให้สร้างขอบเขตที่ไม่เป็นเส้นตรงได้
 
-สำหรับสิบคลาส SVC ฝึกตัวจำแนกทีละคู่ เช่น 0 กับ 1 และ 0 กับ 2 จนครบทุกคู่ แล้วรวมผลเพื่อตัดสินเลขหนึ่งตัว วิธีนี้เรียกว่า **one-versus-one**
+สำหรับสิบคลาส SVC ฝึกตัวจำแนกทีละคู่ เช่น 0 กับ 1 และ 0 กับ 2 จนครบทุกคู่ แล้วรวมผลเพื่อตัดสินเลขหนึ่งตัว
+
+วิธีนี้เรียกว่า **one-versus-one**
 
 ผลจาก `predict` เป็นเลข 0–9 ไม่ใช่ความน่าจะเป็น
 
@@ -101,7 +103,7 @@ def validate_pixels(values):
 
 - `validate_pixels(values)` รับข้อมูลภาพ แล้ว `np.asarray(..., dtype=np.float64)` จัดให้เป็น array ตัวเลข
 - `array.ndim != 2`, `array.shape[1] != 64` และ `len(array) == 0` ตรวจว่ามีอย่างน้อยหนึ่งภาพ โดยแต่ละภาพคลี่เป็น 64 ค่า
-- `np.isfinite(array).all()` ให้ True เมื่อทุกค่าปราศจาก NaN และค่าบวก/ลบอนันต์ ส่วน `np.any((array < 0) | (array > 16))` ให้ True เมื่อมีอย่างน้อยหนึ่งค่าหลุดช่วง 0–16
+- `np.isfinite(array).all()` ให้ True เมื่อทุกค่าปราศจาก NaN และค่าบวก/ลบอนันต์<br>ส่วน `np.any((array < 0) | (array > 16))` ให้ True เมื่อมีอย่างน้อยหนึ่งค่าหลุดช่วง 0–16
 - **ถ้าข้อมูลไม่ผ่าน:** `raise ValueError` จะหยุดก่อนส่งข้อมูลผิดรูปเข้าโมเดล
 - **ถ้าข้อมูลผ่าน:** คืน array ที่พร้อมใช้
 
@@ -211,11 +213,11 @@ def main():
 
 **อ่านโค้ด: ฝึกและประเมิน**
 
-- `validate_pixels(data.data)` ใช้เงื่อนไขเดียวกับตอนรับข้อมูลใหม่ ส่วนการแบ่ง `np.arange(len(X))` เก็บ index ไว้ให้ตรวจย้อนกลับได้ว่าแถวใดอยู่ชุดไหน
-- `X[train_idx]` เลือกค่า pixel ของภาพ (features) ส่วน `data.target[train_idx]` เลือกเลขที่กำกับภาพไว้ (class labels) โดยใช้ index ชุดเดียวกันเพื่อให้จับคู่ตรงภาพ เช่นเดียวกับฝั่ง test
+- `validate_pixels(data.data)` ใช้เงื่อนไขเดียวกับตอนรับข้อมูลใหม่<br>ส่วนการแบ่ง `np.arange(len(X))` เก็บ index ไว้ให้ตรวจย้อนกลับได้ว่าแถวใดอยู่ชุดไหน
+- `X[train_idx]` เลือกค่า pixel ของภาพ (features)<br>ส่วน `data.target[train_idx]` เลือกเลขที่กำกับภาพไว้ (class labels) โดยใช้ index ชุดเดียวกันเพื่อให้จับคู่ตรงภาพ เช่นเดียวกับฝั่ง test
 - `build_search().fit(X_train, y_train)` เปรียบเทียบ C/gamma สี่คู่ด้วย CV เลือกคู่ที่ได้ macro F1 เฉลี่ยสูงสุด แล้วฝึก Pipeline ด้วยคู่ค่าที่เลือกบน train ทั้งหมดอีกครั้ง
 - `search.predict(X_test)` ปรับสเกลภาพ test ด้วยค่าเฉลี่ยและส่วนเบี่ยงเบนมาตรฐานที่เรียนจาก train แล้วให้ SVC ที่ฝึกไว้ทายเลข โดยไม่ fit ใหม่บน test
-- `report` เก็บคะแนน วิธีแบ่ง รุ่น Python และ scikit-learn ส่วน `output_dict=True` ให้ classification report เป็น dictionary ที่เขียนเป็น JSON ได้
+- `report` เก็บคะแนน วิธีแบ่ง รุ่น Python และ scikit-learn<br>ส่วน `output_dict=True` ให้ classification report เป็น dictionary ที่เขียนเป็น JSON ได้
 
 **อ่านโค้ด: บันทึกและนำกลับมาใช้**
 
@@ -339,7 +341,11 @@ Misclassified held-out examples: 7
 
 ![หกภาพแรกที่ SVM ทายผิด พร้อมเลขจริงและเลขที่ทำนาย](../../assets/figures/16-digits-project-errors.png)
 
-ทายถูก 353 จาก 360 ภาพ หรือ accuracy ประมาณ 98.06% กราฟ confusion matrix ใช้ test ทั้งหมด ส่วนภาพข้อผิดพลาดแสดงหกภาพแรกจากเจ็ดภาพที่ทายผิด ค่ารุ่น Python และ scikit-learn ในรายงานเป็นรุ่นของเครื่องที่รัน
+ทายถูก 353 จาก 360 ภาพ หรือ accuracy ประมาณ 98.06%
+
+กราฟ confusion matrix ใช้ test ทั้งหมด<br>ส่วนภาพข้อผิดพลาดแสดงหกภาพแรกจากเจ็ดภาพที่ทายผิด
+
+ค่ารุ่น Python และ scikit-learn ในรายงานเป็นรุ่นของเครื่องที่รัน
 
 </details>
 
