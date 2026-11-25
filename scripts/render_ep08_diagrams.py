@@ -80,6 +80,8 @@ def margin():
     assert np.allclose(model.intercept_, [0])
     assert set(model.support_) == {2, 3}
     assert np.array_equal(model.predict(X), y)
+    assert np.allclose(model.decision_function([[-1, 0], [0, 0], [1, 0]]), [-1, 0, 1])
+    assert np.isclose(2 / np.linalg.norm(model.coef_[0]), 2)
 
     ax = fig.add_axes([.07, .23, .52, .52])
     ax.axvspan(-2.8, 0, color="#EDF4FF")
@@ -94,17 +96,17 @@ def margin():
                edgecolors=art.NAVY, linewidths=1.7, zorder=4)
     ax.annotate("", xy=(1, 1.5), xytext=(-1, 1.5),
                 arrowprops={"arrowstyle": "<->", "color": art.PURPLE, "lw": 2})
-    ax.text(0, 1.73, "ความกว้างของแถบ = 2 หน่วย", ha="center", color=art.PURPLE, fontsize=18,
+    ax.text(0, 1.73, "ระยะบนกราฟ = 2 หน่วย", ha="center", color=art.PURPLE, fontsize=18,
             bbox={"facecolor": "#F0EDF9", "edgecolor": "none", "pad": 2})
     ax.text(-1.65, -1.6, "พื้นน้ำเงิน: ทาย 0", ha="center", color=art.BLUE, fontsize=17)
     ax.text(1.65, -1.6, "พื้นส้ม: ทาย 1", ha="center", color=art.ORANGE, fontsize=17)
     ax.set(xlim=(-2.8, 2.8), ylim=(-2, 2.25), xticks=[-1, 0, 1], yticks=[-1, 0, 1],
-           xlabel="Feature 1", ylabel="Feature 2")
+           xlabel="Feature 1 (พิกัด)", ylabel="Feature 2")
     ax.spines[["top", "right", "left", "bottom"]].set_visible(False)
 
-    art.box(page, .64, .61, .30, .14, "Decision boundary\nเส้นทึบ = แนวแบ่งคลาส", size=19)
+    art.box(page, .64, .61, .30, .14, "Decision boundary\nแนวแบ่งคลาส · คะแนน = 0", size=19)
     art.box(page, .64, .42, .30, .14, "Support vectors\nจุดที่ใช้กำหนดแนวแบ่ง", size=19)
-    art.box(page, .64, .23, .30, .14, "ขอบ Margin\nเส้นประสองฝั่งของแนวแบ่ง", size=19)
+    art.box(page, .64, .23, .30, .14, "ขอบ Margin (เส้นประ)\nคะแนน = −1 และ +1", size=19)
     for start, end, color in [((.64, .68), (0, 1.05), art.NAVY),
                               ((.64, .49), (1, 0), art.NAVY),
                               ((.64, .30), (1, -1.15), art.PURPLE)]:
@@ -113,8 +115,8 @@ def margin():
                     arrowprops={"arrowstyle": "-|>", "color": color, "lw": 2,
                                 "shrinkA": 6, "shrinkB": 7})
     art.footer(page,
-        "เส้นทึบอยู่ที่ 0 · ขอบอยู่ที่ −1 และ 1 · ห่างขอบฝั่งละ 1 หน่วย",
-        "ความกว้างรวม = 1 + 1 = 2 หน่วย · วัดตั้งฉากกับแนวแบ่งตามลูกศรสีม่วง")
+        "โมเดลในภาพ: คะแนน = 1×Feature 1 + 0×Feature 2 + 0 = Feature 1",
+        "ขอบมีพิกัด −1 และ +1 → ระยะห่างบนกราฟ = 1 − (−1) = 2 หน่วย")
     art.save(fig, page, "08-support-vector-machines-margin")
 
 
