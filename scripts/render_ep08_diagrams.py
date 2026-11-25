@@ -80,6 +80,66 @@ def linear_margin_example():
     return X, y, model
 
 
+def boundary_choice():
+    """Compare an illustrative separating line with the actual fitted optimum."""
+    X, y, fitted = linear_margin_example()
+    fitted_w, fitted_b = fitted.coef_[0], fitted.intercept_[0]
+    candidate_w, candidate_b = np.array([2.5, 0.]), -1.5
+    green = "#18785C"
+
+    # Check every constraint used in the collapsed hand calculation, including
+    # nonzero Feature 2 values. The two central points alone do not constrain w2.
+    signed_y = 2 * y - 1
+    for w2 in (-1., -.5, 0., .5, 1.):
+        assert np.all(signed_y * (X @ np.array([1., w2])) >= 1)
+    for w2 in (-1.1, 1.1):
+        assert not np.all(signed_y * (X @ np.array([1., w2])) >= 1)
+    assert np.allclose(fitted.decision_function(X), [-2, -2, -1, 1, 2, 2])
+
+    fig, page = art.page(
+        "SVM · ทายถูกเหมือนกัน แต่เว้นระยะต่างกัน",
+        "จุดฝึกหกจุดชุดเดียวกัน · ซ้าย: เส้นที่สมมติไว้เปรียบเทียบ · ขวา: ผลจากการฝึก Linear SVC",
+    )
+    art.label(page, .07, .80, "สีจุด = label จริง · น้ำเงิน 0 / ส้ม 1", 17)
+    art.label(page, .56, .80, "สีพื้น = คลาสที่แนวแบ่งนั้นทำนาย", 17)
+    for left, w, b, title, nearest in [
+        (.07, candidate_w, candidate_b, "แนวแบ่งที่ลอง: พิกัด 0.6", .4),
+        (.56, fitted_w, fitted_b, "แนวแบ่งที่ฝึกได้: พิกัด 0", 1.),
+    ]:
+        boundary = -b / w[0]
+        scores = X @ w + b
+        distances = np.abs(scores) / np.linalg.norm(w)
+        assert np.array_equal((scores > 0).astype(int), y)
+        assert np.all(signed_y * scores >= 1 - 1e-9)
+        assert np.isclose(distances.min(), nearest)
+        assert np.isclose(abs(-1 - boundary), distances[2])
+        assert np.isclose(abs(1 - boundary), distances[3])
+
+        ax = fig.add_axes([left, .30, .37, .43])
+        ax.axvspan(-2.7, boundary, color="#EDF4FF")
+        ax.axvspan(boundary, 2.7, color="#FFF5EA")
+        ax.axvline(boundary, color=art.NAVY, linewidth=2.7)
+        for cls, color in [(0, art.BLUE), (1, art.ORANGE)]:
+            ax.scatter(*X[y == cls].T, color=color, s=125, zorder=5)
+        for point, label_y, distance in [(-1, .30, distances[2]), (1, -.47, distances[3])]:
+            ax.annotate("", xy=(point, 0), xytext=(boundary, 0),
+                        arrowprops={"arrowstyle": "<->", "color": green, "lw": 2.5,
+                                    "shrinkA": 3, "shrinkB": 9}, zorder=4)
+            ax.text((point + boundary) / 2, label_y, f"{distance:g} หน่วย",
+                    ha="center", fontsize=18, color=green,
+                    bbox={"facecolor": "white", "edgecolor": "none", "pad": 3}, zorder=6)
+        ax.set(xlim=(-2.7, 2.7), ylim=(-1.65, 1.65),
+               xticks=[-2, -1, 0, 1, 2], yticks=[-1, 0, 1],
+               xlabel="Feature 1 (พิกัด)", ylabel="Feature 2", title=title)
+        ax.spines[["top", "right", "left", "bottom"]].set_visible(False)
+        art.label(page, left + .185, .19, f"ระยะถึงจุดฝึกที่ใกล้ที่สุด = {nearest:g} หน่วย",
+                  18, art.NAVY, True, ha="center")
+    art.footer(page,
+        "เส้นทึบ = แนวแบ่งคลาส · ลูกศรเขียว = ระยะตั้งฉากจากแนวแบ่งถึงจุดฝึก",
+        "ทั้งสองเส้นทายถูกครบ 6 จุด · แต่ระยะถึงจุดฝึกที่ใกล้ที่สุดเพิ่มจาก 0.4 → 1 หน่วย")
+    art.save(fig, page, "08-support-vector-machines-boundary-choice")
+
+
 def margin():
     fig, page = art.page(
         "Margin · ระยะถึงจุดฝึก กับแถบคะแนน",
@@ -408,6 +468,7 @@ def main():
     art.OUT = args.output_dir
     workflow.OUT = args.output_dir
     moons_data()
+    boundary_choice()
     margin()
     margin_scaling()
     c_effect()
