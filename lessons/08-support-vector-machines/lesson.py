@@ -62,13 +62,14 @@ print("Prepared kernels:", list(models))
 # Prepared kernels: ['linear', 'rbf']
 # ```
 #
-# เตรียม Pipeline ไว้สองแบบแล้ว ขั้นนี้ยังไม่ได้ฝึกโมเดล จึงยังไม่มีคะแนน Accuracy
+# เตรียม Pipeline ไว้สองแบบแล้ว ขั้นนี้ยังไม่ได้ฝึกโมเดล จึงยังไม่มีแนวแบ่งคลาสหรือคะแนน Accuracy
 #
 # </details>
 #
 # **อ่านโค้ด**
 #
 # - `models` เก็บ Pipeline สองตัว แต่ละตัวเตรียมให้ข้อมูลผ่าน `StandardScaler` ก่อน `SVC` โดยตัวหนึ่งใช้ `kernel="linear"` อีกตัวใช้ `kernel="rbf"` ขั้นตอนเหล่านี้จะทำงานเมื่อเรียก `fit` หรือ `predict`
+# - `kernel="linear"` กับ `kernel="rbf"` เลือกชนิดของฟังก์ชันคำนวณ ส่วนแนวแบ่งคลาสจะเกิดจากการฝึก SVC เมื่อเรียก `fit` ของ Pipeline
 # - `C=1.0` เป็นค่าที่กำหนดไว้ให้ทั้งสองแบบ ฝั่ง RBF เพิ่ม `gamma="scale"` เพื่อให้ SVC คำนวณ gamma เมื่อเริ่ม fit โดยใช้ features **หลังผ่าน StandardScaler**
 #
 # <details>
