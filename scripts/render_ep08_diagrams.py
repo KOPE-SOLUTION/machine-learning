@@ -66,13 +66,8 @@ def moons_data():
     art.save(fig, page, "08-support-vector-machines-moons-data")
 
 
-def margin():
-    fig, page = art.page(
-        "Margin · วัดระยะระหว่างเส้นประสองฝั่ง",
-        "หนึ่งจุด = ข้อมูลหนึ่งแถว · พิกัดแนวนอนและแนวตั้ง = ค่า features ของแถวนั้น",
-    )
-    art.label(page, .07, .81, "สีจุด = label จริง: น้ำเงิน 0 · ส้ม 1", 18)
-    art.label(page, .64, .81, "สีพื้น = คลาสที่โมเดลทำนาย", 18)
+def linear_margin_example():
+    """Fit the six-point example shared by the margin illustrations."""
     X = np.array([[-2, -1], [-2, 1], [-1, 0], [1, 0], [2, -1], [2, 1]])
     y = np.array([0, 0, 0, 1, 1, 1])
     model = SVC(kernel="linear", C=100).fit(X, y)
@@ -82,6 +77,18 @@ def margin():
     assert np.array_equal(model.predict(X), y)
     assert np.allclose(model.decision_function([[-1, 0], [0, 0], [1, 0]]), [-1, 0, 1])
     assert np.isclose(2 / np.linalg.norm(model.coef_[0]), 2)
+    return X, y, model
+
+
+def margin():
+    fig, page = art.page(
+        "Margin · ระยะถึงจุดฝึก กับแถบคะแนน",
+        "ลูกศรเขียว: จากแนวแบ่งถึงจุดฝึก · ลูกศรม่วง: ระหว่างเส้นคะแนน −1 กับ +1",
+    )
+    art.label(page, .07, .81, "สีจุด = label จริง: น้ำเงิน 0 · ส้ม 1", 18)
+    art.label(page, .64, .81, "สีพื้น = คลาสที่โมเดลทำนาย", 18)
+    X, y, model = linear_margin_example()
+    green = "#18785C"
 
     ax = fig.add_axes([.07, .23, .52, .52])
     ax.axvspan(-2.8, 0, color="#EDF4FF")
@@ -96,8 +103,14 @@ def margin():
                edgecolors=art.NAVY, linewidths=1.7, zorder=4)
     ax.annotate("", xy=(1, 1.5), xytext=(-1, 1.5),
                 arrowprops={"arrowstyle": "<->", "color": art.PURPLE, "lw": 2})
-    ax.text(0, 1.73, "ระยะบนกราฟ = 2 หน่วย", ha="center", color=art.PURPLE, fontsize=18,
+    ax.text(0, 1.73, "แถบคะแนนกว้าง 2 หน่วย", ha="center", color=art.PURPLE, fontsize=18,
             bbox={"facecolor": "#F0EDF9", "edgecolor": "none", "pad": 2})
+    for side in (-1, 1):
+        ax.annotate("", xy=(side, 0), xytext=(0, 0),
+                    arrowprops={"arrowstyle": "<->", "color": green, "lw": 2.5,
+                                "shrinkA": 2, "shrinkB": 9}, zorder=5)
+        ax.text(side * .5, .25, "1 หน่วย", ha="center", color=green, fontsize=16,
+                bbox={"facecolor": "white", "edgecolor": "none", "pad": 2}, zorder=6)
     ax.text(-1.65, -1.6, "พื้นน้ำเงิน: ทาย 0", ha="center", color=art.BLUE, fontsize=17)
     ax.text(1.65, -1.6, "พื้นส้ม: ทาย 1", ha="center", color=art.ORANGE, fontsize=17)
     ax.set(xlim=(-2.8, 2.8), ylim=(-2, 2.25), xticks=[-1, 0, 1], yticks=[-1, 0, 1],
@@ -106,7 +119,7 @@ def margin():
 
     art.box(page, .64, .61, .30, .14, "Decision boundary\nแนวแบ่งคลาส · คะแนน = 0", size=19)
     art.box(page, .64, .42, .30, .14, "Support vectors\nจุดที่ใช้กำหนดแนวแบ่ง", size=19)
-    art.box(page, .64, .23, .30, .14, "ขอบ Margin (เส้นประ)\nคะแนน = −1 และ +1", size=19)
+    art.box(page, .64, .23, .30, .14, "เส้นประ = ขอบแถบคะแนน\nคะแนน = −1 และ +1", size=18)
     for start, end, color in [((.64, .68), (0, 1.05), art.NAVY),
                               ((.64, .49), (1, 0), art.NAVY),
                               ((.64, .30), (1, -1.15), art.PURPLE)]:
@@ -115,9 +128,74 @@ def margin():
                     arrowprops={"arrowstyle": "-|>", "color": color, "lw": 2,
                                 "shrinkA": 6, "shrinkB": 7})
     art.footer(page,
-        "โมเดลในภาพ: คะแนน = 1×Feature 1 + 0×Feature 2 + 0 = Feature 1",
-        "ขอบมีพิกัด −1 และ +1 → ระยะห่างบนกราฟ = 1 − (−1) = 2 หน่วย")
+        "โมเดลที่ฝึกได้: f(x) = 1×Feature 1 + 0×Feature 2 + 0 = Feature 1",
+        "ระยะถึงจุดฝึก = 1 หน่วยต่อฝั่ง · ความกว้างแถบคะแนน = 2 หน่วยทั้งแถบ")
     art.save(fig, page, "08-support-vector-machines-margin")
+
+
+def margin_scaling():
+    """Compare geometric distances with fixed-score contours after rescaling."""
+    X, y, model = linear_margin_example()
+    w, b = model.coef_[0], model.intercept_[0]
+    green = "#18785C"
+    fig, page = art.page(
+        "คูณคะแนนด้วย 2 · ระยะถึงจุดฝึกยังเท่าเดิม",
+        "จุดฝึก แนวแบ่ง และสเกลพิกัดเหมือนเดิมทั้งสองกราฟ · เปลี่ยนเฉพาะสเกลคะแนน ไม่ได้ฝึกใหม่",
+    )
+    for left, factor, title in [(.07, 1., "คะแนนเดิม: f(x) = Feature 1"),
+                                 (.56, 2., "คูณ 2: g(x) = 2 × Feature 1")]:
+        scaled_w, scaled_b = factor * w, factor * b
+        scores = X @ scaled_w + scaled_b
+        norm = np.linalg.norm(scaled_w)
+        # Scaling both numerator and denominator preserves geometric distance.
+        assert np.array_equal((scores > 0).astype(int), y)
+        assert np.allclose(np.abs(scores) / norm, np.abs(model.decision_function(X)))
+        assert np.isclose(np.min(np.abs(scores) / norm), 1)
+        # Fixed scores -1,+1 instead locate different parallel lines.
+        edges = (np.array([-1., 1.]) - scaled_b) / scaled_w[0]
+        assert np.allclose(edges, np.array([-1., 1.]) / factor)
+        assert np.isclose(edges[1] - edges[0], 2 / norm)
+        assert np.allclose(np.array([-1., 1.]) * scaled_w[0] + scaled_b,
+                           np.array([-1., 1.]) * factor)
+
+        art.label(page, left + .185, .79, title, 21, art.NAVY, True, ha="center")
+        ax = fig.add_axes([left, .31, .37, .42])
+        ax.axvspan(-2.7, 0, color="#EDF4FF")
+        ax.axvspan(0, 2.7, color="#FFF5EA")
+        ax.axvline(0, color=art.NAVY, linewidth=2.5)
+        for edge in edges:
+            ax.axvline(edge, color=art.PURPLE, linestyle="--", linewidth=1.8)
+        for cls, color in [(0, art.BLUE), (1, art.ORANGE)]:
+            ax.scatter(*X[y == cls].T, color=color, s=115, zorder=3)
+        # Mark the same nearest points; no refit and no new support-vector selection.
+        ax.scatter(*X[model.support_].T, s=340, facecolors="none",
+                   edgecolors=art.NAVY, linewidths=1.7, zorder=4)
+        ax.annotate("", xy=(edges[1], 1.45), xytext=(edges[0], 1.45),
+                    arrowprops={"arrowstyle": "<->", "color": art.PURPLE, "lw": 2.5})
+        ax.text(0, 1.7, f"แถบคะแนนกว้าง {2 / factor:g} หน่วย",
+                ha="center", fontsize=17, color=art.PURPLE,
+                bbox={"facecolor": "#F0EDF9", "edgecolor": "none", "pad": 2})
+        for side in (-1, 1):
+            ax.annotate("", xy=(side, 0), xytext=(0, 0),
+                        arrowprops={"arrowstyle": "<->", "color": green, "lw": 2.5,
+                                    "shrinkA": 2, "shrinkB": 8}, zorder=5)
+            ax.text(side * .5, .27, "1 หน่วย", ha="center", fontsize=15, color=green,
+                    bbox={"facecolor": "white", "edgecolor": "none", "pad": 1}, zorder=6)
+            score_text = f"−{factor:g}" if side == -1 else f"+{factor:g}"
+            ax.text(side, -.45, f"คะแนน {score_text}", ha="center", fontsize=15,
+                    color=art.NAVY,
+                    bbox={"facecolor": "white", "edgecolor": "none", "pad": 1}, zorder=6)
+        ax.set(xlim=(-2.7, 2.7), ylim=(-1.5, 2.05),
+               xticks=[-2, -1, 0, 1, 2], yticks=[-1, 0, 1],
+               xlabel="Feature 1 (พิกัด)", ylabel="Feature 2")
+        ax.spines[["top", "right", "left", "bottom"]].set_visible(False)
+        positions = "−1 และ +1" if factor == 1 else "−0.5 และ +0.5"
+        art.label(page, left + .185, .20, f"เส้นคะแนน −1, +1 อยู่ที่พิกัด {positions}",
+                  16, art.PURPLE, ha="center")
+    art.footer(page,
+        "เขียว = ระยะถึงจุดฝึก · ม่วง = ความกว้างแถบคะแนน −1 ถึง +1 · เส้นทึบอยู่ที่พิกัด 0 ทั้งคู่",
+        "ถ้าใช้ g(x) วาดขอบที่พิกัดเดิม −1, +1 → ต้องใช้คะแนน −2, +2 จึงกว้าง 2 หน่วยเท่าเดิม")
+    art.save(fig, page, "08-support-vector-machines-margin-scaling")
 
 
 def c_effect():
@@ -331,6 +409,7 @@ def main():
     workflow.OUT = args.output_dir
     moons_data()
     margin()
+    margin_scaling()
     c_effect()
     gamma_effect()
     art.svm()
