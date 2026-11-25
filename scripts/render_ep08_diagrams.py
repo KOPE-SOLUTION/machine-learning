@@ -69,19 +69,21 @@ def moons_data():
 def margin():
     fig, page = art.page(
         "Margin · วัดระยะระหว่างเส้นประสองฝั่ง",
-        "ตัวอย่าง Linear SVM ที่แยกสองคลาสได้ชัด · เส้นทึบแบ่งคลาส · เส้นประเป็นขอบแถบ",
+        "หนึ่งจุด = ข้อมูลหนึ่งแถว · พิกัดแนวนอนและแนวตั้ง = ค่า features ของแถวนั้น",
     )
+    art.label(page, .07, .81, "สีจุด = label จริง: น้ำเงิน 0 · ส้ม 1", 18)
+    art.label(page, .64, .81, "สีพื้น = คลาสที่โมเดลทำนาย", 18)
     X = np.array([[-2, -1], [-2, 1], [-1, 0], [1, 0], [2, -1], [2, 1]])
     y = np.array([0, 0, 0, 1, 1, 1])
     model = SVC(kernel="linear", C=100).fit(X, y)
     assert np.allclose(model.coef_, [[1, 0]])
     assert np.allclose(model.intercept_, [0])
     assert set(model.support_) == {2, 3}
+    assert np.array_equal(model.predict(X), y)
 
     ax = fig.add_axes([.07, .23, .52, .52])
     ax.axvspan(-2.8, 0, color="#EDF4FF")
     ax.axvspan(0, 2.8, color="#FFF5EA")
-    ax.axvspan(-1, 1, color=art.PURPLE, alpha=.10)
     ax.axvline(0, color=art.NAVY, linewidth=2.5)
     for x in (-1, 1):
         ax.axvline(x, color=art.PURPLE, linestyle="--", linewidth=1.8)
@@ -94,10 +96,10 @@ def margin():
                 arrowprops={"arrowstyle": "<->", "color": art.PURPLE, "lw": 2})
     ax.text(0, 1.73, "ความกว้างของแถบ = 2 หน่วย", ha="center", color=art.PURPLE, fontsize=18,
             bbox={"facecolor": "#F0EDF9", "edgecolor": "none", "pad": 2})
-    ax.text(-1.9, -1.6, "ทายคลาส 0", ha="center", color=art.BLUE, fontsize=17)
-    ax.text(1.9, -1.6, "ทายคลาส 1", ha="center", color=art.ORANGE, fontsize=17)
-    ax.set(xlim=(-2.8, 2.8), ylim=(-2, 2.25), xticks=[-1, 0, 1], yticks=[],
-           xlabel="Feature 1")
+    ax.text(-1.65, -1.6, "พื้นน้ำเงิน: ทาย 0", ha="center", color=art.BLUE, fontsize=17)
+    ax.text(1.65, -1.6, "พื้นส้ม: ทาย 1", ha="center", color=art.ORANGE, fontsize=17)
+    ax.set(xlim=(-2.8, 2.8), ylim=(-2, 2.25), xticks=[-1, 0, 1], yticks=[-1, 0, 1],
+           xlabel="Feature 1", ylabel="Feature 2")
     ax.spines[["top", "right", "left", "bottom"]].set_visible(False)
 
     art.box(page, .64, .61, .30, .14, "Decision boundary\nเส้นทึบ = แนวแบ่งคลาส", size=19)
