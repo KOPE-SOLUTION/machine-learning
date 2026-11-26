@@ -1,4 +1,4 @@
-# 08 · Support Vector Machines: Linear, RBF และ Cross-validation (CV)
+# 08 · Support Vector Machines: Linear, RBF และ Cross-validation
 
 [กลับสารบัญ](../../README.md) · [Notebook](lesson.ipynb) · [Python](lesson.py)
 

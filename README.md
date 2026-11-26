@@ -62,7 +62,7 @@ flowchart LR
 | 05 | [Linear Regression: ประเมินผลโมเดลและวิเคราะห์ความผิดพลาด (Residual, MAE, RMSE และ R²)](lessons/05-linear-regression/README.md) | คะแนน MAE, RMSE และ R² บน test พร้อมเส้นทำนายและ residual plot |
 | 06 | [Ridge Regression กับการเตรียมตัวเลข หมวดหมู่ และค่าที่หาย](lessons/06-feature-engineering/README.md) | Pipeline จัดการค่าที่หาย/หมวดหมู่ |
 | 07 | [จำแนกข้อความด้วย Multinomial Naive Bayes](lessons/07-naive-bayes-text/README.md) | ตัวจำแนกข้อความสั้น |
-| 08 | [Support Vector Machines: Linear, RBF และ Cross-validation (CV)](lessons/08-support-vector-machines/README.md) | กราฟแนวแบ่ง คะแนน 5-fold CV และผลประเมินบน test |
+| 08 | [Support Vector Machines: Linear, RBF และ Cross-validation](lessons/08-support-vector-machines/README.md) | กราฟแนวแบ่ง คะแนน 5-fold CV และผลประเมินบน test |
 | 09 | [Decision Trees, Random Forests และ overfitting](lessons/09-trees-and-forests/README.md) | ตาราง train/CV และ feature importance |
 | 10 | [ปรับ KNN ด้วย GridSearchCV และอ่าน learning curve](lessons/10-tuning-and-learning-curves/README.md) | Grid search และ learning curve |
 | 11 | [PCA และ Logistic Regression: ลดมิติก่อนจำแนกภาพตัวเลข](lessons/11-principal-components/README.md) | PCA pipeline และกราฟ variance |
