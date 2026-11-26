@@ -61,7 +61,7 @@ def gini():
               19, art.MUTED, ha="center")
     for left, title, groups, impurities, weighted, gain, tint in [
         (.05, "ลอง feature ≤ 1.5", "ซ้าย [0]  |  ขวา [0, 0, 1, 1, 1]",
-         "ขวา: 1 − (2/5)² − (3/5)² = 0.48",
+         "ซ้าย: Gini = 0\nขวา: 1 − (2/5)² − (3/5)² = 0.48",
          "(1/6 × 0) + (5/6 × 0.48) = 0.40", "ลดลง 0.50 − 0.40 = 0.10", "white"),
         (.52, "ลอง feature ≤ 3.5", "ซ้าย [0, 0, 0]  |  ขวา [1, 1, 1]",
          "คลาสไม่ปนกัน: Gini ซ้าย = ขวา = 0",
@@ -70,9 +70,9 @@ def gini():
         art.box(p, left, .24, .43, .35, color=tint)
         center = left + .215
         art.label(p, center, .548, title, 23, art.BLUE, True, ha="center")
-        art.label(p, center, .475, groups, 17, ha="center")
-        art.label(p, center, .414, impurities, 18, ha="center")
-        art.label(p, center, .350, weighted, 18, ha="center")
+        art.label(p, center, .485, groups, 17, ha="center")
+        art.label(p, center, .411, impurities, 17, ha="center")
+        art.label(p, center, .338, weighted, 18, ha="center")
         art.label(p, center, .281, gain, 21, art.BLUE, True, ha="center")
     art.label(p, .5, .162, "เลือก 3.5: ลดความปะปนได้มากกว่าในตัวอย่างนี้",
               25, art.BLUE, True, ha="center")
@@ -94,17 +94,19 @@ def forest():
         art.box(p, left, .55, .40, .14, color="#EDF4FF")
         art.label(p, center, .66, name, 22, art.BLUE, True, ha="center")
         art.label(p, center, .595, "สุ่มแถวแบบคืนกลับ\nสุ่มคอลัมน์ที่พิจารณาในแต่ละจุดแบ่ง", 18, ha="center")
-        art.arrow(p, (center, .54), (center, .47))
-        art.box(p, left, .29, .40, .17, color="white")
-        art.label(p, center, .43, "ใบที่แถวใหม่ไปถึง", 21, bold=True, ha="center")
-        art.label(p, center, .375, f"คลาส 0: {5-count} รายการ  |  คลาส 1: {count} รายการ", 19, ha="center")
-        art.label(p, center, .321, f"P(คลาส 1) = {count}/5 = {count/5:.1f}", 23, art.ORANGE, True, ha="center")
-        art.arrow(p, (center, .28), (.5, .245), art.ORANGE)
+        art.arrow(p, (center, .54), (center, .49))
+        art.box(p, left, .27, .40, .21, color="white")
+        art.label(p, center, .455, "ใบที่แถวใหม่ไปถึง", 21, bold=True, ha="center")
+        art.label(p, center, .409, f"คลาส 0: {5-count} รายการ  |  คลาส 1: {count} รายการ", 19, ha="center")
+        art.label(p, center, .359, f"P(คลาส 0) = {5-count}/5 = {(5-count)/5:.1f}", 22, art.BLUE, True, ha="center")
+        art.label(p, center, .309, f"P(คลาส 1) = {count}/5 = {count/5:.1f}", 22, art.ORANGE, True, ha="center")
+        art.arrow(p, (center, .26), (.5, .235), art.ORANGE)
     art.label(p, .5, .505, "ตอนทำนาย", 21, art.ORANGE, True, ha="center")
-    art.box(p, .05, .14, .90, .10, color="#FFF0DF")
-    art.label(p, .5, .209, "คลาส 1: (0.8 + 0.4) / 2 = 0.6", 23, art.ORANGE, True, ha="center")
-    art.label(p, .5, .166, "คลาส 0: (0.2 + 0.6) / 2 = 0.4 → เลือกคลาส 1", 21, ha="center")
-    art.label(p, .5, .065, "จำนวนรายการในใบรวมจำนวนครั้งที่แถวฝึกถูกสุ่มซ้ำ", 19, art.MUTED, ha="center")
+    art.box(p, .05, .12, .90, .105, color="#FFF0DF")
+    art.label(p, .5, .198, "คลาส 0: (0.2 + 0.6) / 2 = 0.4", 22, art.BLUE, True, ha="center")
+    art.label(p, .5, .153, "คลาส 1: (0.8 + 0.4) / 2 = 0.6", 22, art.ORANGE, True, ha="center")
+    art.label(p, .5, .078, "เลือกคลาส 1 เพราะ 0.6 มากกว่า 0.4", 23, art.ORANGE, True, ha="center")
+    art.label(p, .5, .028, "จำนวนรายการในใบรวมจำนวนครั้งที่แถวฝึกถูกสุ่มซ้ำ", 17, art.MUTED, ha="center")
     assert np.isclose(np.mean([4/5, 2/5]), .6)
     art.save(fig, p, "09-trees-and-forests-ensemble")
 

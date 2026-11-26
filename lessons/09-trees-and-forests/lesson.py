@@ -43,12 +43,8 @@ print("Train counts [class 0, class 1]:", np.bincount(y_train))
 #
 # %% Cell 2 — เตรียมต้นไม้ตื้น ต้นไม้ลึก และ Random Forest
 models = {
-    "shallow_tree": DecisionTreeClassifier(
-        criterion="gini", max_depth=3, random_state=42
-    ),
-    "deep_tree": DecisionTreeClassifier(
-        criterion="gini", max_depth=None, random_state=42
-    ),
+    "shallow_tree": DecisionTreeClassifier(criterion="gini", max_depth=3, random_state=42),
+    "deep_tree": DecisionTreeClassifier(criterion="gini", max_depth=None, random_state=42),
     "forest": RandomForestClassifier(
         n_estimators=120, criterion="gini", min_samples_leaf=2,
         max_features="sqrt", bootstrap=True, random_state=42, n_jobs=1,
